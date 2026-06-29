@@ -14,8 +14,8 @@ import { DECKS, CARDS, HERO_POWERS } from "./cards.js";
 import { takeTurn } from "./bot.js";
 import { buildReplay } from "./replay.js";
 
-const SPECTATE = fileURLToPath(new URL("../public/spectate.html", import.meta.url));
-const PLAY = fileURLToPath(new URL("../public/play.html", import.meta.url));
+const MENU = fileURLToPath(new URL("../public/index.html", import.meta.url));
+const GAMEPLAY = fileURLToPath(new URL("../public/gameplay.html", import.meta.url));
 const PUBLIC = fileURLToPath(new URL("../public", import.meta.url));
 const MIME = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css",
   ".json": "application/json", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg" };
@@ -142,15 +142,14 @@ async function handler(req, res) {
   const url = new URL(req.url, "http://x");
   const parts = url.pathname.split("/").filter(Boolean); // ["match", id, action]
   try {
-    if (req.method === "GET" && (url.pathname === "/" || url.pathname === "/spectate")) {
-      const html = fs.readFileSync(SPECTATE);
+    if (req.method === "GET" && (url.pathname === "/" || url.pathname === "/menu")) {
       res.writeHead(200, { "content-type": "text/html; charset=utf-8" });
-      return res.end(html);
+      return res.end(fs.readFileSync(MENU));
     }
-    if (req.method === "GET" && (url.pathname === "/play" || url.pathname === "/pvp")) {
-      const html = fs.readFileSync(PLAY);
+    // Single unified game view; the client reads ?mode/view/... to pick its display.
+    if (req.method === "GET" && (url.pathname === "/game" || url.pathname === "/play" || url.pathname === "/spectate" || url.pathname === "/pvp")) {
       res.writeHead(200, { "content-type": "text/html; charset=utf-8" });
-      return res.end(html);
+      return res.end(fs.readFileSync(GAMEPLAY));
     }
     // Public card catalog — needed by the play client to render hand cards (the
     // engine state only carries cardIds for your hand) and Founder Move info.

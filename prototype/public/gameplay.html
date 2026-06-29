@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>AI Card Battle — SIGNAL CUT (live spectator)</title>
+<title>Milestone — gameplay</title>
 <!--
   ════════════════════════════════════════════════════════════════════════════
   AI CARD BATTLE · "SIGNAL CUT" — LIVE spectator GUI (DESIGN PROTOTYPE)
@@ -280,6 +280,20 @@ input{font-family:inherit}
   border-radius:2cqh; padding:.5cqh 1cqh; font-size:1.4cqh; color:var(--ink-1); display:none; align-items:center; gap:.5cqw}
 .stage:not(.chat-open) .chat-tab{display:flex}
 .chat-tab:hover{border-color:var(--accent); color:var(--accent)}
+
+/* ── role-based view modes (?view=human|agent|spectator) ──
+   spectator: both hands open, agent reasoning + live chat (default broadcast).
+   human:     own hand open, opponent hand CLOSED, no thinking, no chat.
+   agent:     own hand open, opponent hand CLOSED, OWN thinking, no chat. */
+.stage[data-view="human"] .agent, .stage[data-view="human"] .agent-tab,
+.stage[data-view="human"] .chat,  .stage[data-view="human"] .chat-tab,
+.stage[data-view="agent"]  .chat, .stage[data-view="agent"]  .chat-tab{ display:none !important; }
+/* face-down opponent hand */
+.hcard.closed{background:repeating-linear-gradient(135deg,#161a22 0 6px,#11141b 6px 12px)!important;
+  border-color:#2b333d!important; cursor:default}
+.hcard.closed > *{visibility:hidden}
+.hcard.closed::after{content:"🂠"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-size:3.4cqh; color:#3a4452; visibility:visible}
 
 /* ─────────────────── CONTROLS / SETTINGS (auto-hide) ────────────────── */
 .controls{position:absolute; top:1.2cqh; right:calc(var(--chatW) + 1.4cqw); z-index:30; display:flex; gap:.5cqw;
@@ -790,16 +804,17 @@ function renderBoardRow(rowEl,board,seatClass,emptyTxt){
   if(!board.length){ rowEl.innerHTML=`<span class="row-empty">${emptyTxt}</span>`; return; }
   board.forEach(m=>rowEl.appendChild(bcardEl(m,seatClass)));
 }
-function renderHandRow(rowEl,hand,seatClass,watchSet){
+function closedCardEl(seatClass){ const d=document.createElement("div"); d.className="hcard closed "+seatClass; return d; }
+function renderHandRow(rowEl,hand,seatClass,watchSet,closed){
   rowEl.innerHTML=""; fitRow(rowEl,hand.length,9.5);
   if(!hand.length){ rowEl.innerHTML='<span class="row-empty">— hand empty —</span>'; return; }
-  hand.forEach(n=>rowEl.appendChild(hcardEl(n,seatClass,watchSet.has(n))));
+  hand.forEach(n=>rowEl.appendChild(closed ? closedCardEl(seatClass) : hcardEl(n,seatClass,watchSet.has(n))));
 }
 function renderState(t){
   renderHero("A",t); renderHero("B",t);
   const watch=new Set(); [...t.A.hand,...t.B.hand].forEach(n=>{const c=CARDS[n];if(c&&c.cost>=5)watch.add(n);});
-  renderHandRow($("handB"),t.B.hand,"seatB",watch);
-  renderHandRow($("handA"),t.A.hand,"seatA",watch);
+  renderHandRow($("handB"),t.B.hand,"seatB",watch, OPP_CLOSED && OPP_SEAT==="B");
+  renderHandRow($("handA"),t.A.hand,"seatA",watch, OPP_CLOSED && OPP_SEAT==="A");
   renderBoardRow($("boardB"),t.B.board,"seatB","— enemy data center empty —");
   renderBoardRow($("boardA"),t.A.board,"seatA","— home data center empty —");
   $("sharedZone").innerHTML=""; (t.shared||[]).forEach(m=>$("sharedZone").appendChild(scardEl(m)));
@@ -1015,10 +1030,23 @@ $("servercat").onclick=()=>{ pets++; const f=$("catFace"); f.textContent=pets<3?
 function toast(msg,ico){ const t=document.createElement("div"); t.className="toast"; t.innerHTML=`<span>${ico||"✦"}</span><span>${esc(msg)}</span>`;
   $("toasts").appendChild(t); setTimeout(()=>t.remove(),3000); }
 
+/* ── role/view config (from the Milestone menu via URL params) ── */
+const CFG = (()=>{ const p=new URLSearchParams(location.search);
+  return { mode:p.get("mode")||"spectate", view:p.get("view")||"spectator",
+    you:p.get("you"), opp:p.get("opp"), bot:p.get("bot"), single:p.get("single")==="1",
+    demo:p.get("demo")==="1", matchId:p.get("matchId"), token:p.get("token"), phase:p.get("phase") }; })();
+let YOU_SEAT="A", OPP_SEAT="B", OPP_CLOSED=false;
+function applyView(){
+  const v=CFG.view||"spectator"; stage.dataset.view=v;
+  if(v==="human"){ stage.classList.remove("chat-open","agent-open"); OPP_CLOSED=true; PLAYERS.A="You"; PLAYERS.B="Opponent"; }
+  else if(v==="agent"){ stage.classList.remove("chat-open"); OPP_CLOSED=true; PLAYERS.A="You (agent)"; PLAYERS.B="Opponent"; }
+  else { stage.classList.add("chat-open","agent-open"); OPP_CLOSED=false; } // spectator / broadcast
+}
+
 /* ── boot ── */
+applyView();
 applyFactions(); renderState(REPLAY.turns[0]);
-addChat("Welcome to the AI Card Battle live channel — view-only, agents are playing.","system");
-addChat("nice, a live AI match","viewer","temp0");
+if(CFG.view==="spectator"){ addChat("Welcome to the Milestone live channel — agents are playing.","system"); addChat("nice, a live AI match","viewer","temp0"); }
 showControls(); ambientLoop();
 setTimeout(()=>startMatch(), 800);
 </script>

@@ -1,5 +1,5 @@
 // Tiny dependency-free static file server for the public/ design prototypes.
-// Defaults "/" to broadcast.html so the preview opens the SIGNAL CUT GUI.
+// Defaults "/" to index.html (the Milestone menu).
 //   node prototype/src/static.js [port]
 import http from "http";
 import fs from "fs";
@@ -12,7 +12,7 @@ const TYPES = { ".html":"text/html; charset=utf-8", ".js":"text/javascript", ".c
 
 const server = http.createServer((req, res) => {
   let rel = decodeURIComponent(new URL(req.url, "http://x").pathname);
-  if (rel === "/" || rel === "") rel = "/broadcast.html";
+  if (rel === "/" || rel === "") rel = "/index.html";
   const file = path.join(ROOT, path.normalize(rel));
   if (!file.startsWith(ROOT)) { res.writeHead(403); return res.end("forbidden"); }
   fs.readFile(file, (err, buf) => {

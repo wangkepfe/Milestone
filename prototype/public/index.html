@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Milestone</title>
+<!--
+  MILESTONE — game menu / lobby. Create a game, join a game, or spectate.
+  Produces a role config and hands it to gameplay.html via query params.
+  Art style: "Corporate Mythic" (see prototype/public/art/STYLE.md).
+-->
+<style>
+:root{
+  --bg:#08090d; --bg2:#0c0e13; --panel:#14161c; --panel2:#1b1e26; --line:#2b333d;
+  --ink:#f4f1ea; --ink2:#8c8a84; --gold:#e8b23a; --danger:#e24b4a;
+  --closedai:#19C37D; --anthrabbit:#A07CFF; --googlitch:#4D8DF0; --shallowseek:#FF8A3D;
+  --sans:"Inter",ui-sans-serif,system-ui,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Code","Consolas",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:
+  radial-gradient(1200px 700px at 50% -10%, #1a1f2b 0%, transparent 60%),
+  radial-gradient(900px 600px at 50% 0%, #161a24 0%, var(--bg) 62%);
+  color:var(--ink); font-family:var(--sans); min-height:100%;
+  display:flex; flex-direction:column; align-items:center; overflow-x:hidden;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;}
+a{color:inherit}
+button{font-family:inherit; color:inherit; cursor:pointer; border:none; background:none}
+
+/* faux scene backdrop bars */
+.bg-grid{position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.5;
+  background:
+   repeating-linear-gradient(90deg, rgba(255,255,255,.012) 0 2px, transparent 2px 80px),
+   repeating-linear-gradient(0deg, rgba(255,255,255,.012) 0 2px, transparent 2px 80px);
+  mask:radial-gradient(80% 60% at 50% 30%, #000 0%, transparent 75%);}
+
+header.brand{position:relative; z-index:1; text-align:center; margin-top:8vh; margin-bottom:1.5rem}
+.brand .eyebrow{font-family:var(--mono); letter-spacing:.45em; font-size:.8rem; color:var(--ink2)}
+.brand h1{font-size:clamp(3rem,9vw,6rem); font-weight:800; letter-spacing:.02em; line-height:1;
+  background:linear-gradient(180deg,#fff,#b9c0cc 60%,#7a828f);
+  -webkit-background-clip:text; background-clip:text; color:transparent; margin:.3rem 0}
+.brand .tag{color:var(--ink2); font-size:1rem; max-width:38rem; margin:.4rem auto 0}
+.brand .chips{display:flex; gap:.5rem; justify-content:center; margin-top:1rem; flex-wrap:wrap}
+.fchip{font-family:var(--mono); font-size:.72rem; padding:.25rem .7rem; border-radius:2rem; border:1px solid var(--line);
+  color:var(--ink2); display:inline-flex; gap:.4rem; align-items:center}
+.fchip i{width:.6rem; height:.6rem; border-radius:50%; display:inline-block}
+
+main{position:relative; z-index:1; width:min(960px,92vw); margin:1rem auto 6rem; flex:1}
+.card{background:linear-gradient(180deg,var(--panel),var(--bg2)); border:1px solid var(--line);
+  border-radius:18px; box-shadow:0 30px 80px -40px #000; overflow:hidden}
+.card .hd{padding:1.1rem 1.4rem; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:.7rem}
+.card .hd h2{font-size:1.2rem; font-weight:600}
+.card .hd .back{margin-left:auto; font-family:var(--mono); font-size:.8rem; color:var(--ink2);
+  border:1px solid var(--line); border-radius:8px; padding:.3rem .7rem}
+.card .hd .back:hover{border-color:var(--gold); color:var(--gold)}
+.card .bd{padding:1.4rem}
+
+/* landing 3 big actions */
+.actions{display:grid; grid-template-columns:repeat(3,1fr); gap:1rem}
+@media(max-width:680px){.actions{grid-template-columns:1fr}}
+.action{background:var(--panel2); border:1px solid var(--line); border-radius:14px; padding:1.6rem 1.3rem;
+  text-align:left; transition:.18s; position:relative; overflow:hidden}
+.action:hover{border-color:var(--gold); transform:translateY(-3px); box-shadow:0 20px 50px -30px var(--gold)}
+.action .ico{font-size:2rem; margin-bottom:.7rem}
+.action h3{font-size:1.15rem; font-weight:600; margin-bottom:.3rem}
+.action p{color:var(--ink2); font-size:.9rem; line-height:1.45}
+
+/* role picker grid */
+.steplabel{font-family:var(--mono); font-size:.78rem; letter-spacing:.16em; color:var(--ink2); margin:.2rem 0 .7rem; text-transform:uppercase}
+.opts{display:grid; grid-template-columns:repeat(3,1fr); gap:.8rem}
+@media(max-width:680px){.opts{grid-template-columns:1fr}}
+.opt{background:var(--panel2); border:1.5px solid var(--line); border-radius:12px; padding:1.1rem 1rem; text-align:left; transition:.15s}
+.opt:hover{border-color:#3f4855}
+.opt.sel{border-color:var(--gold); background:color-mix(in srgb,var(--gold) 10%, var(--panel2)); box-shadow:0 0 0 1px var(--gold) inset}
+.opt .oic{font-size:1.4rem}
+.opt h4{font-size:1rem; font-weight:600; margin:.4rem 0 .2rem}
+.opt p{color:var(--ink2); font-size:.82rem; line-height:1.4}
+.opt .badge{font-family:var(--mono); font-size:.66rem; color:var(--gold); border:1px solid var(--gold); border-radius:1rem; padding:.05rem .45rem; margin-top:.5rem; display:inline-block}
+
+.divider{height:1px; background:var(--line); margin:1.5rem 0}
+
+/* bot roster */
+.bots{display:grid; grid-template-columns:repeat(2,1fr); gap:.7rem; margin-top:.4rem}
+@media(max-width:680px){.bots{grid-template-columns:1fr}}
+.bot{display:flex; gap:.8rem; align-items:center; background:var(--panel2); border:1.5px solid var(--line);
+  border-radius:12px; padding:.8rem 1rem; text-align:left; transition:.15s}
+.bot:hover{border-color:#3f4855}
+.bot.sel{border-color:var(--gold); box-shadow:0 0 0 1px var(--gold) inset}
+.bot .av{width:2.6rem; height:2.6rem; border-radius:10px; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
+  font-size:1.3rem; border:1px solid var(--line)}
+.bot .bi{min-width:0}
+.bot .bi h4{font-size:.96rem; font-weight:600; display:flex; gap:.4rem; align-items:center}
+.bot .bi .tier{font-family:var(--mono); font-size:.62rem; color:var(--ink2); border:1px solid var(--line); border-radius:1rem; padding:0 .4rem}
+.bot .bi p{color:var(--ink2); font-size:.8rem; line-height:1.35}
+
+.toggle-row{display:flex; align-items:center; gap:.8rem; background:var(--panel2); border:1px solid var(--line);
+  border-radius:12px; padding:.9rem 1.1rem; margin-top:1rem}
+.toggle-row .tt{flex:1}
+.toggle-row .tt h4{font-size:.96rem; font-weight:600}
+.toggle-row .tt p{color:var(--ink2); font-size:.82rem}
+.sw{width:3.2rem; height:1.8rem; border-radius:1rem; background:var(--panel); border:1px solid var(--line); position:relative; flex:0 0 auto; transition:.15s}
+.sw::after{content:""; position:absolute; top:.2rem; left:.2rem; width:1.3rem; height:1.3rem; border-radius:50%; background:var(--ink2); transition:.15s}
+.sw.on{background:var(--gold); border-color:var(--gold)} .sw.on::after{left:1.5rem; background:#0b0c10}
+
+.summary{font-family:var(--mono); font-size:.82rem; color:var(--ink2); margin-top:1.2rem; line-height:1.6}
+.summary b{color:var(--ink)}
+.cta{display:flex; gap:.8rem; margin-top:1.2rem; flex-wrap:wrap}
+.btn{padding:.8rem 1.4rem; border-radius:10px; font-weight:600; font-size:.95rem; border:1px solid var(--line); background:var(--panel2)}
+.btn:hover{border-color:#3f4855}
+.btn.primary{background:var(--gold); color:#0b0c10; border-color:var(--gold)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn[disabled]{opacity:.4; cursor:not-allowed}
+
+.field{margin-top:1rem}
+.field label{display:block; font-family:var(--mono); font-size:.74rem; letter-spacing:.1em; color:var(--ink2); margin-bottom:.4rem; text-transform:uppercase}
+.field input{width:100%; background:var(--panel2); border:1px solid var(--line); border-radius:10px; color:var(--ink);
+  padding:.8rem 1rem; font-size:1rem; outline:none}
+.field input:focus{border-color:var(--gold)}
+.spectate-row{display:flex; gap:.8rem; align-items:center; background:var(--panel2); border:1px solid var(--line); border-radius:12px; padding:1rem 1.2rem; margin-bottom:.8rem}
+.spectate-row .si{font-size:1.6rem}
+.spectate-row .st{flex:1}
+.spectate-row .st h4{font-weight:600}
+.spectate-row .st p{color:var(--ink2); font-size:.84rem}
+.note{color:var(--ink2); font-size:.8rem; margin-top:1rem; line-height:1.5}
+footer{position:relative; z-index:1; color:#4a5563; font-family:var(--mono); font-size:.72rem; padding:1rem 0 2rem}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+
+<header class="brand">
+  <div class="eyebrow">AI CARD BATTLE</div>
+  <h1>MILESTONE</h1>
+  <p class="tag">A spectator-first card battler where AI agents — and you — play four warring AI tech giants. Create a match, join one, or watch.</p>
+  <div class="chips">
+    <span class="fchip"><i style="background:var(--closedai)"></i> ClosedAI</span>
+    <span class="fchip"><i style="background:var(--anthrabbit)"></i> Anthrabbit</span>
+    <span class="fchip"><i style="background:var(--googlitch)"></i> Googlitch</span>
+    <span class="fchip"><i style="background:var(--shallowseek)"></i> ShallowSeek</span>
+  </div>
+</header>
+
+<main>
+  <!-- ░░ LANDING ░░ -->
+  <section id="landing" class="card">
+    <div class="bd">
+      <div class="actions">
+        <button class="action" data-go="create">
+          <div class="ico">⚔️</div><h3>Create game</h3>
+          <p>Pick who plays you and your opponent — human, live AI agent, or a bot — then choose heroes and battle.</p>
+        </button>
+        <button class="action" data-go="join">
+          <div class="ico">🔗</div><h3>Join game</h3>
+          <p>Have a match link or code from a friend? Drop in as the open seat.</p>
+        </button>
+        <button class="action" data-go="spectate">
+          <div class="ico">📺</div><h3>Spectate</h3>
+          <p>Watch a created match — or a live AI-vs-AI demo — with open hands, agent thinking, and live chat.</p>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ CREATE ░░ -->
+  <section id="create" class="card hidden">
+    <div class="hd"><h2>Create game</h2><button class="back" data-go="landing">‹ back</button></div>
+    <div class="bd">
+      <div class="steplabel">1 · Who plays <b style="color:var(--ink)">you</b>?</div>
+      <div class="opts" id="youOpts">
+        <button class="opt" data-you="human"><div class="oic">🧑</div><h4>Human player</h4><p>You play the cards yourself. Per-turn timer, hidden opponent hand.</p></button>
+        <button class="opt" data-you="agent"><div class="oic">🤖</div><h4>AI agent — live session</h4><p>An LLM agent plays your seat. You watch its hand, board, and reasoning.</p></button>
+        <button class="opt" data-you="bot"><div class="oic">📜</div><h4>AI bot — script</h4><p>A scripted bot plays your seat. You're a spectator — full broadcast view.</p></button>
+      </div>
+
+      <div class="steplabel" style="margin-top:1.4rem">2 · Who plays your <b style="color:var(--ink)">opponent</b>?</div>
+      <div class="opts" id="oppOpts">
+        <button class="opt" data-opp="human"><div class="oic">🧑</div><h4>Invite a human</h4><p>Generate a join link for a friend to take the other seat.</p></button>
+        <button class="opt" data-opp="agent"><div class="oic">🤖</div><h4>AI agent — live session</h4><p>Ask a live LLM agent to take the other seat.</p></button>
+        <button class="opt" data-opp="bot"><div class="oic">📜</div><h4>AI bot — script</h4><p>Pick a bot from the roster below.</p></button>
+      </div>
+
+      <div id="botPick" class="hidden">
+        <div class="divider"></div>
+        <div class="steplabel">Choose an opponent bot</div>
+        <div class="bots" id="botRoster"></div>
+      </div>
+
+      <div id="singleRow" class="toggle-row hidden">
+        <div class="tt"><h4>Single-player mode</h4><p>Human vs bot, no timers — end your turn whenever you like. The bot still takes a fixed 5 s.</p></div>
+        <div class="sw" id="singleSw"></div>
+      </div>
+
+      <div class="summary" id="createSummary">Pick both players to continue.</div>
+      <div class="cta">
+        <button class="btn primary" id="createBtn" disabled>Create &amp; choose heroes ▶</button>
+      </div>
+      <p class="note">After both seats are ready, each side picks a hero (60-second timer). Turn timer: 60 s for human / live agent, 5 s for bots. Live-agent matches disable early end-turn.</p>
+    </div>
+  </section>
+
+  <!-- ░░ JOIN ░░ -->
+  <section id="join" class="card hidden">
+    <div class="hd"><h2>Join game</h2><button class="back" data-go="landing">‹ back</button></div>
+    <div class="bd">
+      <div class="field"><label>Match link or code</label><input id="joinInput" placeholder="paste a match link, or a code like m12 · A-m12" /></div>
+      <div class="cta"><button class="btn primary" id="joinBtn">Join match ▶</button></div>
+      <p class="note">You'll take whichever seat is open. Your opponent's hand stays hidden.</p>
+    </div>
+  </section>
+
+  <!-- ░░ SPECTATE ░░ -->
+  <section id="spectate" class="card hidden">
+    <div class="hd"><h2>Spectate</h2><button class="back" data-go="landing">‹ back</button></div>
+    <div class="bd">
+      <div class="spectate-row">
+        <div class="si">📡</div>
+        <div class="st"><h4>Live AI-vs-AI demo</h4><p>Watch two bots fight, full broadcast: open hands, agent thinking, live chat.</p></div>
+        <button class="btn primary" id="specDemo">Watch ▶</button>
+      </div>
+      <div class="field"><label>…or spectate a specific match</label><input id="specInput" placeholder="match code, e.g. m12" /></div>
+      <div class="cta"><button class="btn" id="specBtn">Spectate match ▶</button></div>
+    </div>
+  </section>
+</main>
+
+<footer>Milestone · prototype · all art is the “Corporate Mythic” style set</footer>
+
+<script>
+/* ── bot roster (a few scripts to choose from) ── */
+const BOTS = [
+  {id:"hypebeast",   name:"Hypebeast",      faction:"closedai",   tier:"Aggro",   ico:"🟢", desc:"All gas, no brakes — stacks Hype and races your Valuation down."},
+  {id:"the_auditor", name:"The Auditor",    faction:"anthrabbit", tier:"Control", ico:"🟣", desc:"Guardrail walls, heals, and Safety Margin. Grinds you out."},
+  {id:"ramp_goblin", name:"Ramp Goblin",    faction:"googlitch",  tier:"Ramp",    ico:"🔵", desc:"Ramps Compute, draws, then slams frontier Titans."},
+  {id:"swarmlord",   name:"Swarmlord",      faction:"shallowseek",tier:"Swarm",   ico:"🟠", desc:"Floods the board with cheap Models and burst finishers."},
+  {id:"greedy_beam", name:"Greedy Beam",    faction:"any",        tier:"Expert",  ico:"🧠", desc:"A strong beam-search generalist. The toughest scripted opponent."},
+  {id:"coin_flip",   name:"Coin Flip",      faction:"any",        tier:"Chaos",   ico:"🎲", desc:"Plays a random legal move every turn. Wildly unpredictable."},
+];
+const FCOL = {closedai:"var(--closedai)",anthrabbit:"var(--anthrabbit)",googlitch:"var(--googlitch)",shallowseek:"var(--shallowseek)",any:"var(--ink2)"};
+
+const state = { you:null, opp:null, bot:null, single:false };
+const $ = s=>document.querySelector(s);
+const $$ = s=>[...document.querySelectorAll(s)];
+
+/* navigation */
+function go(id){ ["landing","create","join","spectate"].forEach(s=>$("#"+s).classList.toggle("hidden", s!==id)); window.scrollTo({top:0,behavior:"smooth"}); }
+$$("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
+
+/* bot roster render */
+$("#botRoster").innerHTML = BOTS.map(b=>`
+  <button class="bot" data-bot="${b.id}">
+    <div class="av" style="border-color:${FCOL[b.faction]};color:${FCOL[b.faction]}">${b.ico}</div>
+    <div class="bi"><h4>${b.name} <span class="tier">${b.tier}</span></h4><p>${b.desc}</p></div>
+  </button>`).join("");
+
+/* selection logic */
+function pick(group, val){
+  state[group]=val;
+  $$("#"+(group==="you"?"youOpts":"oppOpts")+" .opt").forEach(o=>o.classList.toggle("sel", o.dataset[group]===val));
+  $("#botPick").classList.toggle("hidden", state.opp!=="bot");
+  // single-player offer: human you vs bot opponent
+  const canSingle = state.you==="human" && state.opp==="bot";
+  $("#singleRow").classList.toggle("hidden", !canSingle);
+  if(!canSingle){ state.single=false; $("#singleSw").classList.remove("on"); }
+  refresh();
+}
+$$("#youOpts .opt").forEach(o=>o.onclick=()=>pick("you", o.dataset.you));
+$$("#oppOpts .opt").forEach(o=>o.onclick=()=>pick("opp", o.dataset.opp));
+$("#botRoster") && ($("#botRoster").onclick=e=>{ const b=e.target.closest(".bot"); if(!b)return;
+  state.bot=b.dataset.bot; $$("#botRoster .bot").forEach(x=>x.classList.toggle("sel", x===b)); refresh(); });
+$("#singleSw").onclick=()=>{ state.single=!state.single; $("#singleSw").classList.toggle("on", state.single); refresh(); };
+
+function label(role){ return {human:"Human",agent:"AI agent (live)",bot:"AI bot"}[role]||"—"; }
+function refresh(){
+  const ready = state.you && state.opp && (state.opp!=="bot" || state.bot);
+  const botName = state.bot ? (BOTS.find(b=>b.id===state.bot)||{}).name : "—";
+  let s = `You: <b>${label(state.you)}</b>  ·  Opponent: <b>${label(state.opp)}${state.opp==="bot"&&state.bot?` — ${botName}`:""}</b>`;
+  if(state.you==="human"&&state.opp==="bot") s += `  ·  <b>${state.single?"Single-player (no timer)":"Timed"}</b>`;
+  if(state.you==="bot") s += `  ·  <b>you spectate</b> (broadcast view)`;
+  $("#createSummary").innerHTML = state.you||state.opp ? s : "Pick both players to continue.";
+  $("#createBtn").disabled = !ready;
+}
+
+/* derive the gameplay view-mode from who YOU are */
+function viewModeFor(you, opp){
+  if(you==="bot") return "spectator";   // a bot plays your seat → you watch everything
+  if(you==="agent") return "agent";     // own hand+board+own thinking
+  return "human";                        // own hand+board, opp closed, no thinking/chat
+}
+
+/* launch gameplay with a config */
+$("#createBtn").onclick=()=>{
+  const p = new URLSearchParams();
+  p.set("mode","play");
+  p.set("you", state.you); p.set("opp", state.opp);
+  p.set("view", viewModeFor(state.you, state.opp));
+  if(state.opp==="bot") p.set("bot", state.bot);
+  if(state.you==="bot") p.set("youBot", "greedy_beam");
+  if(state.single) p.set("single","1");
+  p.set("phase","heroselect");
+  location.href = "gameplay.html?"+p.toString();
+};
+
+/* join */
+$("#joinBtn").onclick=()=>{
+  const v=$("#joinInput").value.trim(); if(!v){ $("#joinInput").focus(); return; }
+  // accept a full link, a "matchId · token", or just a matchId
+  let matchId=v, token="";
+  try{ if(/^https?:|gameplay\.html/.test(v)){ const u=new URL(v, location.href); matchId=u.searchParams.get("matchId")||matchId; token=u.searchParams.get("token")||""; } }catch(e){}
+  const m=v.match(/\b(m\d+)\b/); if(m) matchId=m[1];
+  const tk=v.match(/([AB]-m\d+)/); if(tk) token=tk[1];
+  const p=new URLSearchParams({mode:"play", you:"human", opp:"human", view:"human", join:"1", matchId});
+  if(token) p.set("token", token);
+  location.href="gameplay.html?"+p.toString();
+};
+
+/* spectate */
+$("#specDemo").onclick=()=>{ location.href="gameplay.html?mode=spectate&view=spectator&demo=1"; };
+$("#specBtn").onclick=()=>{ const v=$("#specInput").value.trim(); const m=v.match(/\b(m\d+)\b/);
+  const p=new URLSearchParams({mode:"spectate", view:"spectator"}); if(m) p.set("matchId", m[1]); else p.set("demo","1");
+  location.href="gameplay.html?"+p.toString(); };
+</script>
+</body>
+</html>
