@@ -80,14 +80,17 @@ input{font-family:inherit}
 .battle{flex:1 1 0; min-height:0; display:grid; grid-template-columns:1fr minmax(0,44cqw) 1fr; gap:1cqw; align-items:stretch}
 .battle-center{min-width:0; display:flex; flex-direction:column; gap:.3cqh}
 /* side panels are framed translucent windows onto the datacenter backdrop */
-.art-side{min-width:0; display:flex; flex-direction:column; gap:1.2cqh; overflow:hidden; position:relative;
+/* the two side rectangles host the INTERACTIVE datacenter-arena art (left/right framing) */
+.art-side{min-width:0; overflow:hidden; position:relative;
   border-style:solid; border-width:.12cqh; border-color:#222a34; border-radius:1cqh;
-  background:linear-gradient(180deg, rgba(8,10,14,.12), rgba(8,10,14,.45))}
+  background:linear-gradient(180deg,#0c0f15,#08090d)}
 .art-side .a-ico, .art-side .a-cap, .art-side .ph-lbl{display:none}
-/* interactive arena backdrop */
-.scene-bg{position:absolute; inset:0; z-index:0; overflow:hidden; background:radial-gradient(120% 90% at 50% 0%, #0e1018, #08090d 75%)}
-.scene-frame{position:absolute; inset:-1px; width:calc(100% + 2px); height:calc(100% + 2px); border:none; pointer-events:none; opacity:.5}
-.art-prop{position:absolute; bottom:1.4cqh; left:50%; transform:translateX(-50%); z-index:3}
+.art-side .arena-frame{position:absolute; top:0; height:100%; width:220%; border:none; pointer-events:auto}
+.art-side.left .arena-frame{left:0}
+.art-side.right .arena-frame{right:0}
+/* deep stage backdrop — plain, NOT a full-screen scene */
+.scene-bg{position:absolute; inset:0; z-index:0; background:radial-gradient(120% 90% at 50% 0%, #0e1018, #08090d 75%)}
+.art-prop{position:absolute; bottom:1.4cqh; left:50%; transform:translateX(-50%); z-index:5}
 
 /* ── HERO (big CEO profile + vitals, always visible) ── */
 .hero{flex:0 0 19cqh; display:flex; align-items:center; gap:1.2cqw; padding:0 1cqw;
@@ -440,9 +443,7 @@ input{font-family:inherit}
 <div class="stage chat-open agent-open" id="stage" data-active="A">
 
   <!-- deepest: interactive datacenter-arena backdrop (real art) -->
-  <div class="scene-bg" id="sceneBg">
-    <iframe class="scene-frame" src="art/background/background.html" title="Datacenter Colosseum backdrop" tabindex="-1" loading="lazy" scrolling="no"></iframe>
-  </div>
+  <div class="scene-bg" id="sceneBg"></div>
 
   <!-- LIVE badge -->
   <div class="live-badge" id="liveBadge"><span class="d"></span> LIVE</div>
@@ -486,9 +487,7 @@ input{font-family:inherit}
 
     <!-- LEFT background-art rectangle -->
     <div class="ph art-side left" data-ph="ph-arena-left">
-      <span class="a-ico">🖼</span>
-      <span class="a-cap">BACKGROUND<br>ART</span>
-      <span class="ph-lbl">ph-arena-left · scene / faction monolith / crowd</span>
+      <iframe class="arena-frame" src="art/background/background.html" title="Datacenter Colosseum — left wing (interactive)" scrolling="no" loading="lazy"></iframe>
       <div class="poke art-prop" id="servercat" title="Pet the server-cat">
         <div class="ph" data-ph="ph-prop-servercat" style="width:4cqh;height:3cqh"><span class="ph-ico" id="catFace">🐈</span></div>
         <span class="finger">👆</span>
@@ -518,9 +517,7 @@ input{font-family:inherit}
 
     <!-- RIGHT background-art rectangle -->
     <div class="ph art-side right" data-ph="ph-arena-right">
-      <span class="a-ico">🖼</span>
-      <span class="a-cap">BACKGROUND<br>ART</span>
-      <span class="ph-lbl">ph-arena-right · scene / faction monolith / crowd</span>
+      <iframe class="arena-frame" src="art/background/background.html" title="Datacenter Colosseum — right wing (interactive)" scrolling="no" loading="lazy"></iframe>
       <div class="poke art-prop" id="bell" title="Ring for support">
         <div class="ph" data-ph="ph-prop-supportbell" style="width:3.6cqh;height:3.2cqh"><span class="ph-ico" id="bellFace">🛎</span></div>
         <span class="finger">👆</span>
