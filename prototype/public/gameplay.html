@@ -230,19 +230,30 @@ input{font-family:inherit}
 .cand.chosen .cost{background:var(--accent); color:var(--ink-on)}
 
 /* hover tooltip — hero skill + detailed candidate-action breakdown */
-.tip{position:absolute; z-index:50; width:23cqw; background:var(--surface-3); border:.12cqh solid var(--hairline);
-  border-radius:.8cqh; padding:1cqh 1cqw; box-shadow:0 1.4cqh 4cqh rgba(0,0,0,.7); display:none; flex-direction:column; gap:.5cqh; pointer-events:none}
-.tip.show{display:flex}
-.tip .tt-kind{font-family:var(--font-mono); font-size:1.15cqh; letter-spacing:.1em; color:var(--accent)}
-.tip .tt-head{display:flex; justify-content:space-between; align-items:baseline; gap:.5cqw}
-.tip .tt-title{font-weight:600; font-size:1.7cqh; line-height:1.1}
+/* beautiful art-styled popover — used for cards, keywords, icons, skills, actions, every game concept */
+.tip{position:absolute; z-index:50; width:23cqw; --tc:var(--accent);
+  background:linear-gradient(180deg,#1c2029,#12151c); border:.12cqh solid color-mix(in srgb,var(--tc) 45%, var(--hairline));
+  border-radius:1cqh; overflow:hidden; box-shadow:0 1.8cqh 4.5cqh -1cqh #000, 0 0 0 .3cqh rgba(0,0,0,.45);
+  display:none; flex-direction:column; pointer-events:none}
+.tip.show{display:flex; animation:tipin .12s ease-out}
+@keyframes tipin{from{opacity:0; transform:translateY(.7cqh)} to{opacity:1; transform:none}}
+.tip .tt-bar{height:.5cqh; background:linear-gradient(90deg,var(--tc),transparent 85%); flex:0 0 auto}
+.tip .tt-body{padding:1cqh 1.1cqw; display:flex; flex-direction:column; gap:.55cqh}
+.tip .tt-art{display:block; width:calc(100% + 2.2cqw); margin:-1cqh -1.1cqw .55cqh; aspect-ratio:400/300; object-fit:cover;
+  background:linear-gradient(180deg,#11141b,#0a0c11); border-bottom:.1cqh solid var(--hairline)}
+.tip .tt-kind{font-family:var(--font-mono); font-size:1.1cqh; letter-spacing:.16em; color:var(--tc); text-transform:uppercase}
+.tip .tt-head{display:flex; justify-content:space-between; align-items:baseline; gap:.6cqw}
+.tip .tt-title{font-weight:700; font-size:1.8cqh; line-height:1.12; display:flex; align-items:center; gap:.5cqw}
+.tip .tt-title .tt-ico{font-size:2cqh; line-height:1}
 .tip .tt-cost{font-family:var(--font-mono); color:var(--accent); font-size:1.5cqh; white-space:nowrap}
-.tip .tt-sub{font-size:1.3cqh; color:var(--ink-2); line-height:1.4}
-.tip .tt-text{font-size:1.45cqh; line-height:1.45; color:var(--ink-1)}
+.tip .tt-sub{font-size:1.25cqh; color:var(--ink-2); line-height:1.4}
+.tip .tt-text{font-size:1.45cqh; line-height:1.5; color:var(--ink-1)}
+.tip .tt-stat{display:flex; gap:1.2cqw; font-family:var(--font-mono); font-size:1.5cqh; font-weight:700}
+.tip .tt-stat .atk{color:var(--accent)} .tip .tt-stat .hp{color:#7ee787}
 .tip .tt-card{border-top:.1cqh solid var(--hairline); padding-top:.6cqh; display:flex; flex-direction:column; gap:.4cqh}
 .tip .tt-card .tc-stats{font-family:var(--font-mono); color:var(--ink-1); font-size:1.3cqh}
-.tip .tt-kw{display:flex; flex-wrap:wrap; gap:.3cqh}
-.tip .tt-kw span{font-family:var(--font-mono); font-size:1.15cqh; background:var(--surface-1); border-radius:.3cqh; padding:.1cqh .4cqh; color:var(--ink-2)}
+.tip .tt-kw{display:flex; flex-wrap:wrap; gap:.35cqh}
+.tip .tt-kw span{font-family:var(--font-mono); font-size:1.15cqh; background:rgba(255,255,255,.06); border-radius:.3cqh; padding:.12cqh .5cqh; color:var(--ink-1)}
 .agent-foot{padding:.8cqh 1cqw; border-top:.12cqh solid var(--hairline); font-family:var(--font-mono); font-size:1.15cqh; color:var(--ink-2)}
 .agent-tab{position:absolute; left:1cqw; top:1.4cqh; z-index:21; background:rgba(20,22,28,.92); border:.1cqh solid var(--hairline);
   border-radius:2cqh; padding:.5cqh 1cqh; font-size:1.4cqh; color:var(--ink-1); display:none; align-items:center; gap:.5cqw}
@@ -406,7 +417,7 @@ input{font-family:inherit}
     <!-- PLAYER 2 hero (top) -->
     <div class="hero seatB top" id="heroB">
       <div class="portrait-wrap">
-        <div class="ph portrait" data-ph="ph-ceo-portrait-large"><span class="ph-ico">☗</span><span class="ph-lbl">CEO portrait</span></div>
+        <div class="ph portrait" data-tip="ceo" data-ph="ph-ceo-portrait-large"><span class="ph-ico">☗</span><span class="ph-lbl">CEO portrait</span></div>
         <svg class="hero-ring" viewBox="0 0 100 100"><circle class="trk" cx="50" cy="50" r="45"/><circle class="prg" id="ringB" cx="50" cy="50" r="45"/></svg>
         <span class="think-dot"></span>
         <span class="secs" id="secsB">6</span>
@@ -414,13 +425,13 @@ input{font-family:inherit}
       <div class="hero-info">
         <div class="hero-name" id="nameB">Player 2</div>
         <div class="hero-sub"><span class="ph flogo" data-ph="ph-faction-logo"><span class="ph-ico" style="font-size:1em">◈</span></span>
-          <span class="company" id="companyB">Anthrabbit</span> <span class="tier" id="tierB">Strong · Sonnet</span></div>
+          <span class="company" id="companyB">Anthrabbit</span> <span class="tier" data-tip="timer" id="tierB">Strong · Sonnet</span></div>
         <div class="vitals">
-          <span class="vital hp"><span class="vi">♥</span><b id="valB">22</b></span>
-          <span class="vital cmp"><span class="vi">◆</span><b id="cmpB">2/2</b></span>
-          <span class="vital"><span class="vi">✋</span><b id="handCB">4</b></span>
-          <span class="vital"><span class="vi">▤</span><b id="deckCB">16</b></span>
-          <span class="armor" id="armB"></span>
+          <span class="vital hp" data-tip="valuation"><span class="vi">♥</span><b id="valB">22</b></span>
+          <span class="vital cmp" data-tip="compute"><span class="vi">◆</span><b id="cmpB">2/2</b></span>
+          <span class="vital" data-tip="hand"><span class="vi">✋</span><b id="handCB">4</b></span>
+          <span class="vital" data-tip="deck"><span class="vi">▤</span><b id="deckCB">16</b></span>
+          <span class="armor" data-tip="armor" id="armB"></span>
         </div>
       </div>
       <!-- open hand (Telemetry) lives in the hero band -->
@@ -454,14 +465,14 @@ input{font-family:inherit}
 
     <!-- center lane -->
     <div class="centerlane">
-      <span class="meta-pill" title="Scaling Laws — public Compute-spent counter">
+      <span class="meta-pill" data-tip="scaling">
         <span class="ph mi" data-ph="ph-scaling-laws-counter" style="background:none;border:none"><span class="ph-ico">▲</span></span>Scaling <b id="scaling">1</b></span>
-      <span class="turnpill" id="turnpill">Turn 1</span>
-      <div class="os-frame" id="osFrame">
+      <span class="turnpill" data-tip="turn" id="turnpill">Turn 1</span>
+      <div class="os-frame" data-tip="opensource" id="osFrame">
         <span class="os-tag">OPEN SOURCE · either side may Benchmark</span>
         <div id="sharedZone" style="display:flex; gap:.5cqw"></div>
       </div>
-      <span class="meta-pill" title="Model Collapse — fatigue / Burnout clock">
+      <span class="meta-pill" data-tip="collapse">
         <span class="ph mi" data-ph="ph-model-collapse-clock" style="background:none;border:none"><span class="ph-ico">⧗</span></span>Collapse <b id="collapse">—</b></span>
     </div>
 
@@ -485,7 +496,7 @@ input{font-family:inherit}
     <!-- PLAYER 1 hero (bottom) -->
     <div class="hero seatA bottom" id="heroA">
       <div class="portrait-wrap">
-        <div class="ph portrait" data-ph="ph-ceo-portrait-large"><span class="ph-ico">☗</span><span class="ph-lbl">CEO portrait</span></div>
+        <div class="ph portrait" data-tip="ceo" data-ph="ph-ceo-portrait-large"><span class="ph-ico">☗</span><span class="ph-lbl">CEO portrait</span></div>
         <svg class="hero-ring" viewBox="0 0 100 100"><circle class="trk" cx="50" cy="50" r="45"/><circle class="prg" id="ringA" cx="50" cy="50" r="45"/></svg>
         <span class="think-dot"></span>
         <span class="secs" id="secsA">6</span>
@@ -493,13 +504,13 @@ input{font-family:inherit}
       <div class="hero-info">
         <div class="hero-name" id="nameA">Player 1</div>
         <div class="hero-sub"><span class="ph flogo" data-ph="ph-faction-logo"><span class="ph-ico" style="font-size:1em">◈</span></span>
-          <span class="company" id="companyA">ClosedAI</span> <span class="tier" id="tierA">BYOA · local</span></div>
+          <span class="company" id="companyA">ClosedAI</span> <span class="tier" data-tip="timer" id="tierA">BYOA · local</span></div>
         <div class="vitals">
-          <span class="vital hp"><span class="vi">♥</span><b id="valA">22</b></span>
-          <span class="vital cmp"><span class="vi">◆</span><b id="cmpA">1/1</b></span>
-          <span class="vital"><span class="vi">✋</span><b id="handCA">3</b></span>
-          <span class="vital"><span class="vi">▤</span><b id="deckCA">15</b></span>
-          <span class="armor" id="armA"></span>
+          <span class="vital hp" data-tip="valuation"><span class="vi">♥</span><b id="valA">22</b></span>
+          <span class="vital cmp" data-tip="compute"><span class="vi">◆</span><b id="cmpA">1/1</b></span>
+          <span class="vital" data-tip="hand"><span class="vi">✋</span><b id="handCA">3</b></span>
+          <span class="vital" data-tip="deck"><span class="vi">▤</span><b id="deckCA">15</b></span>
+          <span class="armor" data-tip="armor" id="armA"></span>
         </div>
       </div>
       <!-- open hand (Telemetry) lives in the hero band -->
@@ -736,21 +747,22 @@ function bcardEl(m, seatClass){
     <div class="nm">${esc(m.name)}</div>
     <div class="kw">${(m.kw||[]).map(k=>`<span>${esc(k)}</span>`).join("")}</div>
     <div class="stats"><span class="atk">${m.a}</span><span class="hp${m.hurt?' hurt':''}">${m.h}</span></div>`;
-  d.onmouseenter=()=>showInspect(d,m.name,m,seatClass); d.onmouseleave=hideInspect;
+  d.onmouseenter=()=>showTip(d, cardTip(m.name,m), facAccent(seatClass)); d.onmouseleave=hideTip;
   return d;
 }
+function facAccent(sc){ return sc==="seatA"?FACTIONS[seatFaction.A].color : sc==="seatB"?FACTIONS[seatFaction.B].color : "var(--accent)"; }
 function hcardEl(name, seatClass, watch){
   const c=CARDS[name]||{cost:"?"};
   const d=document.createElement("div"); d.className="hcard "+seatClass+(watch?" watch":"");
   d.innerHTML=`<span class="cost">${c.cost}</span><div class="ph art" data-ph="ph-card-art-hand"><span class="ph-ico">▤</span></div>
     <div class="nm">${esc(name)}</div>`;
-  d.onmouseenter=()=>showInspect(d,name,null,seatClass); d.onmouseleave=hideInspect;
+  d.onmouseenter=()=>showTip(d, cardTip(name), facAccent(seatClass)); d.onmouseleave=hideTip;
   return d;
 }
 function scardEl(m){
   const d=document.createElement("div"); d.className="scard";
   d.innerHTML=`<div class="ss"><span class="a">${m.a}</span><span class="h">${m.h}</span></div>`;
-  d.onmouseenter=()=>showInspect(d,m.name,{name:m.name,a:m.a,h:m.h,kw:["Open Source"]},""); d.onmouseleave=hideInspect;
+  d.onmouseenter=()=>showTip(d, cardTip(m.name,{name:m.name,a:m.a,h:m.h,kw:["Open Source"]}), "var(--accent)"); d.onmouseleave=hideTip;
   return d;
 }
 // Scale cards to fit their row: --fit (≤1) shrinks both card dims when the row
@@ -779,9 +791,11 @@ function showInspect(anchor,name,override,seatClass){
 }
 function hideInspect(){ $("inspect").classList.remove("show"); }
 
-/* ── generic hover tooltip: hero skill + detailed candidate-action breakdown ── */
-function showTip(anchor, html){
-  const tip=$("tip"); tip.innerHTML=html; tip.classList.add("show");
+/* ── universal beautiful hover tooltip: cards, keywords, icons, skills, actions, every concept ── */
+function showTip(anchor, html, accent){
+  const tip=$("tip"); tip.style.setProperty("--tc", accent||"var(--accent)");
+  tip.innerHTML='<div class="tt-bar"></div><div class="tt-body">'+html+'</div>';
+  tip.classList.add("show");
   const sb=stage.getBoundingClientRect(), ab=anchor.getBoundingClientRect();
   const tw=tip.offsetWidth, th=tip.offsetHeight, m=sb.width*0.006;
   let left=(ab.left-sb.left < sb.width/2) ? (ab.right-sb.left+m) : (ab.left-sb.left-tw-m);
@@ -790,13 +804,59 @@ function showTip(anchor, html){
   tip.style.left=left+"px"; tip.style.top=top+"px";
 }
 function hideTip(){ $("tip").classList.remove("show"); }
+
+/* card name -> art id (filled from the art MANIFEST at boot; falls back to no art) */
+let NAME2ART={};
+const SKILL_ART={closedai:"skill_hype_ping",anthrabbit:"skill_realign",googlitch:"skill_index_scry",shallowseek:"skill_spin_up"};
+function cardArt(name){ const id=NAME2ART[name]; return id?`<img class="tt-art" src="art/cards/${id}.svg" alt="" onerror="this.remove()">`:""; }
+/* beautiful card pop-up (board Model or hand card) */
+function cardTip(name, override){
+  const c=CARDS[name]; const card=c||{t:"Model",cost:"—",a:override&&override.a,h:override&&override.h,kw:override&&override.kw,x:"(deployed Model)"};
+  const stats = card.a!=null ? `<div class="tt-stat"><span class="atk">⚔ ${card.a}</span><span class="hp">❤ ${card.h}</span></div>` : "";
+  const kws=(card.kw||[]).filter(k=>KW_GLOSS[k]);
+  return `${cardArt(name)}
+    <div class="tt-head"><span class="tt-title">${esc(name)}</span><span class="tt-cost">${card.cost} ◆</span></div>
+    <div class="tt-kind">${esc((card.t||"Model").toUpperCase())}</div>
+    ${stats}
+    ${(card.kw&&card.kw.length)?`<div class="tt-kw">${card.kw.map(k=>`<span>${esc(k)}</span>`).join("")}</div>`:""}
+    <div class="tt-text">${esc(card.x||"")}</div>
+    ${kws.map(k=>`<div class="tt-sub"><b style="color:var(--ink-1)">${esc(k)}</b> — ${esc(KW_GLOSS[k])}</div>`).join("")}`;
+}
+
+/* ── GLOSSARY: explain every icon / concept a player needs ── */
+const GLOSS={
+  valuation:{ico:"♥",title:"Valuation",sub:"Your health (starts 22)",text:"Your company's market cap, in billions. When it hits 0 you collapse and get acqui-hired — you lose. Attacks and burn reduce it."},
+  cost:{ico:"◆",title:"Compute cost",sub:"What this costs to play",text:"The Compute (energy) you must spend to deploy this Model or cast this Op. You can only play it if you have enough Compute this turn."},
+  compute:{ico:"◆",title:"Compute (GPUs)",sub:"Your energy / mana",text:"Per-turn resource. Spend it to deploy Models and cast Ops. Your max rises +1 each turn (cap 8) and refills every turn; unspent Compute is LOST (no rollover)."},
+  hand:{ico:"✋",title:"Hand",sub:"Cards you can play now",text:"Cards drawn from your Roadmap. You draw 1 at the start of each turn. Hand cap is 8 — extra draws are discarded."},
+  deck:{ico:"▤",title:"Roadmap (deck)",sub:"Your 20-card library",text:"You draw from here each turn. When it's empty, Model Collapse begins: every draw deals escalating, un-healable Burnout damage."},
+  armor:{ico:"▮",title:"Safety Margin (armor)",sub:"Absorbs damage first",text:"A pool that soaks up damage to your CEO before your Valuation. It persists between turns and stacks. Anthrabbit's signature resource."},
+  scaling:{ico:"▲",title:"Scaling Laws",sub:"Public Compute counter",text:"A public, ever-rising counter of total Compute spent this game. Some Ops (tagged Scaling Laws) get stronger as it grows — rewards planning."},
+  collapse:{ico:"⧗",title:"Model Collapse",sub:"The fatigue clock",text:"Once your Roadmap is empty, each required draw deals escalating, un-healable Burnout damage (1, 2, 3, …). A hard clock that guarantees games end."},
+  opensource:{ico:"⌁",title:"Open Source lane",sub:"Shared neutral zone",text:"A Model placed here is owned by neither player. On each player's turn, THEY may attack with it — whoever exploits the public model best wins tempo."},
+  turn:{ico:"◷",title:"Turn",sub:"Whose turn & number",text:"Players alternate turns. On your turn you gain Compute, draw, play cards, run Benchmarks (attacks), then end your turn."},
+  timer:{ico:"⏱",title:"Turn timer",sub:"Time to act",text:"How long the active player has. Human or live AI agent: 60s. Bot script: a fixed 5s. Single-player human: no timer — end whenever you like."},
+  performance:{ico:"⚔",title:"Performance (Attack)",sub:"Damage dealt",text:"How much damage this Model deals when it runs a Benchmark (attacks) or is hit."},
+  reliability:{ico:"❤",title:"Reliability (Health)",sub:"Damage absorbed",text:"How much damage this Model can take before it's decommissioned (destroyed)."},
+  onair:{ico:"●",title:"Agent reasoning",sub:"Watch it think",text:"The live agent streams its rationale and the legal actions it's weighing, then commits. In spectator view you see both players' reasoning."},
+  ceo:{ico:"☗",title:"CEO (your hero)",sub:"You, the avatar",text:"Your hero with 22 Valuation and a once-per-turn Founder Move. Reduce the enemy CEO's Valuation to 0 to win."},
+};
+function glossTip(key){ const g=GLOSS[key]; if(!g) return `<div class="tt-text">${esc(key)}</div>`;
+  return `<div class="tt-kind">GAME CONCEPT</div>
+    <div class="tt-head"><span class="tt-title"><span class="tt-ico">${g.ico}</span>${esc(g.title)}</span></div>
+    <div class="tt-sub">${esc(g.sub)}</div><div class="tt-text">${esc(g.text)}</div>`;
+}
+/* delegated hover for any [data-tip] element (icons, meters, badges, …) */
+stage.addEventListener("mouseover", e=>{ const el=e.target.closest("[data-tip]"); if(el && stage.contains(el)) showTip(el, glossTip(el.dataset.tip)); });
+stage.addEventListener("mouseout", e=>{ const el=e.target.closest("[data-tip]"); if(el && !(e.relatedTarget&&el.contains(e.relatedTarget))) hideTip(); });
 function findCardInLabel(lbl){ let best=null,bi=1e9; for(const n in CARDS){const i=lbl.indexOf(n); if(i>=0&&i<bi){bi=i;best=n;}} return best; }
 function founderDetail(seat){
-  const fm=FOUNDER_MOVES[seatFaction[seat]];
-  return `<div class="tt-kind">FOUNDER MOVE · HERO SKILL</div>
-    <div class="tt-head"><span class="tt-title">${esc(fm.name)}</span><span class="tt-cost">${fm.cost} ◆</span></div>
+  const fac=seatFaction[seat], fm=FOUNDER_MOVES[fac], art=SKILL_ART[fac];
+  return `${art?`<img class="tt-art" src="art/skills/${art}.svg" alt="" onerror="this.remove()">`:""}
+    <div class="tt-kind">FOUNDER MOVE · HERO SKILL</div>
+    <div class="tt-head"><span class="tt-title">${esc(fm.name)}</span><span class="tt-cost" data-tip="cost">${fm.cost} ◆</span></div>
     <div class="tt-text">${esc(fm.text)}</div>
-    <div class="tt-sub">${esc(FACTIONS[seatFaction[seat]].name)} · once per turn.</div>`;
+    <div class="tt-sub">${esc(FACTIONS[fac].name)} · once per turn · costs ${fm.cost} Compute.</div>`;
 }
 function actionDetail(a, seat){
   const ti=TOOL_INFO[a.tool]||{label:a.tool,desc:""};
@@ -1042,7 +1102,7 @@ document.querySelector("#heroB .flogo").style.cursor="pointer";
 
 /* hero-skill (founder move) hover tooltip */
 ["A","B"].forEach(s=>{ const fb=document.querySelector("#hero"+s+" .founder-box");
-  if(fb){ fb.onmouseenter=()=>showTip(fb, founderDetail(s)); fb.onmouseleave=hideTip; } });
+  if(fb){ fb.onmouseenter=()=>showTip(fb, founderDetail(s), FACTIONS[seatFaction[s]].color); fb.onmouseleave=hideTip; } });
 
 /* ── easter-egg props ── */
 let pets=0;
@@ -1112,6 +1172,7 @@ applyFactions(); renderState(REPLAY.turns[0]);
 if(CFG.view==="spectator"){ addChat("Welcome to the Milestone live channel — agents are playing.","system"); addChat("nice, a live AI match","viewer","temp0"); }
 showControls(); ambientLoop();
 (async function(){
+  try{ const m=await (await fetch("art/MANIFEST.json")).json(); (m.cards||[]).forEach(c=>NAME2ART[c.name]=c.id); }catch(e){}
   if(CFG.phase==="heroselect"){ const picked=await showHeroSelect(); seatFaction={A:picked.A,B:picked.B}; applyFactions(); startMatch(); }
   else setTimeout(()=>startMatch(), 800);
 })();
