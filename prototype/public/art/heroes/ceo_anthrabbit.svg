@@ -1,0 +1,80 @@
+<svg viewBox="0 0 360 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Anthrabbit CEO — the Earnest Safety Researcher: a calm rabbit-eared founder in a lab coat clutching a 'constitution' clipboard, round glasses, a halo of caution tape overhead">
+  <defs>
+    <radialGradient id="ha-bg" cx="50%" cy="28%" r="92%">
+      <stop offset="0%" stop-color="#2A2150"/><stop offset="55%" stop-color="#1A1430"/><stop offset="100%" stop-color="#0D0A1C"/>
+    </radialGradient>
+    <radialGradient id="ha-halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F0E6D2" stop-opacity=".55"/><stop offset="100%" stop-color="#A07CFF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ha-fur" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F6EFDD"/><stop offset="100%" stop-color="#CDBC9C"/></linearGradient>
+    <linearGradient id="ha-coat" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#EDE7F5"/><stop offset="100%" stop-color="#C4BAE0"/></linearGradient>
+    <linearGradient id="ha-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FFE9A8"/><stop offset="50%" stop-color="#F4C04C"/><stop offset="100%" stop-color="#8a5a12"/></linearGradient>
+    <linearGradient id="ha-board" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F6EFDD"/><stop offset="100%" stop-color="#D8C8A6"/></linearGradient>
+    <filter id="ha-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="9"/></filter>
+    <filter id="ha-grain"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0"/></filter>
+    <radialGradient id="ha-vig" cx="50%" cy="44%" r="74%"><stop offset="58%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".6"/></radialGradient>
+  </defs>
+
+  <rect width="360" height="460" fill="url(#ha-bg)"/>
+  <g filter="url(#ha-soft)" opacity=".55"><ellipse cx="180" cy="140" rx="160" ry="130" fill="#A07CFF" opacity=".17"/></g>
+  <ellipse cx="180" cy="430" rx="150" ry="26" fill="#160F2A"/>
+  <circle cx="180" cy="170" r="120" fill="url(#ha-halo)"/>
+
+  <!-- the floating halo of caution tape -->
+  <g transform="translate(180 86)">
+    <ellipse cx="0" cy="0" rx="62" ry="18" fill="none" stroke="url(#ha-gold)" stroke-width="11"/>
+    <g fill="#1A1430" opacity=".8"><path d="M-52 -7 l9 14 h-8 l-9 -14 z"/><path d="M-26 -10 l9 15 h-8 l-9 -15 z"/><path d="M2 -10 l9 15 h-8 l-9 -15 z"/><path d="M30 -8 l9 14 h-8 l-9 -14 z"/></g>
+  </g>
+
+  <!-- long rabbit ears -->
+  <path d="M158 128 q-16 -66 2 -84 q18 16 12 80 z" fill="url(#ha-fur)"/>
+  <path d="M202 128 q16 -66 -2 -84 q-18 16 -12 80 z" fill="url(#ha-fur)"/>
+  <path d="M160 122 q-10 -50 4 -66" fill="none" stroke="#E0A3C8" stroke-width="5" opacity=".5"/>
+  <path d="M200 122 q10 -50 -4 -66" fill="none" stroke="#E0A3C8" stroke-width="5" opacity=".5"/>
+
+  <!-- lab coat torso -->
+  <path d="M180 256 q-64 6 -86 64 q-12 30 -12 96 l196 0 q0 -66 -12 -96 q-22 -58 -86 -64 z" fill="url(#ha-coat)"/>
+  <line x1="180" y1="262" x2="180" y2="416" stroke="#B9AEDB" stroke-width="2"/>
+  <g fill="#A07CFF"><circle cx="180" cy="300" r="3"/><circle cx="180" cy="330" r="3"/><circle cx="180" cy="360" r="3"/></g>
+  <!-- coat collar + amethyst tie -->
+  <path d="M156 258 q24 22 48 0 l-12 -12 q-12 8 -24 0 z" fill="#C4BAE0"/>
+  <path d="M180 256 l-7 30 l7 14 l7 -14 z" fill="#A07CFF"/>
+
+  <!-- neck + head -->
+  <rect x="166" y="218" width="28" height="30" rx="9" fill="url(#ha-fur)"/>
+  <ellipse cx="180" cy="184" rx="44" ry="42" fill="url(#ha-fur)"/>
+  <!-- round earnest glasses -->
+  <circle cx="166" cy="182" r="13" fill="none" stroke="#3E3070" stroke-width="2.4"/><circle cx="194" cy="182" r="13" fill="none" stroke="#3E3070" stroke-width="2.4"/>
+  <line x1="179" y1="182" x2="181" y2="182" stroke="#3E3070" stroke-width="2.4"/>
+  <circle cx="166" cy="183" r="3" fill="#2A2150"/><circle cx="194" cy="183" r="3" fill="#2A2150"/>
+  <!-- calm-to-a-fault soft smile + tiny nose -->
+  <path d="M170 204 q10 6 20 0" fill="none" stroke="#7a5f7a" stroke-width="2.4" stroke-linecap="round"/>
+  <ellipse cx="180" cy="197" rx="3.4" ry="2.6" fill="#C98CA8"/>
+  <!-- little buck-tooth -->
+  <rect x="177" y="206" width="6" height="6" rx="1.5" fill="#fff"/>
+
+  <!-- arms hugging the 'constitution' clipboard to chest -->
+  <g>
+    <path d="M134 268 q-16 36 8 70 l40 18 0 -16 q-28 -10 -34 -40 z" fill="url(#ha-coat)"/>
+    <path d="M226 268 q16 36 -8 70 l-40 18 0 -16 q28 -10 34 -40 z" fill="url(#ha-coat)"/>
+    <!-- the clipboard -->
+    <g transform="translate(180 326)">
+      <rect x="-44" y="-28" width="88" height="100" rx="6" fill="url(#ha-board)" stroke="#A07CFF" stroke-width="2"/>
+      <rect x="-16" y="-36" width="32" height="14" rx="4" fill="#8B6F47"/>
+      <text x="0" y="-6" font-family="JetBrains Mono,monospace" font-size="9" fill="#5A47A0" text-anchor="middle" font-weight="700">CONSTITUTION</text>
+      <g stroke="#B49A6E" stroke-width="2" opacity=".7"><line x1="-32" y1="8" x2="32" y2="8"/><line x1="-32" y1="22" x2="32" y2="22"/><line x1="-32" y1="36" x2="24" y2="36"/><line x1="-32" y1="50" x2="32" y2="50"/></g>
+    </g>
+  </g>
+
+  <!-- rim light -->
+  <path d="M158 128 q-16 -66 2 -84" fill="none" stroke="#FFF6E0" stroke-width="2" opacity=".55" stroke-linecap="round"/>
+
+  <!-- nameplate -->
+  <g transform="translate(180 426)">
+    <rect x="-140" y="0" width="280" height="30" rx="8" fill="#160F2A" stroke="#A07CFF" stroke-width="1.4"/>
+    <text x="0" y="20" font-family="'Space Grotesk',Archivo,sans-serif" font-size="14" font-weight="800" fill="#F0E6D2" text-anchor="middle">🟣 Anthrabbit — The Safety Researcher</text>
+  </g>
+
+  <rect width="360" height="460" filter="url(#ha-grain)" opacity=".05"/>
+  <rect width="360" height="460" fill="url(#ha-vig)"/>
+</svg>

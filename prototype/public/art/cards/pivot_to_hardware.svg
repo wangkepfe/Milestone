@@ -1,0 +1,75 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pivot to Hardware — a glossy chrome Launch cannon being bolted onto the CEO podium, a 3-Attack weapon">
+  <defs>
+    <radialGradient id="pth-bg" cx="46%" cy="30%" r="90%">
+      <stop offset="0%" stop-color="#163829"/><stop offset="55%" stop-color="#0D1A14"/><stop offset="100%" stop-color="#070D0A"/>
+    </radialGradient>
+    <linearGradient id="pth-chrome" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F2FFF9"/><stop offset="40%" stop-color="#8FE9C4"/><stop offset="100%" stop-color="#0B4d37"/>
+    </linearGradient>
+    <linearGradient id="pth-barrel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#EAFBF3"/><stop offset="50%" stop-color="#3FB689"/><stop offset="100%" stop-color="#0B4d37"/>
+    </linearGradient>
+    <radialGradient id="pth-muzzle" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF"/><stop offset="40%" stop-color="#7FF5C0"/><stop offset="100%" stop-color="#7FF5C0" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="pth-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="pth-grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0"/></filter>
+    <radialGradient id="pth-vig" cx="50%" cy="46%" r="72%"><stop offset="60%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".55"/></radialGradient>
+  </defs>
+
+  <rect width="400" height="300" fill="url(#pth-bg)"/>
+
+  <g filter="url(#pth-soft)" opacity=".6">
+    <ellipse cx="180" cy="120" rx="140" ry="90" fill="#19C37D" opacity=".15"/>
+    <ellipse cx="300" cy="100" rx="80" ry="60" fill="#7FF5C0" opacity=".10"/>
+  </g>
+
+  <!-- back racks -->
+  <g opacity=".75"><rect x="0" y="218" width="400" height="82" fill="#0A1510"/>
+    <g fill="#0E2419"><rect x="16" y="180" width="54" height="50" rx="4"/><rect x="332" y="178" width="54" height="52" rx="4"/></g>
+  </g>
+
+  <!-- CEO podium -->
+  <g transform="translate(108 150)">
+    <path d="M0 0 L84 0 L74 96 L10 96 Z" fill="#0E2C22" stroke="#11704F" stroke-width="1.2"/>
+    <rect x="14" y="20" width="56" height="10" rx="3" fill="#06150F"/>
+    <rect x="18" y="22" width="20" height="6" rx="2" fill="#5BD68A"/>
+    <rect x="42" y="22" width="14" height="6" rx="2" fill="#3DD6F0"/>
+    <text x="42" y="58" font-family="JetBrains Mono, monospace" font-size="9" fill="#7FF5C0" text-anchor="middle">PIVOT →</text>
+  </g>
+
+  <!-- the chrome Launch cannon bolted on top, aimed up-right -->
+  <g transform="translate(150 90) rotate(-22)">
+    <!-- mount bracket -->
+    <rect x="-12" y="40" width="44" height="26" rx="5" fill="url(#pth-chrome)"/>
+    <circle cx="-4" cy="53" r="3" fill="#06150F"/><circle cx="24" cy="53" r="3" fill="#06150F"/>
+    <!-- barrel -->
+    <rect x="0" y="6" width="150" height="34" rx="14" fill="url(#pth-barrel)"/>
+    <rect x="0" y="6" width="150" height="11" rx="6" fill="#EAFBF3" opacity=".5"/>
+    <!-- chrome bands -->
+    <rect x="40" y="4" width="8" height="38" rx="3" fill="#0B4d37" opacity=".5"/>
+    <rect x="92" y="4" width="8" height="38" rx="3" fill="#0B4d37" opacity=".5"/>
+    <!-- "3" attack rating etched -->
+    <text x="20" y="32" font-family="'Space Grotesk',sans-serif" font-weight="800" font-size="22" fill="#06150F">3</text>
+    <!-- muzzle glow -->
+    <circle cx="156" cy="23" r="20" fill="url(#pth-muzzle)"/>
+    <circle cx="152" cy="23" r="9" fill="#06150F"/>
+    <circle cx="152" cy="23" r="5" fill="#7FF5C0"/>
+    <!-- rim light -->
+    <rect x="0" y="6" width="150" height="3" rx="1.5" fill="#FFF6E0" opacity=".8"/>
+  </g>
+
+  <!-- wrench bolting it on -->
+  <g transform="translate(168 150) rotate(30)" fill="url(#pth-chrome)">
+    <rect x="-4" y="0" width="9" height="44" rx="3"/>
+    <path d="M-9 -10 a12 12 0 1 1 19 0 l-5 4 a6 6 0 1 0 -9 0 z"/>
+  </g>
+  <!-- charge pips (2 charges) -->
+  <g transform="translate(300 240)">
+    <circle cx="0" r="6" fill="#7FF5C0"/><circle cx="16" r="6" fill="#7FF5C0"/>
+    <text x="8" y="22" font-family="JetBrains Mono,monospace" font-size="8" fill="#8B97A6" text-anchor="middle">charges</text>
+  </g>
+
+  <rect width="400" height="300" filter="url(#pth-grain)" opacity=".05"/>
+  <rect width="400" height="300" fill="url(#pth-vig)"/>
+</svg>

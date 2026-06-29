@@ -1,0 +1,83 @@
+<svg viewBox="0 0 360 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ShallowSeek CEO — the Scrappy Upstart: a relaxed young founder in a hoodie and flip-flops, hands in pocket, a small pet whale floating at their side, ships fast and cheap">
+  <defs>
+    <radialGradient id="hs-bg" cx="50%" cy="28%" r="92%">
+      <stop offset="0%" stop-color="#0F4044"/><stop offset="55%" stop-color="#0A2A2E"/><stop offset="100%" stop-color="#05181A"/>
+    </radialGradient>
+    <radialGradient id="hs-halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFD9A8" stop-opacity=".4"/><stop offset="100%" stop-color="#FF8A3D" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="hs-skin" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#EAC9A6"/><stop offset="100%" stop-color="#BE8C62"/></linearGradient>
+    <linearGradient id="hs-hoodie" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FF8A3D"/><stop offset="100%" stop-color="#A8481A"/></linearGradient>
+    <linearGradient id="hs-whale" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3AA0A0"/><stop offset="100%" stop-color="#0F4E52"/></linearGradient>
+    <filter id="hs-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="9"/></filter>
+    <filter id="hs-grain"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0"/></filter>
+    <radialGradient id="hs-vig" cx="50%" cy="44%" r="74%"><stop offset="58%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".6"/></radialGradient>
+  </defs>
+
+  <rect width="360" height="460" fill="url(#hs-bg)"/>
+  <g filter="url(#hs-soft)" opacity=".55"><ellipse cx="180" cy="150" rx="160" ry="130" fill="#FF8A3D" opacity=".12"/><ellipse cx="180" cy="320" rx="170" ry="120" fill="#0E5E63" opacity=".5"/></g>
+  <!-- deep-sea light rays -->
+  <g opacity=".18" fill="#8FE6DC"><path d="M120 0 L96 460 L122 460 Z"/><path d="M250 0 L276 460 L250 460 Z"/></g>
+  <ellipse cx="180" cy="432" rx="150" ry="24" fill="#0A3438"/>
+  <circle cx="180" cy="180" r="120" fill="url(#hs-halo)"/>
+
+  <!-- the pet whale floating at the founder's side -->
+  <g transform="translate(286 250) scale(.9)">
+    <ellipse cx="0" cy="40" rx="46" ry="10" fill="#0A3438" opacity=".5"/>
+    <path d="M-44 0 L-66 -16 L-56 0 L-66 16 Z" fill="url(#hs-whale)"/>
+    <path d="M-46 0 q8 -30 44 -30 q36 0 48 24 q4 16 -8 24 q-42 16 -78 2 q-10 -10 -6 -20 z" fill="url(#hs-whale)"/>
+    <path d="M-36 10 q40 18 78 2 q-6 12 -22 16 q-36 8 -54 -8 z" fill="#6FD4CC" opacity=".7"/>
+    <circle cx="26" cy="-8" r="5" fill="#06181A"/><circle cx="26" cy="-8" r="2.4" fill="#8FE6DC"/>
+    <!-- little water spout -->
+    <path d="M6 -28 q-2 -14 4 -20 q4 8 0 18" fill="none" stroke="#8FE6DC" stroke-width="2.4" stroke-linecap="round"/>
+    <circle cx="9" cy="-50" r="3" fill="#8FE6DC" opacity=".7"/>
+  </g>
+
+  <!-- hoodie torso, relaxed, hands in pocket -->
+  <g>
+    <path d="M180 254 q-56 6 -76 56 q-12 30 -10 100 l172 0 q2 -70 -10 -100 q-20 -50 -76 -56 z" fill="url(#hs-hoodie)"/>
+    <!-- hood bunched at neck -->
+    <path d="M150 256 q30 -22 60 0 q-6 14 -30 14 q-24 0 -30 -14 z" fill="#A8481A"/>
+    <line x1="166" y1="266" x2="164" y2="292" stroke="#FFD9A8" stroke-width="2.4"/><line x1="194" y1="266" x2="196" y2="292" stroke="#FFD9A8" stroke-width="2.4"/>
+    <!-- big front pocket with both hands tucked in -->
+    <path d="M126 330 q54 22 108 0 l-8 40 q-46 16 -92 0 z" fill="#9A4416"/>
+    <!-- drawstring tips -->
+    <circle cx="164" cy="294" r="2.6" fill="#FFD9A8"/><circle cx="196" cy="294" r="2.6" fill="#FFD9A8"/>
+  </g>
+
+  <!-- legs + FLIP-FLOPS -->
+  <g>
+    <rect x="156" y="406" width="16" height="22" rx="4" fill="#1E4A4E"/><rect x="188" y="406" width="16" height="22" rx="4" fill="#1E4A4E"/>
+    <ellipse cx="160" cy="432" rx="17" ry="7" fill="#FFB36A"/><ellipse cx="200" cy="432" rx="17" ry="7" fill="#FFB36A"/>
+    <path d="M160 426 l-4 6 M160 426 l4 6" stroke="#0A2A2E" stroke-width="2"/><path d="M200 426 l-4 6 M200 426 l4 6" stroke="#0A2A2E" stroke-width="2"/>
+  </g>
+
+  <!-- neck + head -->
+  <rect x="167" y="218" width="26" height="28" rx="8" fill="url(#hs-skin)"/>
+  <ellipse cx="180" cy="186" rx="42" ry="42" fill="url(#hs-skin)"/>
+  <!-- messy young hair under a bit of hood -->
+  <path d="M140 182 q4 -42 40 -42 q36 0 40 42 q-12 -18 -22 -14 q-6 -10 -18 -6 q-12 -4 -18 6 q-10 -4 -22 14 z" fill="#2a1f16"/>
+  <!-- relaxed confident smirk -->
+  <path d="M166 204 q14 9 28 -2" fill="none" stroke="#7a4f33" stroke-width="2.6" stroke-linecap="round"/>
+  <!-- chill half-lidded eyes -->
+  <path d="M160 180 q6 4 12 0" fill="none" stroke="#2a1c10" stroke-width="2.6" stroke-linecap="round"/>
+  <path d="M188 180 q6 4 12 0" fill="none" stroke="#2a1c10" stroke-width="2.6" stroke-linecap="round"/>
+  <ellipse cx="180" cy="194" rx="2.6" ry="2" fill="#b07a52"/>
+  <!-- rim light -->
+  <path d="M140 182 q4 -42 40 -42" fill="none" stroke="#FFF6E0" stroke-width="2" opacity=".5" stroke-linecap="round"/>
+
+  <!-- "ships fast & cheap" sticker -->
+  <g transform="translate(86 300) rotate(-12)">
+    <rect x="-36" y="-13" width="72" height="26" rx="6" fill="#06181A" stroke="#FF8A3D" stroke-width="1.2"/>
+    <text x="0" y="4" font-family="JetBrains Mono,monospace" font-size="8" fill="#FFB36A" text-anchor="middle">ship fast 🚀</text>
+  </g>
+
+  <!-- nameplate -->
+  <g transform="translate(180 426)">
+    <rect x="-138" y="0" width="276" height="30" rx="8" fill="#06181A" stroke="#FF8A3D" stroke-width="1.4"/>
+    <text x="0" y="20" font-family="'Space Grotesk',Archivo,sans-serif" font-size="14" font-weight="800" fill="#FFE0BC" text-anchor="middle">🟠 ShallowSeek — The Scrappy Upstart</text>
+  </g>
+
+  <rect width="360" height="460" filter="url(#hs-grain)" opacity=".05"/>
+  <rect width="360" height="460" fill="url(#hs-vig)"/>
+</svg>

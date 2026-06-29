@@ -1,0 +1,85 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Red-Team Rabbit — a rabbit in a red-team vest probing a padded test rig with a pointer, a glowing Safety Margin shield forming overhead">
+  <defs>
+    <radialGradient id="rtr-bg" cx="50%" cy="28%" r="92%">
+      <stop offset="0%" stop-color="#2A2150"/><stop offset="55%" stop-color="#1A1430"/><stop offset="100%" stop-color="#0E0A1C"/>
+    </radialGradient>
+    <linearGradient id="rtr-fur" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F0E6D2"/><stop offset="100%" stop-color="#C9B79A"/>
+    </linearGradient>
+    <linearGradient id="rtr-vest" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E25555"/><stop offset="100%" stop-color="#8A2B2B"/>
+    </linearGradient>
+    <linearGradient id="rtr-shield" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D6E3F0"/><stop offset="100%" stop-color="#9FB3C8"/>
+    </linearGradient>
+    <radialGradient id="rtr-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#CFE0F2" stop-opacity=".7"/><stop offset="100%" stop-color="#9FB3C8" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="rtr-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="rtr-grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0"/></filter>
+    <radialGradient id="rtr-vig" cx="50%" cy="46%" r="72%"><stop offset="60%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".55"/></radialGradient>
+  </defs>
+
+  <rect width="400" height="300" fill="url(#rtr-bg)"/>
+
+  <g filter="url(#rtr-soft)" opacity=".6">
+    <ellipse cx="170" cy="120" rx="140" ry="80" fill="#A07CFF" opacity=".17"/>
+    <ellipse cx="300" cy="120" rx="80" ry="70" fill="#9FB3C8" opacity=".10"/>
+  </g>
+
+  <g opacity=".7"><rect x="0" y="220" width="400" height="80" fill="#120D24"/>
+    <g fill="#1E1640"><rect x="14" y="184" width="52" height="46" rx="6"/></g></g>
+  <ellipse cx="200" cy="258" rx="170" ry="16" fill="#1E1640" opacity=".7"/>
+
+  <!-- padded test rig (a dummy model on a stand) -->
+  <g transform="translate(276 120)">
+    <rect x="-8" y="60" width="16" height="76" rx="4" fill="#1E1640"/>
+    <ellipse cx="0" cy="138" rx="34" ry="9" fill="#1E1640"/>
+    <!-- rounded padded dummy -->
+    <ellipse cx="0" cy="36" rx="40" ry="46" fill="#3E3070"/>
+    <ellipse cx="0" cy="36" rx="40" ry="46" fill="#5A47A0" opacity=".5" transform="translate(-6 -6)"/>
+    <circle cx="0" cy="-6" r="22" fill="#4A3A85"/>
+    <!-- target rings on the dummy -->
+    <circle cx="0" cy="36" r="20" fill="none" stroke="#E25555" stroke-width="2" opacity=".7"/>
+    <circle cx="0" cy="36" r="11" fill="none" stroke="#E25555" stroke-width="2" opacity=".7"/>
+    <circle cx="0" cy="36" r="3" fill="#E25555"/>
+    <!-- padding seams -->
+    <path d="M-30 20 q30 12 60 0 M-30 52 q30 12 60 0" fill="none" stroke="#2A2150" stroke-width="2" opacity=".6"/>
+  </g>
+
+  <!-- the Safety Margin shield forming overhead -->
+  <g transform="translate(150 70)">
+    <circle cx="0" cy="0" r="40" fill="url(#rtr-glow)"/>
+    <path d="M0 -28 l24 10 v18 q0 20 -24 28 q-24 -8 -24 -28 v-18 z" fill="url(#rtr-shield)" stroke="#E6EDF3" stroke-width="1.5"/>
+    <path d="M-10 0 l7 8 l16 -18" fill="none" stroke="#1A1430" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="0" y="44" font-family="JetBrains Mono,monospace" font-size="11" fill="#9FB3C8" text-anchor="middle" font-weight="700">+2 SM</text>
+  </g>
+
+  <!-- red-team rabbit -->
+  <g>
+    <!-- ears -->
+    <path d="M126 132 q-10 -54 4 -68 q14 14 8 64 z" fill="url(#rtr-fur)"/>
+    <path d="M150 130 q12 -52 -2 -66 q-14 14 -10 62 z" fill="url(#rtr-fur)"/>
+    <!-- body -->
+    <ellipse cx="140" cy="206" rx="40" ry="46" fill="url(#rtr-fur)"/>
+    <!-- red-team vest -->
+    <path d="M112 178 q28 16 56 0 l-6 56 q-22 10 -44 0 z" fill="url(#rtr-vest)"/>
+    <path d="M140 176 l0 60" stroke="#5a1c1c" stroke-width="2" opacity=".6"/>
+    <text x="140" y="214" font-family="JetBrains Mono,monospace" font-size="8" fill="#F0E6D2" text-anchor="middle">RED TEAM</text>
+    <!-- head -->
+    <circle cx="140" cy="150" r="30" fill="url(#rtr-fur)"/>
+    <circle cx="131" cy="148" r="3" fill="#2A2150"/><circle cx="151" cy="148" r="3" fill="#2A2150"/>
+    <path d="M134 160 q6 4 12 0" fill="none" stroke="#7a5f7a" stroke-width="2" stroke-linecap="round"/>
+    <ellipse cx="140" cy="156" rx="2.6" ry="2" fill="#C98CA8"/>
+    <!-- pointer/probe arm toward the rig -->
+    <path d="M168 188 L236 150 L240 158 L172 198 Z" fill="url(#rtr-fur)"/>
+    <line x1="236" y1="152" x2="262" y2="142" stroke="#9FB3C8" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="263" cy="142" r="3.5" fill="#CFE0F2"/>
+    <!-- rim light -->
+    <path d="M126 132 q-10 -54 4 -68" fill="none" stroke="#FFF6E0" stroke-width="1.6" opacity=".6" stroke-linecap="round"/>
+    <path d="M110 150 a30 30 0 0 1 14 -24" fill="none" stroke="#FFF6E0" stroke-width="1.5" opacity=".5"/>
+  </g>
+
+  <rect width="400" height="300" filter="url(#rtr-grain)" opacity=".05"/>
+  <rect width="400" height="300" fill="url(#rtr-vig)"/>
+</svg>

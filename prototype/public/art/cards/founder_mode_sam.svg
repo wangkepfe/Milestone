@@ -1,0 +1,85 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Founder Mode Sam — a caricatured hype-showman founder mid-keynote, headset mic, gesturing one more thing, hype radiating over his team, legendary gold trim">
+  <defs>
+    <radialGradient id="fms-bg" cx="50%" cy="22%" r="95%">
+      <stop offset="0%" stop-color="#1C4233"/><stop offset="50%" stop-color="#0D1A14"/><stop offset="100%" stop-color="#060B09"/>
+    </radialGradient>
+    <linearGradient id="fms-skin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F2D9BE"/><stop offset="100%" stop-color="#C89B74"/>
+    </linearGradient>
+    <linearGradient id="fms-blazer" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1B5C45"/><stop offset="100%" stop-color="#0A2E22"/>
+    </linearGradient>
+    <linearGradient id="fms-hoodie" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#19C37D"/><stop offset="100%" stop-color="#0E6346"/>
+    </linearGradient>
+    <radialGradient id="fms-halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFDF2" stop-opacity=".85"/><stop offset="55%" stop-color="#7FF5C0" stop-opacity=".3"/><stop offset="100%" stop-color="#7FF5C0" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="fms-gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFE9A8"/><stop offset="50%" stop-color="#F4C04C"/><stop offset="100%" stop-color="#8a5a12"/>
+    </linearGradient>
+    <filter id="fms-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="fms-grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0"/></filter>
+    <radialGradient id="fms-vig" cx="50%" cy="46%" r="72%"><stop offset="58%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".58"/></radialGradient>
+  </defs>
+
+  <rect width="400" height="300" fill="url(#fms-bg)"/>
+
+  <!-- legendary gold corner rays -->
+  <g opacity=".5"><path d="M0 0 L120 0 L0 90 Z" fill="url(#fms-gold)" opacity=".12"/><path d="M400 300 L280 300 L400 210 Z" fill="url(#fms-gold)" opacity=".12"/></g>
+
+  <g filter="url(#fms-soft)" opacity=".55">
+    <ellipse cx="200" cy="100" rx="150" ry="80" fill="#19C37D" opacity=".16"/>
+  </g>
+
+  <!-- back racks + small team silhouettes gaining hype -->
+  <g opacity=".8"><rect x="0" y="226" width="400" height="74" fill="#0A1510"/></g>
+  <g fill="#08130E" opacity=".9">
+    <circle cx="56" cy="210" r="13"/><rect x="44" y="220" width="24" height="40" rx="8"/>
+    <circle cx="344" cy="210" r="13"/><rect x="332" y="220" width="24" height="40" rx="8"/>
+  </g>
+  <path d="M56 184 l7 -12 l7 12 l-4 0 l0 9 l-6 0 l0 -9 z" fill="#7FF5C0"/>
+  <path d="M344 184 l7 -12 l7 12 l-4 0 l0 9 l-6 0 l0 -9 z" fill="#7FF5C0"/>
+
+  <!-- keynote halo behind founder -->
+  <circle cx="200" cy="120" r="92" fill="url(#fms-halo)"/>
+
+  <!-- FOUNDER caricature -->
+  <g>
+    <!-- torso: hoodie-to-blazer pivot (blazer over hoodie) -->
+    <path d="M150 268 q-6 -78 26 -104 l48 0 q32 26 26 104 z" fill="url(#fms-hoodie)"/>
+    <path d="M168 164 L150 268 L184 268 L188 168 Z" fill="url(#fms-blazer)"/>
+    <path d="M232 164 L250 268 L216 268 L212 168 Z" fill="url(#fms-blazer)"/>
+    <!-- blazer lapel highlights -->
+    <path d="M188 168 L200 210 L184 268 L182 200 Z" fill="#0A2E22"/>
+    <path d="M212 168 L200 210 L216 268 L218 200 Z" fill="#0A2E22"/>
+    <!-- hoodie collar -->
+    <path d="M182 168 q18 22 36 0 l0 -10 q-18 14 -36 0 z" fill="#0E6346"/>
+    <!-- neck + head (exaggerated, confident) -->
+    <rect x="190" y="146" width="20" height="20" rx="6" fill="url(#fms-skin)"/>
+    <ellipse cx="200" cy="120" rx="30" ry="32" fill="url(#fms-skin)"/>
+    <!-- close-cropped hair -->
+    <path d="M171 116 q4 -34 29 -34 q25 0 29 34 q-10 -14 -29 -12 q-19 -2 -29 12 z" fill="#3a2c1e"/>
+    <!-- knowing grin + brows -->
+    <path d="M188 130 q12 8 24 0" fill="none" stroke="#7a4f33" stroke-width="2.4" stroke-linecap="round"/>
+    <circle cx="190" cy="116" r="2.6" fill="#2a1c10"/><circle cx="210" cy="116" r="2.6" fill="#2a1c10"/>
+    <path d="M183 110 l12 2 M205 112 l12 -2" stroke="#3a2c1e" stroke-width="2" stroke-linecap="round"/>
+    <!-- headset mic -->
+    <path d="M172 116 q28 -36 56 0" fill="none" stroke="#0A2E22" stroke-width="3"/>
+    <path d="M174 118 q-4 14 14 18" fill="none" stroke="#0A2E22" stroke-width="3"/>
+    <circle cx="190" cy="138" r="3" fill="#7FF5C0"/>
+    <!-- the "one more thing" raised index finger -->
+    <path d="M236 168 L280 96 L292 102 L252 178 Z" fill="url(#fms-blazer)"/>
+    <rect x="280" y="78" width="11" height="26" rx="5" fill="url(#fms-skin)"/>
+    <circle cx="285" cy="74" r="8" fill="url(#fms-halo)"/>
+    <text x="296" y="66" font-family="JetBrains Mono,monospace" font-size="9" fill="#7FF5C0">one more thing</text>
+    <!-- other hand on hip -->
+    <path d="M150 196 L120 178 L114 188 L146 212 Z" fill="url(#fms-blazer)"/>
+    <!-- rim light down the key side -->
+    <path d="M171 116 q4 -34 29 -34" fill="none" stroke="#FFF6E0" stroke-width="2" opacity=".65" stroke-linecap="round"/>
+    <path d="M150 268 q-6 -78 26 -104" fill="none" stroke="#FFF6E0" stroke-width="1.6" opacity=".5"/>
+  </g>
+
+  <rect width="400" height="300" filter="url(#fms-grain)" opacity=".05"/>
+  <rect width="400" height="300" fill="url(#fms-vig)"/>
+</svg>

@@ -1,0 +1,1026 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI Card Battle — SIGNAL CUT (live spectator)</title>
+<!--
+  ════════════════════════════════════════════════════════════════════════════
+  AI CARD BATTLE · "SIGNAL CUT" — LIVE spectator GUI (DESIGN PROTOTYPE)
+  ────────────────────────────────────────────────────────────────────────────
+  WATCH-ONLY LIVE STREAM: two LLM agents play; the human only watches. There is
+  NO playback control (no pause/scrub/replay) — the match runs live and loops.
+  The GAME fills the screen: huge played-card lanes, large CEO profiles, with
+  HP / Compute / hand all on the board. A live CHAT box runs alongside. The only
+  auto-hiding surface is the SETTINGS/controls cluster (top-right).
+
+  All artwork is placeholder ( .ph[data-ph] ); open Settings → "Show art slots"
+  to label every one. Data model mirrors prototype/src/replay.js.
+  ════════════════════════════════════════════════════════════════════════════
+-->
+<style>
+/* ─────────────────────────── DESIGN TOKENS ─────────────────────────── */
+:root{
+  --bg-stage:#07070A; --bg-room:#0C0D11;
+  --surface-1:#14161C; --surface-2:#1B1E26; --surface-3:#20232C;
+  --hairline:#2B333D;
+  --ink-1:#F4F1EA; --ink-2:#8C8A84; --ink-on:#0B0C10;
+  --accent:#E8B23A;      /* gold: active / timer / commit */
+  --danger:#E24B4A;      /* coral: lethal + valuation loss */
+  --advantage:#D8DCE2; --advisory:#6B7280;
+  --f-closedai:#1D9E75;   --f-closedai-deep:#0C5D43;
+  --f-anthrabbit:#7F77DD; --f-anthrabbit-deep:#3F3A86;
+  --f-googlitch:#378ADD;  --f-googlitch-deep:#1B4E84;
+  --f-shallowseek:#EF9F27;--f-shallowseek-deep:#8A560C;
+  --seat-a:var(--f-closedai);   --seat-a-deep:var(--f-closedai-deep);
+  --seat-b:var(--f-anthrabbit); --seat-b-deep:var(--f-anthrabbit-deep);
+  --font-sans:"Inter",ui-sans-serif,system-ui,"Segoe UI",Roboto,sans-serif;
+  --font-mono:ui-monospace,"SF Mono","Cascadia Code","Consolas",monospace;
+  --chatW:17cqw; --agentW:19cqw;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:radial-gradient(120% 80% at 50% 12%, #101218 0%, var(--bg-stage) 70%);
+  color:var(--ink-1); font-family:var(--font-sans);
+  display:flex; align-items:center; justify-content:center; overflow:hidden;
+  text-rendering:optimizeLegibility; -webkit-font-smoothing:antialiased;}
+button{font-family:inherit;color:inherit;cursor:pointer;border:none;background:none}
+input{font-family:inherit}
+
+/* ─────────────────────────── THE 16:9 STAGE ─────────────────────────── */
+.stage{position:relative; width:min(100vw,177.78vh); aspect-ratio:16/9;
+  container-type:size; background:var(--bg-room); overflow:hidden;
+  box-shadow:0 0 0 1px var(--hairline), 0 4cqw 12cqw rgba(0,0,0,.6);
+  font-size:1.45cqw; user-select:none;}
+
+/* ───────────── ART PLACEHOLDER SYSTEM (toggle in Settings) ───────────── */
+.ph{position:relative; display:flex; align-items:center; justify-content:center;
+  color:var(--ink-2); background:
+    repeating-linear-gradient(135deg, rgba(255,255,255,.02) 0 6px, transparent 6px 12px), var(--surface-2);
+  border:.1cqw dashed #3a424d; border-radius:.5cqh; overflow:hidden; text-align:center; line-height:1.05;}
+.ph .ph-ico{font-size:1.3em;opacity:.5}
+.ph .ph-lbl{position:absolute;bottom:.2cqh;left:0;right:0;font-family:var(--font-mono);
+  font-size:.62em;color:#5d6b7a;opacity:0;transition:opacity .2s}
+.stage.annotate .ph{border-color:var(--accent)}
+.stage.annotate .ph .ph-lbl{opacity:.9}
+.stage.annotate .ph::after{content:attr(data-ph);position:absolute;top:.1cqh;left:.2cqh;
+  font-family:var(--font-mono);font-size:.55em;color:var(--accent);opacity:.85}
+
+/* seat color helpers */
+.seatA{--seat:var(--seat-a);--seat-deep:var(--seat-a-deep)}
+.seatB{--seat:var(--seat-b);--seat-deep:var(--seat-b-deep)}
+
+/* ─────────────────────────── GAME LAYER ─────────────────────────────── */
+.game{position:absolute; inset:0; z-index:2; display:flex; flex-direction:column;
+  padding:.6cqh 1cqw; gap:.3cqh; transition:padding .3s;}
+.stage.chat-open .game{padding-right:19cqw;}
+.stage.agent-open .game{padding-left:21cqw;}
+
+/* ── BATTLE: left art · center cards · right art (grid = deterministic) ── */
+.battle{flex:1 1 0; min-height:0; display:grid; grid-template-columns:1fr minmax(0,44cqw) 1fr; gap:1cqw; align-items:stretch}
+.battle-center{min-width:0; display:flex; flex-direction:column; gap:.3cqh}
+.art-side{min-width:0; display:flex; flex-direction:column; gap:1.2cqh; overflow:hidden;
+  border-style:dashed; border-color:#333b46;
+  background:repeating-linear-gradient(135deg, rgba(255,255,255,.022) 0 8px, transparent 8px 16px),
+    linear-gradient(180deg,#10131b 0%, #0a0c11 100%)}
+.art-side .a-ico{font-size:3.6cqh; opacity:.35}
+.art-side .a-cap{font-family:var(--font-mono); font-size:1.25cqh; letter-spacing:.28em; color:#566472; text-align:center; line-height:1.6}
+.art-prop{position:absolute; bottom:1.4cqh; left:50%; transform:translateX(-50%); z-index:3}
+
+/* ── HERO (big CEO profile + vitals, always visible) ── */
+.hero{flex:0 0 19cqh; display:flex; align-items:center; gap:1.2cqw; padding:0 1cqw;
+  border-radius:1cqh; transition:background .5s, box-shadow .5s; position:relative;}
+.hero.bottom{align-items:center}
+.stage[data-active="A"] .hero.seatA, .stage[data-active="B"] .hero.seatB{
+  background:linear-gradient(90deg, color-mix(in srgb,var(--seat) 16%, transparent), transparent 70%);
+  box-shadow:inset 0 0 0 .12cqh color-mix(in srgb,var(--seat) 45%, transparent);}
+.hero.dim{opacity:.62; filter:saturate(.6)}
+
+.portrait-wrap{position:relative; width:13cqh; height:13cqh; flex:0 0 auto}
+.portrait{width:100%; height:100%; border-radius:50%; border:.3cqh solid var(--seat-deep);}
+.stage[data-active="A"] .seatA .portrait, .stage[data-active="B"] .seatB .portrait{border-color:var(--seat)}
+.hero-ring{position:absolute; inset:-1cqh; width:calc(100% + 2cqh); height:calc(100% + 2cqh);
+  transform:rotate(-90deg); pointer-events:none; opacity:0; transition:opacity .3s}
+.hero.active .hero-ring{opacity:1}
+.hero-ring .trk{fill:none;stroke:var(--surface-3);stroke-width:3}
+.hero-ring .prg{fill:none;stroke:var(--accent);stroke-width:3.5;stroke-linecap:round;stroke-dasharray:283;stroke-dashoffset:0}
+.think-dot{position:absolute; bottom:.4cqh; right:.4cqh; width:2.2cqh; height:2.2cqh; border-radius:50%;
+  background:var(--advisory); opacity:0; transition:opacity .3s}
+.hero.active .think-dot{opacity:1; background:var(--accent); box-shadow:0 0 1.6cqh var(--accent); animation:breathe 1.5s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:.5;transform:scale(.82)}50%{opacity:1;transform:scale(1.12)}}
+.portrait-wrap .secs{position:absolute; inset:0; display:none; align-items:center; justify-content:center;
+  font-family:var(--font-mono); font-weight:600; font-size:4cqh; color:var(--accent); text-shadow:0 0 1cqh #000}
+.hero.active .secs{display:flex}
+
+.hero-info{display:flex; flex-direction:column; gap:.4cqh; min-width:0}
+.hero-name{font-size:3cqh; font-weight:600; line-height:1; letter-spacing:.01em}
+.hero-sub{display:flex; align-items:center; gap:.6cqw; font-size:1.5cqh; color:var(--ink-2)}
+.hero-sub .flogo{width:2.2cqh; height:2.2cqh; border-radius:.4cqh; flex:0 0 auto}
+.hero-sub .company{color:color-mix(in srgb,var(--seat) 70%, var(--ink-1)); font-weight:500}
+.tier{font-family:var(--font-mono); font-size:1.15cqh; color:var(--ink-2);
+  border:.1cqh solid var(--hairline); border-radius:1cqh; padding:.05cqh .6cqh; white-space:nowrap}
+.tier.fallback{color:var(--danger);border-color:var(--danger)}
+.vitals{display:flex; align-items:center; gap:1.1cqw; margin-top:.3cqh}
+.vital{display:flex; align-items:baseline; gap:.35cqw; font-family:var(--font-mono);
+  font-variant-numeric:tabular-nums; color:var(--ink-2); font-size:1.5cqh}
+.vital .vi{font-size:2cqh; opacity:.85}
+.vital b{font-size:2.9cqh; font-weight:600; color:var(--ink-1); line-height:1}
+.vital.hp b{color:#7ee787} .vital.hp .vi{color:#7ee787}
+.vital.cmp b{color:var(--accent)} .vital.cmp .vi{color:var(--accent)}
+.vital.flash b{animation:valflash .6s}
+@keyframes valflash{0%,100%{}30%{color:var(--danger);transform:scale(1.18)}}
+.armor{display:inline-flex; gap:.2cqw}
+.armor .pip{width:.7cqw; height:1.8cqh; background:var(--seat); border-radius:.15cqh}
+/* in-hero open hand (the red-box space) */
+.hand-in-hero{flex:1 1 0; min-width:0; height:100%; display:flex; align-items:center; justify-content:center; gap:.5cqw; overflow:visible}
+/* founder-move "hero skill" slot — a DEFINED area, marked as a temp/placeholder box */
+.founder-box{flex:0 0 13cqw; height:84%; align-self:center; flex-direction:column; gap:.5cqh; position:relative}
+.founder-box .fb-tag{position:absolute; top:.3cqh; left:.5cqh; font-family:var(--font-mono); font-size:1cqh; letter-spacing:.05em; color:var(--accent); opacity:.75}
+.founder-box .fb-ring{width:5.4cqh; height:5.4cqh; border-radius:50%; background:var(--surface-3);
+  border:.18cqh solid color-mix(in srgb,var(--seat,#888) 60%, var(--hairline)); display:flex; align-items:center; justify-content:center;
+  font-size:2.6cqh; color:color-mix(in srgb,var(--seat,#888) 85%, var(--ink-1))}
+.founder-box .fb-name{font-size:1.6cqh; font-weight:500; color:var(--ink-1); text-align:center; line-height:1.05}
+.founder-box .fb-cost{font-family:var(--font-mono); font-size:1.3cqh; color:var(--accent)}
+
+/* ── HAND ROW (open, Telemetry) ── */
+.handrow{flex:0 0 10cqh; display:flex; justify-content:center; align-items:center; gap:.5cqw; z-index:2}
+.handrow.opp{opacity:.72}
+.hcard{height:calc(11cqh * var(--fit,1)); width:calc(8cqh * var(--fit,1)); flex:0 0 auto; background:var(--surface-2);
+  border-radius:.6cqh; border:.12cqh solid var(--hairline); position:relative; padding:.3cqh;
+  display:flex; flex-direction:column; gap:.2cqh; transition:transform .15s}
+.hcard:hover{transform:translateY(-1.6cqh) scale(1.12); z-index:40; box-shadow:0 1cqh 2cqh rgba(0,0,0,.6)}
+.hcard .art{flex:1; min-height:0; border-radius:.4cqh}
+.hcard .nm{font-size:1cqh; line-height:1; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.hcard .cost{position:absolute; top:-.5cqh; left:-.5cqh; width:2.6cqh; height:2.6cqh; border-radius:50%;
+  background:var(--seat-deep); color:var(--ink-1); font-family:var(--font-mono); font-weight:600; font-size:1.4cqh;
+  display:flex; align-items:center; justify-content:center; border:.12cqh solid var(--seat)}
+.hcard.watch{box-shadow:0 0 0 .14cqh var(--danger) inset}
+.hcard.watch::after{content:"!"; position:absolute; top:-.5cqh; right:-.5cqh; width:2.2cqh; height:2.2cqh; border-radius:50%;
+  background:var(--danger); color:#fff; font-family:var(--font-mono); font-size:1.3cqh; display:flex; align-items:center; justify-content:center}
+
+/* ── BOARD ROW (big played Models) ── */
+.boardrow{flex:1 1 0; min-height:0; display:flex; justify-content:center; align-items:center; gap:.7cqw; z-index:2}
+.bcard{height:calc(19cqh * var(--fit,1)); width:calc(14cqh * var(--fit,1)); flex:0 0 auto; background:linear-gradient(#1d212b,#161a22);
+  border-radius:1cqh; border:.14cqh solid var(--hairline); position:relative; padding:.5cqh;
+  display:flex; flex-direction:column; gap:.35cqh; transition:transform .18s, box-shadow .18s, opacity .3s;
+  transform-origin:bottom center}
+.bcard.sick{opacity:.62}
+.bcard.ready{box-shadow:0 0 0 .16cqh var(--seat) inset, 0 0 2cqh -.4cqh var(--seat)}
+.bcard.shield{box-shadow:0 0 0 .2cqh #cfe0ff inset, 0 0 2cqh -.2cqh #cfe0ff}
+.bcard.stealth{opacity:.5; filter:grayscale(.4)}
+.bcard:hover{transform:translateY(-1.6cqh) scale(1.05); z-index:40; box-shadow:0 1.4cqh 2.6cqh rgba(0,0,0,.6)}
+.bcard .art{flex:1; min-height:0; border-radius:.6cqh}
+.bcard .nm{font-size:1.9cqh; font-weight:600; line-height:1.02; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.bcard .kw{display:flex; gap:.3cqh; flex-wrap:wrap; min-height:1.4cqh; max-height:3cqh; overflow:hidden}
+.bcard .kw span{font-family:var(--font-mono); font-size:1.1cqh; background:var(--surface-3); color:var(--ink-2);
+  border-radius:.3cqh; padding:0 .4cqh; white-space:nowrap}
+.bcard .stats{display:flex; justify-content:space-between; font-family:var(--font-mono); font-weight:700; font-size:2.7cqh; line-height:1}
+.bcard .atk{color:var(--accent)} .bcard .hp{color:#7ee787}
+.bcard .hp.hurt{color:var(--danger)}
+.bcard.guardrail::before{content:""; position:absolute; inset:0 0 auto 0; height:.5cqh;
+  background:repeating-linear-gradient(90deg,var(--advisory) 0 .8cqh,transparent .8cqh 1.6cqh); border-radius:1cqh 1cqh 0 0; opacity:.85}
+.bcard.dying{animation:sunset .5s forwards}
+@keyframes sunset{to{opacity:0;transform:translateY(1cqh) scale(.8);filter:blur(3px)}}
+.bcard.strike{animation:strike .5s}
+@keyframes strike{0%,100%{}40%{transform:translateY(-2cqh) scale(1.06);box-shadow:0 0 3cqh var(--danger)}}
+.row-empty{font-family:var(--font-mono); font-size:1.4cqh; color:#3f4855; letter-spacing:.1em}
+
+/* ── CENTER LANE (Open Source + match meta) ── */
+.centerlane{flex:0 0 7.5cqh; display:flex; align-items:center; justify-content:center; gap:1cqw; flex-wrap:nowrap; z-index:2}
+.meta-pill{display:flex; align-items:center; gap:.5cqw; font-family:var(--font-mono); font-size:1.5cqh; color:var(--ink-2)}
+.meta-pill .mi{width:2cqh; height:2cqh}
+.meta-pill b{color:var(--ink-1); font-variant-numeric:tabular-nums}
+.turnpill{font-family:var(--font-mono); font-size:2cqh; font-weight:600; color:var(--accent);
+  border:.12cqh solid var(--hairline); border-radius:2cqh; padding:.3cqh 1.4cqh; background:var(--surface-1)}
+.os-frame{display:flex; align-items:center; gap:.6cqw; border:.16cqh dashed var(--advisory); border-radius:.8cqh;
+  padding:.3cqh 1cqh; height:6.4cqh; min-width:11cqw}
+.os-tag{font-family:var(--font-mono); font-size:1.1cqh; letter-spacing:.1em; color:var(--advisory)}
+.os-frame.controllable{border-color:var(--accent)}
+.scard{height:5.4cqh; width:4cqh; background:var(--surface-2); border:.12cqh solid var(--advisory); border-radius:.5cqh;
+  display:flex; flex-direction:column; justify-content:flex-end; padding:.2cqh; position:relative}
+.scard .ss{display:flex; justify-content:space-between; font-family:var(--font-mono); font-weight:700; font-size:1.3cqh}
+.scard .ss .a{color:var(--accent)} .scard .ss .h{color:#7ee787}
+
+/* ─────────────────── AGENT PANEL (left) — the reasoning ─────────────── */
+.agent{position:absolute; left:0; top:0; height:100%; width:var(--agentW); z-index:20;
+  background:rgba(9,10,14,.94); border-right:.12cqh solid var(--hairline); display:flex; flex-direction:column;
+  transform:translateX(0); transition:transform .3s}
+.stage:not(.agent-open) .agent{transform:translateX(-100%)}
+.stage[data-active="A"] .agent{--seat:var(--seat-a)} .stage[data-active="B"] .agent{--seat:var(--seat-b)}
+.agent-head{display:flex; align-items:center; gap:.6cqw; padding:1cqh 1cqw; border-bottom:.12cqh solid var(--hairline);
+  font-family:var(--font-mono); font-size:1.4cqh; color:var(--ink-2)}
+.agent-head .a-dot{width:1.3cqh; height:1.3cqh; border-radius:50%; background:var(--accent); box-shadow:0 0 1.2cqh var(--accent); animation:breathe 1.5s infinite; flex:0 0 auto}
+.agent-head .who{color:color-mix(in srgb,var(--seat,#888) 80%, var(--ink-1)); font-weight:600}
+.agent-head .a-timer{margin-left:auto; font-weight:600; color:var(--accent); font-variant-numeric:tabular-nums}
+.agent-head .collapse{color:var(--ink-2); font-size:1.8cqh; line-height:1; padding:0 .3cqw}
+.agent-head .collapse:hover{color:var(--accent)}
+.agent-body{flex:1; min-height:0; overflow-y:auto; padding:1.2cqh 1cqw; display:flex; flex-direction:column; gap:1cqh}
+.agent-body::-webkit-scrollbar{width:.5cqw} .agent-body::-webkit-scrollbar-thumb{background:var(--surface-3); border-radius:1cqw}
+.ag-eyebrow{font-family:var(--font-mono); font-size:1.15cqh; letter-spacing:.14em; color:var(--ink-2)}
+.ag-rationale{font-size:2cqh; line-height:1.45; color:var(--ink-1); min-height:4cqh}
+.ag-rationale .w{opacity:0; transition:opacity .2s} .ag-rationale .w.in{opacity:1}
+.ag-cands{display:flex; flex-direction:column; gap:.5cqh}
+.cand{display:flex; align-items:center; gap:.5cqw; font-family:var(--font-mono); font-size:1.3cqh; color:var(--ink-2);
+  background:var(--surface-2); border:.1cqh solid transparent; border-radius:.5cqh; padding:.4cqh .6cqw; opacity:.6; transition:.25s}
+.cand .cost{min-width:2.2cqh; height:2.2cqh; display:flex; align-items:center; justify-content:center; border-radius:.3cqh;
+  background:var(--surface-3); color:var(--ink-1); font-weight:600; flex:0 0 auto}
+.cand .clbl{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.cand{cursor:help}
+.cand.chosen{opacity:1; color:var(--ink-1); border-color:var(--accent); background:color-mix(in srgb,var(--accent) 14%, var(--surface-2))}
+.cand.chosen .cost{background:var(--accent); color:var(--ink-on)}
+
+/* hover tooltip — hero skill + detailed candidate-action breakdown */
+.tip{position:absolute; z-index:50; width:23cqw; background:var(--surface-3); border:.12cqh solid var(--hairline);
+  border-radius:.8cqh; padding:1cqh 1cqw; box-shadow:0 1.4cqh 4cqh rgba(0,0,0,.7); display:none; flex-direction:column; gap:.5cqh; pointer-events:none}
+.tip.show{display:flex}
+.tip .tt-kind{font-family:var(--font-mono); font-size:1.15cqh; letter-spacing:.1em; color:var(--accent)}
+.tip .tt-head{display:flex; justify-content:space-between; align-items:baseline; gap:.5cqw}
+.tip .tt-title{font-weight:600; font-size:1.7cqh; line-height:1.1}
+.tip .tt-cost{font-family:var(--font-mono); color:var(--accent); font-size:1.5cqh; white-space:nowrap}
+.tip .tt-sub{font-size:1.3cqh; color:var(--ink-2); line-height:1.4}
+.tip .tt-text{font-size:1.45cqh; line-height:1.45; color:var(--ink-1)}
+.tip .tt-card{border-top:.1cqh solid var(--hairline); padding-top:.6cqh; display:flex; flex-direction:column; gap:.4cqh}
+.tip .tt-card .tc-stats{font-family:var(--font-mono); color:var(--ink-1); font-size:1.3cqh}
+.tip .tt-kw{display:flex; flex-wrap:wrap; gap:.3cqh}
+.tip .tt-kw span{font-family:var(--font-mono); font-size:1.15cqh; background:var(--surface-1); border-radius:.3cqh; padding:.1cqh .4cqh; color:var(--ink-2)}
+.agent-foot{padding:.8cqh 1cqw; border-top:.12cqh solid var(--hairline); font-family:var(--font-mono); font-size:1.15cqh; color:var(--ink-2)}
+.agent-tab{position:absolute; left:1cqw; top:1.4cqh; z-index:21; background:rgba(20,22,28,.92); border:.1cqh solid var(--hairline);
+  border-radius:2cqh; padding:.5cqh 1cqh; font-size:1.4cqh; color:var(--ink-1); display:none; align-items:center; gap:.5cqw}
+.stage:not(.agent-open) .agent-tab{display:flex}
+.agent-tab:hover{border-color:var(--accent); color:var(--accent)}
+
+/* ─────────────────────────── LIVE CHAT ──────────────────────────────── */
+.chat{position:absolute; right:0; top:0; height:100%; width:var(--chatW); z-index:20;
+  background:rgba(9,10,14,.94); border-left:.12cqh solid var(--hairline); display:flex; flex-direction:column;
+  transform:translateX(0); transition:transform .3s}
+.stage:not(.chat-open) .chat{transform:translateX(100%)}
+.chat-head{display:flex; align-items:center; gap:.5cqw; padding:1cqh 1cqh; border-bottom:.12cqh solid var(--hairline);
+  font-family:var(--font-mono); font-size:1.4cqh; letter-spacing:.1em; color:var(--ink-2)}
+.chat-head .live{display:inline-flex; align-items:center; gap:.4cqw; color:var(--danger); font-weight:600}
+.chat-head .live .d{width:1.1cqh; height:1.1cqh; border-radius:50%; background:var(--danger); animation:breathe 1.6s infinite}
+.chat-head .vcount{margin-left:auto; color:var(--ink-2)}
+.chat-head .collapse{color:var(--ink-2); font-size:1.8cqh; line-height:1; padding:0 .3cqw}
+.chat-head .collapse:hover{color:var(--accent)}
+.chat-msgs{flex:1; overflow-y:auto; padding:.8cqh 1cqh; display:flex; flex-direction:column; gap:.7cqh; font-size:1.45cqh; line-height:1.3}
+.chat-msgs::-webkit-scrollbar{width:.5cqw} .chat-msgs::-webkit-scrollbar-thumb{background:var(--surface-3); border-radius:1cqw}
+.cmsg{word-wrap:break-word}
+.cmsg .u{font-weight:600; margin-right:.4cqw}
+.cmsg.system{color:var(--ink-2); font-family:var(--font-mono); font-size:1.25cqh; border-left:.2cqh solid var(--hairline); padding-left:.6cqw}
+.cmsg.system .s{color:var(--accent)}
+.cmsg.goblin .u{color:#9ad07a}
+.cmsg.you .u{color:var(--accent)}
+.cmsg.viewer .u{color:#7fb0e8}
+.cmsg.hype{color:var(--accent); font-weight:600}
+.chat-input{display:flex; gap:.5cqw; padding:.8cqh 1cqh; border-top:.12cqh solid var(--hairline)}
+.chat-input input{flex:1; min-width:0; background:var(--surface-2); border:.1cqh solid var(--hairline); border-radius:.6cqh;
+  color:var(--ink-1); padding:.5cqh .7cqh; font-size:1.4cqh; outline:none}
+.chat-input input:focus{border-color:var(--seat-a)}
+.chat-input .send{flex:0 0 auto; background:var(--seat-a); color:var(--ink-on); border-radius:.6cqh; padding:.5cqh 1cqh; font-size:1.4cqh; font-weight:600}
+.chat-tab{position:absolute; right:1cqw; top:1.4cqh; z-index:21; background:rgba(20,22,28,.92); border:.1cqh solid var(--hairline);
+  border-radius:2cqh; padding:.5cqh 1cqh; font-size:1.4cqh; color:var(--ink-1); display:none; align-items:center; gap:.5cqw}
+.stage:not(.chat-open) .chat-tab{display:flex}
+.chat-tab:hover{border-color:var(--accent); color:var(--accent)}
+
+/* ─────────────────── CONTROLS / SETTINGS (auto-hide) ────────────────── */
+.controls{position:absolute; top:1.2cqh; right:calc(var(--chatW) + 1.4cqw); z-index:30; display:flex; gap:.5cqw;
+  transition:opacity .4s, transform .4s}
+.stage:not(.chat-open) .controls{right:1.4cqw}
+.controls.hidden{opacity:0; transform:translateY(-1cqh); pointer-events:none}
+.cbtn{width:3.2cqh; height:3.2cqh; border-radius:.6cqh; background:rgba(20,22,28,.92); border:.1cqh solid var(--hairline);
+  display:flex; align-items:center; justify-content:center; font-size:1.7cqh; color:var(--ink-1)}
+.cbtn:hover{border-color:var(--accent); color:var(--accent)}
+.cbtn.on{background:var(--accent); color:var(--ink-on); border-color:var(--accent)}
+.live-badge{position:absolute; top:1.2cqh; left:1.4cqw; z-index:30; display:flex; align-items:center; gap:.5cqw;
+  font-family:var(--font-mono); font-size:1.4cqh; color:var(--ink-1); background:rgba(20,22,28,.6); padding:.3cqh .8cqh; border-radius:2cqh;
+  transition:opacity .4s, left .3s}
+.stage.agent-open .live-badge{left:calc(var(--agentW) + 1.4cqw)}
+.live-badge .d{width:1.2cqh; height:1.2cqh; border-radius:50%; background:var(--danger); animation:breathe 1.6s infinite}
+.controls.hidden ~ .live-badge{opacity:.25}
+
+.settings{position:absolute; top:5.2cqh; right:calc(var(--chatW) + 1.4cqw); z-index:31; width:24cqw;
+  background:rgba(16,18,24,.97); border:.12cqh solid var(--hairline); border-radius:1cqh; padding:1.2cqh 1.4cqw;
+  display:none; flex-direction:column; gap:1cqh; box-shadow:0 1.4cqh 4cqh rgba(0,0,0,.6)}
+.stage:not(.chat-open) .settings{right:1.4cqw}
+.settings.show{display:flex}
+.settings h4{font-size:1.5cqh; font-weight:600; color:var(--ink-1)}
+.set-row{display:flex; align-items:center; justify-content:space-between; gap:1cqw; font-size:1.4cqh; color:var(--ink-2)}
+.set-row select{font-family:var(--font-mono); font-size:1.3cqh; background:var(--surface-2); color:var(--ink-1);
+  border:.1cqh solid var(--hairline); border-radius:.5cqh; padding:.2cqh .5cqh}
+.toggle{width:5cqh; height:2.6cqh; border-radius:2cqh; background:var(--surface-3); position:relative; transition:background .2s; flex:0 0 auto}
+.toggle::after{content:""; position:absolute; top:.3cqh; left:.3cqh; width:2cqh; height:2cqh; border-radius:50%; background:var(--ink-2); transition:.2s}
+.toggle.on{background:var(--accent)} .toggle.on::after{left:2.7cqh; background:var(--ink-on)}
+.settings .note{font-size:1.15cqh; color:#5d6b7a; line-height:1.4}
+
+/* ── interactive easter-egg props (kept: support goblin + server-cat) ── */
+.poke{position:absolute; z-index:12; cursor:pointer}
+.poke::before{content:""; position:absolute; inset:-.5cqh; border:.1cqh dashed transparent; border-radius:.8cqh; transition:border-color .2s}
+.poke:hover::before{border-color:var(--advisory)}
+.poke .finger{position:absolute; top:-1cqh; right:-1cqh; font-size:1.4cqh; opacity:0; transition:opacity .2s}
+.poke:hover .finger{opacity:.85}
+.stage.annotate .poke::before{border-color:var(--advisory)}
+
+/* ── inspect / toast / lore / victor ── */
+.inspect{position:absolute; z-index:42; width:18cqw; background:var(--surface-3); border:.12cqh solid var(--seat,#888);
+  border-radius:.8cqh; padding:1cqh 1cqw; box-shadow:0 1.4cqh 4cqh rgba(0,0,0,.7); display:none; flex-direction:column; gap:.5cqh; pointer-events:none}
+.inspect.show{display:flex}
+.inspect .it-top{display:flex; justify-content:space-between; align-items:baseline}
+.inspect .it-name{font-weight:600; font-size:1.8cqh}
+.inspect .it-cost{font-family:var(--font-mono); color:var(--accent); font-size:1.6cqh}
+.inspect .it-type{font-family:var(--font-mono); font-size:1.2cqh; letter-spacing:.08em; color:var(--ink-2)}
+.inspect .it-text{font-size:1.45cqh; line-height:1.45}
+.inspect .it-kw{display:flex; flex-wrap:wrap; gap:.4cqh}
+.inspect .it-kw span{font-family:var(--font-mono); font-size:1.15cqh; background:var(--surface-1); border-radius:.3cqh; padding:.1cqh .5cqh; color:var(--ink-2)}
+
+.toasts{position:absolute; left:calc(50% - var(--chatW)/2); bottom:24%; transform:translateX(-50%); z-index:40;
+  display:flex; flex-direction:column; gap:.5cqh; align-items:center; pointer-events:none}
+.stage:not(.chat-open) .toasts{left:50%}
+.toast{background:var(--surface-3); border:.1cqh solid var(--accent); border-radius:2cqh; padding:.6cqh 1.4cqw; font-size:1.6cqh;
+  box-shadow:0 .8cqh 2cqh rgba(0,0,0,.5); animation:toastin .35s, toastout .35s 2.4s forwards; display:flex; gap:.6cqw; align-items:center}
+@keyframes toastin{from{opacity:0;transform:translateY(1cqh)}to{opacity:1}}
+@keyframes toastout{to{opacity:0;transform:translateY(-1cqh)}}
+
+.lore-pop{position:absolute; z-index:41; width:22cqw; background:var(--surface-3); border:.12cqh solid var(--hairline);
+  border-radius:.8cqh; padding:1.2cqh 1.2cqw; box-shadow:0 1.4cqh 4cqh rgba(0,0,0,.6); display:none; flex-direction:column; gap:.6cqh}
+.lore-pop.show{display:flex}
+.lore-pop h4{font-size:1.8cqh; font-weight:600}
+.lore-pop .ll{font-size:1.4cqh; color:var(--ink-2); line-height:1.45}
+.lore-pop .lk{font-family:var(--font-mono); font-size:1.25cqh; color:var(--accent)}
+
+.victor{position:absolute; inset:0; z-index:45; display:none; align-items:center; justify-content:center;
+  background:radial-gradient(60% 60% at 50% 50%, color-mix(in srgb,var(--seat) 22%, rgba(7,7,10,.88)), rgba(7,7,10,.95))}
+.victor.show{display:flex}
+.victor .vc{text-align:center; display:flex; flex-direction:column; gap:1cqh; align-items:center}
+.victor .vk{font-family:var(--font-mono); letter-spacing:.3em; color:var(--accent); font-size:1.6cqh}
+.victor .vt{font-size:5cqh; font-weight:600; color:color-mix(in srgb,var(--seat) 80%, var(--ink-1))}
+.victor .vs{font-size:1.8cqh; color:var(--ink-2)}
+.victor .vnext{font-family:var(--font-mono); font-size:1.4cqh; color:var(--ink-2); margin-top:1cqh}
+
+@media (prefers-reduced-motion: reduce){*{animation-duration:.001ms!important;transition-duration:.05ms!important}}
+</style>
+</head>
+<body>
+<div class="stage chat-open agent-open" id="stage" data-active="A">
+
+  <!-- deepest: scene background -->
+  <div class="ph" data-ph="ph-scene-bg" style="position:absolute;inset:0;z-index:0;border:none;border-radius:0;
+     background:radial-gradient(120% 90% at 50% 0%, #0e1018, #08090d 75%)">
+    <span class="ph-lbl" style="top:.6cqh;bottom:auto">ph-scene-bg · darkened arena (keep center low-detail)</span>
+  </div>
+
+  <!-- LIVE badge -->
+  <div class="live-badge" id="liveBadge"><span class="d"></span> LIVE</div>
+
+  <!-- ════════════════════════ GAME LAYER ════════════════════════ -->
+  <div class="game">
+
+    <!-- PLAYER 2 hero (top) -->
+    <div class="hero seatB top" id="heroB">
+      <div class="portrait-wrap">
+        <div class="ph portrait" data-ph="ph-ceo-portrait-large"><span class="ph-ico">☗</span><span class="ph-lbl">CEO portrait</span></div>
+        <svg class="hero-ring" viewBox="0 0 100 100"><circle class="trk" cx="50" cy="50" r="45"/><circle class="prg" id="ringB" cx="50" cy="50" r="45"/></svg>
+        <span class="think-dot"></span>
+        <span class="secs" id="secsB">6</span>
+      </div>
+      <div class="hero-info">
+        <div class="hero-name" id="nameB">Player 2</div>
+        <div class="hero-sub"><span class="ph flogo" data-ph="ph-faction-logo"><span class="ph-ico" style="font-size:1em">◈</span></span>
+          <span class="company" id="companyB">Anthrabbit</span> <span class="tier" id="tierB">Strong · Sonnet</span></div>
+        <div class="vitals">
+          <span class="vital hp"><span class="vi">♥</span><b id="valB">22</b></span>
+          <span class="vital cmp"><span class="vi">◆</span><b id="cmpB">2/2</b></span>
+          <span class="vital"><span class="vi">✋</span><b id="handCB">4</b></span>
+          <span class="vital"><span class="vi">▤</span><b id="deckCB">16</b></span>
+          <span class="armor" id="armB"></span>
+        </div>
+      </div>
+      <!-- open hand (Telemetry) lives in the hero band -->
+      <div class="hand-in-hero" id="handB"></div>
+      <!-- founder move = hero skill slot (temp/placeholder box) -->
+      <div class="founder-box ph" data-ph="ph-founder-move" title="Founder Move — hero skill · 2 Compute, once per turn">
+        <span class="fb-tag">HERO SKILL · temp</span>
+        <div class="fb-ring"><span>✦</span></div>
+        <div class="fb-name" id="fmB">Realign</div>
+        <div class="fb-cost">2 ◆</div>
+      </div>
+    </div>
+
+    <!-- BATTLE: left art · center cards · right art -->
+    <div class="battle">
+
+    <!-- LEFT background-art rectangle -->
+    <div class="ph art-side left" data-ph="ph-arena-left">
+      <span class="a-ico">🖼</span>
+      <span class="a-cap">BACKGROUND<br>ART</span>
+      <span class="ph-lbl">ph-arena-left · scene / faction monolith / crowd</span>
+      <div class="poke art-prop" id="servercat" title="Pet the server-cat">
+        <div class="ph" data-ph="ph-prop-servercat" style="width:4cqh;height:3cqh"><span class="ph-ico" id="catFace">🐈</span></div>
+        <span class="finger">👆</span>
+      </div>
+    </div>
+
+    <div class="battle-center">
+    <!-- PLAYER 2 board -->
+    <div class="boardrow" id="boardB"></div>
+
+    <!-- center lane -->
+    <div class="centerlane">
+      <span class="meta-pill" title="Scaling Laws — public Compute-spent counter">
+        <span class="ph mi" data-ph="ph-scaling-laws-counter" style="background:none;border:none"><span class="ph-ico">▲</span></span>Scaling <b id="scaling">1</b></span>
+      <span class="turnpill" id="turnpill">Turn 1</span>
+      <div class="os-frame" id="osFrame">
+        <span class="os-tag">OPEN SOURCE · either side may Benchmark</span>
+        <div id="sharedZone" style="display:flex; gap:.5cqw"></div>
+      </div>
+      <span class="meta-pill" title="Model Collapse — fatigue / Burnout clock">
+        <span class="ph mi" data-ph="ph-model-collapse-clock" style="background:none;border:none"><span class="ph-ico">⧗</span></span>Collapse <b id="collapse">—</b></span>
+    </div>
+
+    <!-- PLAYER 1 board -->
+    <div class="boardrow" id="boardA"></div>
+    </div><!-- /battle-center -->
+
+    <!-- RIGHT background-art rectangle -->
+    <div class="ph art-side right" data-ph="ph-arena-right">
+      <span class="a-ico">🖼</span>
+      <span class="a-cap">BACKGROUND<br>ART</span>
+      <span class="ph-lbl">ph-arena-right · scene / faction monolith / crowd</span>
+      <div class="poke art-prop" id="bell" title="Ring for support">
+        <div class="ph" data-ph="ph-prop-supportbell" style="width:3.6cqh;height:3.2cqh"><span class="ph-ico" id="bellFace">🛎</span></div>
+        <span class="finger">👆</span>
+      </div>
+    </div>
+
+    </div><!-- /battle -->
+
+    <!-- PLAYER 1 hero (bottom) -->
+    <div class="hero seatA bottom" id="heroA">
+      <div class="portrait-wrap">
+        <div class="ph portrait" data-ph="ph-ceo-portrait-large"><span class="ph-ico">☗</span><span class="ph-lbl">CEO portrait</span></div>
+        <svg class="hero-ring" viewBox="0 0 100 100"><circle class="trk" cx="50" cy="50" r="45"/><circle class="prg" id="ringA" cx="50" cy="50" r="45"/></svg>
+        <span class="think-dot"></span>
+        <span class="secs" id="secsA">6</span>
+      </div>
+      <div class="hero-info">
+        <div class="hero-name" id="nameA">Player 1</div>
+        <div class="hero-sub"><span class="ph flogo" data-ph="ph-faction-logo"><span class="ph-ico" style="font-size:1em">◈</span></span>
+          <span class="company" id="companyA">ClosedAI</span> <span class="tier" id="tierA">BYOA · local</span></div>
+        <div class="vitals">
+          <span class="vital hp"><span class="vi">♥</span><b id="valA">22</b></span>
+          <span class="vital cmp"><span class="vi">◆</span><b id="cmpA">1/1</b></span>
+          <span class="vital"><span class="vi">✋</span><b id="handCA">3</b></span>
+          <span class="vital"><span class="vi">▤</span><b id="deckCA">15</b></span>
+          <span class="armor" id="armA"></span>
+        </div>
+      </div>
+      <!-- open hand (Telemetry) lives in the hero band -->
+      <div class="hand-in-hero" id="handA"></div>
+      <!-- founder move = hero skill slot (temp/placeholder box) -->
+      <div class="founder-box ph" data-ph="ph-founder-move" title="Founder Move — hero skill · 2 Compute, once per turn">
+        <span class="fb-tag">HERO SKILL · temp</span>
+        <div class="fb-ring"><span>✦</span></div>
+        <div class="fb-name" id="fmA">Hype Ping</div>
+        <div class="fb-cost">2 ◆</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════ AGENT REASONING (left) ════════════════════ -->
+  <div class="agent" id="agent">
+    <div class="agent-head"><span class="a-dot"></span><span class="who" id="agWho">Player 1</span>&nbsp;· thinking
+      <span class="a-timer" id="agSecs">0:06</span>
+      <button class="collapse" id="agentCollapse" title="Collapse agent panel">⟨</button></div>
+    <div class="agent-body">
+      <div class="ag-eyebrow" id="agEyebrow">AGENT REASONING</div>
+      <div class="ag-rationale" id="agQuote"></div>
+      <div class="ag-eyebrow">CANDIDATE ACTIONS · legalActions</div>
+      <div class="ag-cands" id="agCands"></div>
+    </div>
+    <div class="agent-foot" id="agModel">claude-opus-4-8 · one-shot submit_turn</div>
+  </div>
+  <button class="agent-tab" id="agentTab">🧠 Agent reasoning</button>
+
+  <!-- ════════════════════════ LIVE CHAT ════════════════════════ -->
+  <div class="chat" id="chat">
+    <div class="chat-head"><span class="live"><span class="d"></span>LIVE</span> CHAT
+      <span class="vcount" id="vcount">1,248 watching</span>
+      <button class="collapse" id="chatCollapse" title="Collapse chat">⟩</button></div>
+    <div class="chat-msgs" id="chatMsgs"></div>
+    <div class="chat-input">
+      <input id="chatInput" maxlength="140" placeholder="Send a message…" />
+      <button class="send" id="chatSend">Send</button>
+    </div>
+  </div>
+  <button class="chat-tab" id="chatTab">💬 Live chat</button>
+
+  <!-- controls (auto-hide) + settings -->
+  <div class="controls" id="controls">
+    <button class="cbtn" id="btnSettings" title="Settings / options">⚙</button>
+  </div>
+  <div class="settings" id="settings">
+    <h4>Options</h4>
+    <div class="set-row">Show art slots <span class="toggle" id="tgAnnotate" data-k="annotate"></span></div>
+    <div class="set-row">Ambient chat <span class="toggle on" id="tgAmbient" data-k="ambient"></span></div>
+    <div class="set-row">Matchup (demo)
+      <span style="display:flex;gap:.4cqw"><select id="selA"></select><select id="selB"></select></span></div>
+    <div class="set-row">Agent · P1
+      <select id="agentA"><option value="script">Script · 5s</option><option value="live">Live · 60s</option></select></div>
+    <div class="set-row">Agent · P2
+      <select id="agentB"><option value="script">Script · 5s</option><option value="live">Live · 60s</option></select></div>
+    <div class="note">View-only live stream — no playback controls. Each turn consumes its <b>full</b> timer (5s script / 60s live) with no early skip. This panel auto-hides; move the pointer or type to bring it back.</div>
+  </div>
+
+  <div class="inspect" id="inspect"></div>
+  <div class="tip" id="tip"></div>
+  <div class="lore-pop" id="lorePop"></div>
+  <div class="toasts" id="toasts"></div>
+
+  <!-- end-of-match victor -->
+  <div class="victor seatA" id="victor">
+    <div class="vc">
+      <span class="vk">SHUTDOWN · ACQUI-HIRED</span>
+      <span class="vt" id="victorName">Player 1 wins</span>
+      <span class="vs" id="victorReason">by lethal · Turn 9</span>
+      <span class="vnext" id="victorNext">next match starting…</span>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════ CARD DATABASE ════════════════════════════ */
+const CARDS = {
+  "Demo-Day Intern":{t:"Model",cost:1,a:2,h:1,kw:["Ship It"],x:"On Deploy: give this +Hype 1 if you control another Model."},
+  "Hype-4 Omni":{t:"Model",cost:2,a:3,h:2,kw:["On Deploy"],x:"On Deploy: deal 1 to the enemy CEO, then give this Hype 1."},
+  "Closed Beta Brigade":{t:"Model",cost:2,a:2,h:2,kw:["Ship It","Stealth Mode"],x:"When it deals combat damage to the enemy CEO, deal 1 more."},
+  "Series-F Frenzy":{t:"Model",cost:3,a:3,h:3,kw:["On Deploy"],x:"On Deploy: give ALL other friendly Models Hype 1."},
+  "Vaporware Teaser":{t:"Op",cost:1,a:null,h:null,kw:["Announce"],x:"Give a friendly Model Hype 2. If you've spent 6+ total Compute (Scaling Laws), Hype 3 instead."},
+  "Founder Mode Sam":{t:"Model",cost:5,a:4,h:4,kw:["On Deploy","Launch Day"],x:"On Deploy: X = your Announce casts (max 3). Give every friendly Model Hype X and deal X to the enemy CEO."},
+  "Total Addressable Market":{t:"Op",cost:6,a:null,h:null,kw:[],x:"Deal damage to the enemy CEO equal to the total Performance of all your Models. Cannot be prevented or healed."},
+  "Pivot to Hardware":{t:"Launch",cost:3,a:3,h:null,kw:[],x:"Equip your CEO with a 3-Performance Launch (2 charges). On Deploy: give a friendly Model Hype 1."},
+  "Paperclip Auditor":{t:"Model",cost:1,a:1,h:3,kw:["Guardrail"],x:"A clean wall to blunt turns 1–2."},
+  "Red-Team Rabbit":{t:"Model",cost:2,a:2,h:2,kw:["On Deploy"],x:"On Deploy: gain 2 Safety Margin."},
+  "Alignment Researcher":{t:"Model",cost:3,a:2,h:4,kw:["Guardrail","On Deploy"],x:"On Deploy: restore 3 Valuation (overflow → Safety Margin)."},
+  "Constitutional Clause":{t:"Op",cost:2,a:null,h:null,kw:[],x:"Deal 3 to a Model. If its Performance ≥ 4, also gain 3 Safety Margin."},
+  "Failover Cluster":{t:"Model",cost:4,a:3,h:4,kw:["Guardrail","Failover"],x:"A resilient mid-game wall."},
+  "Rapid Rollback":{t:"Op",cost:4,a:null,h:null,kw:[],x:"Restore 6 Valuation (overflow → Safety Margin). If you control a Guardrail Model, gain 2 Safety Margin."},
+  "The Long-Horizon Plan":{t:"Op",cost:6,a:null,h:null,kw:["Scaling Laws"],x:"Deal 2 + 1 per 10 total Compute spent to ALL enemy Models, and gain that much Safety Margin."},
+  "Claudius the Considerate":{t:"Model",cost:8,a:6,h:8,kw:["Guardrail","Monetize","On Deploy"],x:"On Deploy: restore Valuation equal to your current Safety Margin (cap 8)."}
+};
+const KW_GLOSS = {
+  "Guardrail":"Taunt — enemy Benchmarks must hit a Guardrail first.","Ship It":"Rush — can attack enemy Models the turn it deploys.",
+  "Launch Day":"Charge — can attack anything immediately.","Failover":"Divine Shield — prevents the first hit.",
+  "On Deploy":"Battlecry — fires when played.","On Sunset":"Deathrattle — fires when destroyed.",
+  "Monetize":"Lifesteal.","Overclock":"Spell Damage +1.","Stealth Mode":"Stealth.","Parallelize":"Windfury.","Announce":"Grants Hype."
+};
+const FACTIONS = {
+  closedai:{name:"ClosedAI",color:"var(--f-closedai)",deep:"var(--f-closedai-deep)",fm:"Hype Ping",
+    lore:["ClosedAI — ships first, aligns never.","Aggro / Hype tempo: cheap all-Performance bodies, stack Hype, burn the CEO."],kwh:"Hype N = permanent +N Performance."},
+  anthrabbit:{name:"Anthrabbit",color:"var(--f-anthrabbit)",deep:"var(--f-anthrabbit-deep)",fm:"Realign",
+    lore:["Anthrabbit — measure twice, deploy never.","Control / Safety: Guardrail walls + heal + Safety Margin armor."],kwh:"Safety Margin = armor before Valuation."},
+  googlitch:{name:"Googlitch",color:"var(--f-googlitch)",deep:"var(--f-googlitch-deep)",fm:"Index & Scry",
+    lore:["Googlitch — now with 9 messaging apps.","Ramp / value: ramp Compute, draw, slam frontier Titans."],kwh:"Glitch = public coin downside."},
+  shallowseek:{name:"ShallowSeek",color:"var(--f-shallowseek)",deep:"var(--f-shallowseek-deep)",fm:"Spin Up",
+    lore:["ShallowSeek — trained on a budget, wins on a vibe.","Swarm / efficiency: cheap Models, free Tokens, wide burst."],kwh:"Quantize = hand-wide −1 cost."}
+};
+const PLAYERS = {A:"Player 1", B:"Player 2"};
+/* hero-skill (Founder Move) text per faction — shown on hover */
+const FOUNDER_MOVES = {
+  closedai:{name:"Hype Ping",cost:2,text:"Deal 1 damage to any target (a Model or the enemy CEO). If it kills a Model or hits the enemy CEO, give a friendly Model Hype 1 (+1 Performance)."},
+  anthrabbit:{name:"Realign",cost:2,text:"Restore 2 Valuation. If already at 22, gain 2 Safety Margin (armor) instead."},
+  googlitch:{name:"Index & Scry",cost:2,text:"Look at the top 2 cards of your Roadmap; draw one and bottom the other."},
+  shallowseek:{name:"Spin Up",cost:2,text:"Gain +1 temporary Compute this turn."}
+};
+/* tool descriptions for the detailed action breakdown on hover */
+const TOOL_INFO = {
+  play_card:{label:"Play card",desc:"Deploy a Model or cast an Op from hand."},
+  use_hero_power:{label:"Founder Move",desc:"Use the CEO's hero skill (once per turn, 2 Compute)."},
+  attack:{label:"Benchmark",desc:"Declare an attack: deal Performance to a target, and take its Performance back if it's a Model."},
+  end_turn:{label:"End turn",desc:"Stop acting and pass the turn to the opponent."},
+  concede:{label:"Concede",desc:"Forfeit the match."}
+};
+/* Turn timer is ALWAYS consumed in full (no early skip). Duration by agent type. */
+const AGENT_TIMES = { script:5, live:60 };            // seconds
+let seatAgent = { A:"script", B:"live" };             // P1 script bot (5s), P2 live-prompt agent (60s)
+const TIER_LABEL = { script:"Script bot · 5s", live:"Live prompt · 60s" };
+function updateTiers(){ ["A","B"].forEach(s=>{ const e=document.getElementById("tier"+s);
+  if(e){ e.classList.remove("fallback"); e.textContent=TIER_LABEL[seatAgent[s]]; } }); }
+
+/* ════════════════════════════ MOCK MATCH ═══════════════════════════════ */
+const M = (name,a,h,...f)=>({name,a,h,kw:CARDS[name]?CARDS[name].kw:[],
+  sick:f.includes("sick"),shield:f.includes("shield"),stealth:f.includes("stealth"),hurt:f.includes("hurt")});
+const side=(val,arm,maxC,hand,deck,board)=>({val,arm,maxC,hand,deck,board});
+const la=(id,tool,cost,lbl,chosen=false)=>({id,tool,cost,lbl,chosen});
+
+const REPLAY = {
+ seed:9001, aKey:"closedai", bKey:"anthrabbit", result:{winner:"A",reason:"lethal",turn:9},
+ turns:[
+  { n:1, seat:"A", think:6, scaling:1, collapse:"—", big:false, lethal:false, timeout:false,
+    rationale:"Open on tempo — drop the cheapest body and let Compute curve. Nothing of theirs to answer yet, so I keep the gas in hand.",
+    actions:["Deploy Demo-Day Intern (2/1, Ship It)"],
+    legal:[la("a1","play_card",1,"Deploy Demo-Day Intern",true),la("a2","use_hero_power",2,"Founder Move: Hype Ping → CEO"),la("end","end_turn",0,"End turn",true)],
+    A:side(22,0,1,["Hype-4 Omni","Series-F Frenzy","Vaporware Teaser"],15,[M("Demo-Day Intern",2,1,"sick")]),
+    B:side(22,0,0,["Paperclip Auditor","Red-Team Rabbit","Alignment Researcher","Constitutional Clause"],16,[]) },
+  { n:2, seat:"B", think:9, scaling:3, collapse:"—", big:false, lethal:false, timeout:false,
+    rationale:"They're going wide and low. Plant a Guardrail wall now so their Ship It bodies trade into it instead of my Valuation.",
+    actions:["Play Paperclip Auditor (1/3, Guardrail)"],
+    legal:[la("a1","play_card",1,"Play Paperclip Auditor (Guardrail)",true),la("a2","play_card",2,"Play Red-Team Rabbit"),la("a3","use_hero_power",2,"Founder Move: Realign"),la("end","end_turn",0,"End turn",true)],
+    A:side(22,0,1,["Hype-4 Omni","Series-F Frenzy","Vaporware Teaser"],15,[M("Demo-Day Intern",2,1)]),
+    B:side(22,0,2,["Red-Team Rabbit","Alignment Researcher","Constitutional Clause"],15,[M("Paperclip Auditor",1,3,"sick")]) },
+  { n:3, seat:"A", think:5, scaling:6, collapse:"—", big:true, lethal:false, timeout:false,
+    rationale:"Their wall blocks combat, not damage I send upstairs. Ping their CEO to bank Hype, then Omni adds a body and another point to the face.",
+    actions:["Founder Move: Hype Ping → Player 2 CEO (22→21)","Deploy Hype-4 Omni (On Deploy: 1 → CEO 21→20; self-Hype → 4/2)"],
+    legal:[la("a1","use_hero_power",2,"Hype Ping → enemy CEO",true),la("a2","play_card",2,"Deploy Hype-4 Omni",true),la("a3","play_card",3,"Deploy Series-F Frenzy"),la("a4","attack",0,"Intern → Paperclip Auditor"),la("end","end_turn",0,"End turn",true)],
+    A:side(22,0,3,["Series-F Frenzy","Vaporware Teaser"],14,[M("Demo-Day Intern",3,1),M("Hype-4 Omni",4,2,"sick")]),
+    B:side(20,0,2,["Red-Team Rabbit","Alignment Researcher","Constitutional Clause"],15,[M("Paperclip Auditor",1,3)]) },
+  { n:4, seat:"B", think:11, scaling:9, collapse:"—", big:false, lethal:false, timeout:false,
+    rationale:"The Omni is the snowball — Constitutional Clause clears it before its Hype compounds, and Realign claws back the chip damage.",
+    actions:["Op: Constitutional Clause → Hype-4 Omni (3 dmg, destroyed)","Founder Move: Realign (Valuation 20→22)"],
+    legal:[la("a1","play_card",2,"Constitutional Clause → Hype-4 Omni",true),la("a2","play_card",2,"Constitutional Clause → Demo-Day Intern"),la("a3","play_card",3,"Deploy Alignment Researcher"),la("a4","use_hero_power",2,"Founder Move: Realign",true),la("end","end_turn",0,"End turn",true)],
+    A:side(22,0,3,["Series-F Frenzy","Vaporware Teaser"],14,[M("Demo-Day Intern",3,1)]),
+    B:side(22,0,4,["Red-Team Rabbit","Alignment Researcher"],13,[M("Paperclip Auditor",1,3)]) },
+  { n:5, seat:"A", think:6, scaling:12, collapse:"—", big:false, lethal:false, timeout:false,
+    rationale:"They spent a whole turn answering one body. I reload wide so the next buff hits more targets — Vaporware pumps the Intern, Frenzy lifts the team.",
+    actions:["Op: Vaporware Teaser → Demo-Day Intern (Hype 2 → 5/1)","Deploy Series-F Frenzy (On Deploy: +Hype 1 to all → Intern 6/1)"],
+    legal:[la("a1","play_card",1,"Vaporware Teaser → Demo-Day Intern",true),la("a2","play_card",3,"Deploy Series-F Frenzy",true),la("a3","attack",0,"Intern → Paperclip Auditor"),la("end","end_turn",0,"End turn",true)],
+    A:side(22,0,5,[],12,[M("Demo-Day Intern",6,1),M("Series-F Frenzy",3,3,"sick")]),
+    B:side(22,0,4,["Red-Team Rabbit","Alignment Researcher"],13,[M("Paperclip Auditor",1,3)]) },
+  { n:6, seat:"B", think:10, scaling:14, collapse:"—", big:false, lethal:false, timeout:false,
+    rationale:"A 6-Performance Intern is a clock I can't race. Stack a second Guardrail and bank Safety Margin — make every point cost them setup.",
+    actions:["Deploy Alignment Researcher (2/4, Guardrail; heal 3 → +3 Safety Margin)","Deploy Red-Team Rabbit (2/2; +2 Safety Margin)"],
+    legal:[la("a1","play_card",3,"Deploy Alignment Researcher (Guardrail)",true),la("a2","play_card",2,"Deploy Red-Team Rabbit",true),la("a3","use_hero_power",2,"Founder Move: Realign"),la("end","end_turn",0,"End turn",true)],
+    A:side(22,0,5,[],12,[M("Demo-Day Intern",6,1),M("Series-F Frenzy",3,3)]),
+    B:side(22,5,6,[],11,[M("Paperclip Auditor",1,3),M("Alignment Researcher",2,4,"sick"),M("Red-Team Rabbit",2,2,"sick")]) },
+  { n:7, seat:"A", think:7, scaling:18, collapse:"—", big:true, lethal:false, timeout:false,
+    rationale:"Two walls and armor — I can't punch through by combat. So I stop trying. Sam lands, Hypes the whole board, and I draw toward reach that ignores Guardrails.",
+    actions:["Deploy Founder Mode Sam (4/4, Launch Day; X=2 → +Hype 2 to all, 2 → CEO)","Result: Intern 8/1, Series-F 5/3, Sam 6/4 · Safety Margin 5→3"],
+    legal:[la("a1","play_card",5,"Deploy Founder Mode Sam",true),la("a2","use_hero_power",2,"Hype Ping → enemy CEO"),la("a3","attack",0,"Intern → Alignment Researcher"),la("end","end_turn",0,"End turn",true)],
+    A:side(22,0,7,["Total Addressable Market"],9,[M("Demo-Day Intern",8,1),M("Series-F Frenzy",5,3),M("Founder Mode Sam",6,4,"sick")]),
+    B:side(22,3,6,[],11,[M("Paperclip Auditor",1,3),M("Alignment Researcher",2,4),M("Red-Team Rabbit",2,2)]) },
+  { n:8, seat:"B", think:14, scaling:20, collapse:"—", big:false, lethal:false, timeout:true,
+    rationale:"(local agent — BYOA — didn't respond before the deadline; the fallback bot played a safe line.)",
+    actions:["⏱ Technical timeout — fallback bot stepped in","Founder Move: Realign → Safety Margin 3→4"],
+    legal:[la("a1","use_hero_power",2,"Founder Move: Realign",true),la("a2","play_card",6,"The Long-Horizon Plan (sweep)"),la("end","end_turn",0,"End turn",true)],
+    A:side(22,0,7,["Total Addressable Market"],9,[M("Demo-Day Intern",8,1),M("Series-F Frenzy",5,3),M("Founder Mode Sam",6,4)]),
+    B:side(22,4,8,[],11,[M("Paperclip Auditor",1,3),M("Alignment Researcher",2,4),M("Red-Team Rabbit",2,2)]) },
+  { n:9, seat:"A", think:8, scaling:24, collapse:"T-3", big:true, lethal:true, timeout:false,
+    rationale:"Total board Performance is 27. Total Addressable Market sends every point straight to their Valuation — it ignores both Guardrails and can't be prevented. Through 4 Safety Margin and 22 Valuation, that is exactly lethal.",
+    actions:["Hype Ping (bank board Performance → 27)","Op: Total Addressable Market → 27 to Player 2 CEO","Lethal — ignores Guardrail, cannot be prevented. Shutdown."],
+    legal:[la("a1","use_hero_power",2,"Hype Ping (bank Performance)",true),la("a2","play_card",6,"Total Addressable Market → enemy CEO",true),la("a3","attack",0,"Sam (Launch Day) → enemy CEO"),la("end","end_turn",0,"End turn")],
+    A:side(22,0,8,[],8,[M("Demo-Day Intern",9,1),M("Series-F Frenzy",8,3),M("Founder Mode Sam",10,4)]),
+    B:side(0,0,8,[],11,[M("Paperclip Auditor",1,3),M("Alignment Researcher",2,4),M("Red-Team Rabbit",2,2)]) }
+ ]
+};
+
+/* ════════════════════════════ STATE / ENGINE ═══════════════════════════ */
+const $=id=>document.getElementById(id);
+const stage=$("stage");
+let idx=0, gen=0, seatFaction={A:"closedai",B:"anthrabbit"}, ambient=true, running=false;
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function bump(){ gen++; return gen; }
+function sleep(ms){ const g=gen; return new Promise((res,rej)=>setTimeout(()=>g===gen?res():rej("x"),ms)); }
+const prevState=i=> i>0?REPLAY.turns[i-1]:{...REPLAY.turns[0], A:{...REPLAY.turns[0].A,board:[],hand:["—","—","—"]}, B:{...REPLAY.turns[0].B}};
+
+/* ── faction theming ── */
+function applyFactions(){
+  const fa=FACTIONS[seatFaction.A], fb=FACTIONS[seatFaction.B];
+  stage.style.setProperty("--seat-a",fa.color); stage.style.setProperty("--seat-a-deep",fa.deep);
+  stage.style.setProperty("--seat-b",fb.color); stage.style.setProperty("--seat-b-deep",fb.deep);
+  $("companyA").textContent=fa.name; $("companyB").textContent=fb.name;
+  $("fmA").textContent=fa.fm; $("fmB").textContent=fb.fm;
+  $("nameA").textContent=PLAYERS.A; $("nameB").textContent=PLAYERS.B;
+  updateTiers();
+}
+
+/* ── card elements ── */
+function bcardEl(m, seatClass){
+  const d=document.createElement("div");
+  d.className="bcard "+seatClass+(m.sick?" sick":" ready")+(m.shield?" shield":"")+(m.stealth?" stealth":"")+((m.kw||[]).includes("Guardrail")?" guardrail":"");
+  d.innerHTML=`<div class="ph art" data-ph="ph-card-art-model"><span class="ph-ico">▤</span><span class="ph-lbl">art</span></div>
+    <div class="nm">${esc(m.name)}</div>
+    <div class="kw">${(m.kw||[]).map(k=>`<span>${esc(k)}</span>`).join("")}</div>
+    <div class="stats"><span class="atk">${m.a}</span><span class="hp${m.hurt?' hurt':''}">${m.h}</span></div>`;
+  d.onmouseenter=()=>showInspect(d,m.name,m,seatClass); d.onmouseleave=hideInspect;
+  return d;
+}
+function hcardEl(name, seatClass, watch){
+  const c=CARDS[name]||{cost:"?"};
+  const d=document.createElement("div"); d.className="hcard "+seatClass+(watch?" watch":"");
+  d.innerHTML=`<span class="cost">${c.cost}</span><div class="ph art" data-ph="ph-card-art-hand"><span class="ph-ico">▤</span></div>
+    <div class="nm">${esc(name)}</div>`;
+  d.onmouseenter=()=>showInspect(d,name,null,seatClass); d.onmouseleave=hideInspect;
+  return d;
+}
+function scardEl(m){
+  const d=document.createElement("div"); d.className="scard";
+  d.innerHTML=`<div class="ss"><span class="a">${m.a}</span><span class="h">${m.h}</span></div>`;
+  d.onmouseenter=()=>showInspect(d,m.name,{name:m.name,a:m.a,h:m.h,kw:["Open Source"]},""); d.onmouseleave=hideInspect;
+  return d;
+}
+// Scale cards to fit their row: --fit (≤1) shrinks both card dims when the row
+// would overflow. baseCqh = one card's footprint (width + gap) in cqh.
+function fitRow(el,count,baseCqh){
+  if(count<=0){ el.style.setProperty("--fit",1); return; }
+  const oneCqh = stage.getBoundingClientRect().height/100;
+  const avail = el.clientWidth/oneCqh;
+  el.style.setProperty("--fit", avail>0 ? Math.min(1, avail/(count*baseCqh)).toFixed(3) : 1);
+}
+
+/* ── inspect ── */
+function showInspect(anchor,name,override,seatClass){
+  const c=CARDS[name]; if(!c&&!override) return;
+  const ins=$("inspect"); ins.className="inspect "+(seatClass||"")+" show";
+  const card=c||{t:"Model",cost:"—",a:override.a,h:override.h,kw:override.kw,x:"(deployed Model)"};
+  ins.innerHTML=`<div class="it-top"><span class="it-name">${esc(name)}</span><span class="it-cost">${card.cost} ◆</span></div>
+    <div class="it-type">${esc((card.t||"Model").toUpperCase())}${card.a!=null?` · ${card.a}/${card.h}`:""}</div>
+    <div class="it-kw">${(card.kw||[]).map(k=>`<span title="${esc(KW_GLOSS[k]||'')}">${esc(k)}</span>`).join("")}</div>
+    <div class="it-text">${esc(card.x||"")}</div>`;
+  const sb=stage.getBoundingClientRect(), ab=anchor.getBoundingClientRect();
+  let left=(ab.left-sb.left)+ab.width/2-sb.width*0.09;
+  left=Math.max(sb.width*0.01, Math.min(left, sb.width*(stage.classList.contains("chat-open")?0.62:0.80)));
+  ins.style.left=left+"px";
+  ins.style.top=(ab.top-sb.top>sb.height*0.5 ? (ab.top-sb.top-sb.height*0.30) : (ab.bottom-sb.top+sb.height*0.01))+"px";
+}
+function hideInspect(){ $("inspect").classList.remove("show"); }
+
+/* ── generic hover tooltip: hero skill + detailed candidate-action breakdown ── */
+function showTip(anchor, html){
+  const tip=$("tip"); tip.innerHTML=html; tip.classList.add("show");
+  const sb=stage.getBoundingClientRect(), ab=anchor.getBoundingClientRect();
+  const tw=tip.offsetWidth, th=tip.offsetHeight, m=sb.width*0.006;
+  let left=(ab.left-sb.left < sb.width/2) ? (ab.right-sb.left+m) : (ab.left-sb.left-tw-m);
+  left=Math.max(m, Math.min(left, sb.width-tw-m));
+  let top=Math.max(m, Math.min(ab.top-sb.top + ab.height/2 - th/2, sb.height-th-m));
+  tip.style.left=left+"px"; tip.style.top=top+"px";
+}
+function hideTip(){ $("tip").classList.remove("show"); }
+function findCardInLabel(lbl){ let best=null,bi=1e9; for(const n in CARDS){const i=lbl.indexOf(n); if(i>=0&&i<bi){bi=i;best=n;}} return best; }
+function founderDetail(seat){
+  const fm=FOUNDER_MOVES[seatFaction[seat]];
+  return `<div class="tt-kind">FOUNDER MOVE · HERO SKILL</div>
+    <div class="tt-head"><span class="tt-title">${esc(fm.name)}</span><span class="tt-cost">${fm.cost} ◆</span></div>
+    <div class="tt-text">${esc(fm.text)}</div>
+    <div class="tt-sub">${esc(FACTIONS[seatFaction[seat]].name)} · once per turn.</div>`;
+}
+function actionDetail(a, seat){
+  const ti=TOOL_INFO[a.tool]||{label:a.tool,desc:""};
+  let html=`<div class="tt-kind">${esc(a.id)} · ${esc(a.tool)}${a.chosen?" · ✓ CHOSEN":""}</div>
+    <div class="tt-head"><span class="tt-title">${esc(a.lbl)}</span>${a.cost?`<span class="tt-cost">${a.cost} ◆</span>`:""}</div>
+    <div class="tt-sub">${esc(ti.label)} — ${esc(ti.desc)}</div>`;
+  if(a.tool==="use_hero_power") html+=`<div class="tt-text">${esc(FOUNDER_MOVES[seatFaction[seat]].text)}</div>`;
+  const cn=findCardInLabel(a.lbl);
+  if(cn){ const c=CARDS[cn];
+    html+=`<div class="tt-card"><div class="tt-head"><span class="tt-title" style="font-size:1.5cqh">${esc(cn)}</span>
+        <span class="tc-stats">${esc(c.t)}${c.a!=null?` · ${c.a}/${c.h}`:""} · ${c.cost}◆</span></div>
+      ${(c.kw&&c.kw.length)?`<div class="tt-kw">${c.kw.map(k=>`<span title="${esc(KW_GLOSS[k]||'')}">${esc(k)}</span>`).join("")}</div>`:""}
+      <div class="tt-text">${esc(c.x)}</div></div>`;
+  }
+  return html;
+}
+
+/* ── render one frame (no animation) ── */
+function renderHero(seat,t){
+  const s=t[seat], fac=FACTIONS[seatFaction[seat]];
+  $("val"+seat).textContent=s.val;
+  $("cmp"+seat).textContent=s.maxC+"/"+s.maxC;
+  $("handC"+seat).textContent=s.hand.length;
+  $("deckC"+seat).textContent=s.deck;
+  $("arm"+seat).innerHTML=Array(s.arm).fill('<span class="pip"></span>').join("");
+}
+function renderBoardRow(rowEl,board,seatClass,emptyTxt){
+  rowEl.innerHTML=""; fitRow(rowEl,board.length,15.5);
+  if(!board.length){ rowEl.innerHTML=`<span class="row-empty">${emptyTxt}</span>`; return; }
+  board.forEach(m=>rowEl.appendChild(bcardEl(m,seatClass)));
+}
+function renderHandRow(rowEl,hand,seatClass,watchSet){
+  rowEl.innerHTML=""; fitRow(rowEl,hand.length,9.5);
+  if(!hand.length){ rowEl.innerHTML='<span class="row-empty">— hand empty —</span>'; return; }
+  hand.forEach(n=>rowEl.appendChild(hcardEl(n,seatClass,watchSet.has(n))));
+}
+function renderState(t){
+  renderHero("A",t); renderHero("B",t);
+  const watch=new Set(); [...t.A.hand,...t.B.hand].forEach(n=>{const c=CARDS[n];if(c&&c.cost>=5)watch.add(n);});
+  renderHandRow($("handB"),t.B.hand,"seatB",watch);
+  renderHandRow($("handA"),t.A.hand,"seatA",watch);
+  renderBoardRow($("boardB"),t.B.board,"seatB","— enemy data center empty —");
+  renderBoardRow($("boardA"),t.A.board,"seatA","— home data center empty —");
+  $("sharedZone").innerHTML=""; (t.shared||[]).forEach(m=>$("sharedZone").appendChild(scardEl(m)));
+  $("osFrame").classList.toggle("controllable", !!(t.shared&&t.shared.length));
+  $("scaling").textContent=t.scaling; $("collapse").textContent=t.collapse; $("turnpill").textContent="Turn "+t.n;
+}
+
+/* ── active seat (color-is-an-event) ── */
+function setActive(seat){
+  stage.dataset.active=seat;
+  $("heroA").classList.toggle("active",seat==="A"); $("heroB").classList.toggle("active",seat==="B");
+  $("heroA").classList.toggle("dim",seat!=="A"); $("heroB").classList.toggle("dim",seat!=="B");
+  $("agWho").textContent=PLAYERS[seat];           // agent panel themes via .stage[data-active] CSS
+  $("agEyebrow").textContent="AGENT REASONING";
+}
+
+/* ── timer ring (active hero) ── */
+let ringTimer=null;
+function runTimer(seat, seconds){
+  const ring=$("ring"+seat), secs=$("secs"+seat), td=$("agSecs"), C=283;
+  if(ringTimer){clearInterval(ringTimer);ringTimer=null;}
+  $("ringA").style.strokeDashoffset="0"; $("ringB").style.strokeDashoffset="0";
+  ring.style.stroke="var(--accent)";
+  const fmt=x=>{const s=Math.max(0,Math.ceil(x)); return Math.floor(s/60)+":"+String(s%60).padStart(2,"0");};
+  secs.textContent=Math.ceil(seconds); td.textContent=fmt(seconds);
+  const t0=performance.now(), dur=seconds*1000, myGen=gen;
+  ringTimer=setInterval(()=>{
+    if(myGen!==gen){clearInterval(ringTimer);return;}
+    const el=(performance.now()-t0)/dur, left=Math.max(0,seconds*(1-el));
+    ring.style.strokeDashoffset=(C*Math.min(1,el)).toFixed(1);
+    secs.textContent=Math.ceil(left); td.textContent=fmt(left);
+    if(left<=2) ring.style.stroke="var(--danger)";
+    if(el>=1){clearInterval(ringTimer);ringTimer=null;}
+  },80);
+}
+
+/* ── rationale + candidates ── */
+async function streamRationale(text){
+  const q=$("agQuote"); const words=esc(text).split(/(\s+)/);
+  q.innerHTML=words.map(w=>/\s+/.test(w)?w:`<span class="w">${w}</span>`).join("");
+  for(const s of q.querySelectorAll(".w")){ s.classList.add("in"); await sleep(55); }
+}
+function renderCandidates(t,lock){
+  const c=$("agCands"); c.innerHTML="";
+  t.legal.forEach(x=>{const d=document.createElement("div"); d.className="cand"+(lock&&x.chosen?" chosen":"");
+    d.innerHTML=`<span class="cost">${x.cost||0}</span><span class="clbl">${esc(x.lbl)}</span>`;
+    d.onmouseenter=()=>showTip(d, actionDetail(x, t.seat)); d.onmouseleave=hideTip;
+    c.appendChild(d);});
+}
+
+/* ── valuation-loss flash ── */
+function flashLoss(i){
+  const t=REPLAY.turns[i], p=prevState(i);
+  ["A","B"].forEach(s=>{ if(t[s].val<p[s].val){ const v=$("val"+s).parentElement; v.classList.add("flash");
+    setTimeout(()=>v.classList.remove("flash"),650);} });
+}
+
+/* ════════════════════════ LIVE PLAYBACK (no controls) ═══════════════════ */
+async function playTurn(i){
+  const myGen=bump(); idx=i; const t=REPLAY.turns[i];
+  const seat=t.seat, dur=AGENT_TIMES[seatAgent[seat]];     // full timer for this seat's agent type
+  renderState(prevState(i)); setActive(seat);
+  $("agQuote").innerHTML=""; renderCandidates(t,false);
+  $("agEyebrow").textContent="THINKING…";
+  runTimer(seat,dur);
+  if(t.timeout){ $("tier"+seat).classList.add("fallback"); $("tier"+seat).textContent=TIER_LABEL[seatAgent[seat]]+" · fallback"; }
+  try{
+    const t0=performance.now();
+    // think for the bulk of the budget; reveal + resolve in the last ~3.2s
+    await sleep(Math.max(300, dur*1000 - 3200));
+    await streamRationale(t.rationale);
+    renderCandidates(t,true);                 // lock the chosen action(s)
+    $("agEyebrow").textContent="▸ COMMITTED";
+    await sleep(300);
+    renderState(t); flashLoss(i);             // board animates (cards never blocked)
+    logActions(t);
+    if(t.big||t.lethal) chatReact(t);
+    if(t.lethal) lethalFx(t);
+    // FORCE the whole timer to be consumed — no early skip
+    const remain = dur*1000 - (performance.now()-t0);
+    if(remain>0) await sleep(remain);
+    if(myGen!==gen) return;
+    if(i>=REPLAY.turns.length-1){ endMatch(); return; }
+    if(running) playTurn(i+1);
+  }catch(e){/* cancelled */}
+}
+function lethalFx(t){
+  const loser=t.seat==="A"?"B":"A";
+  ($("board"+loser)).querySelectorAll(".bcard").forEach(c=>c.classList.add("strike"));
+  $("hero"+loser).style.filter="drop-shadow(0 0 2cqh var(--danger))";
+  setTimeout(()=>$("hero"+loser).style.filter="",1800);
+}
+function endMatch(){
+  const w=REPLAY.result.winner, fac=FACTIONS[seatFaction[w]];
+  const v=$("victor"); v.className="victor seat"+w+" show"; v.style.setProperty("--seat",fac.color);
+  $("victorName").textContent=`${PLAYERS[w]} wins`;
+  $("victorReason").textContent=`${fac.name} · by ${REPLAY.result.reason} · Turn ${REPLAY.result.turn}`;
+  addChat(`${PLAYERS[w]} (${fac.name}) wins by ${REPLAY.result.reason}!`,"system");
+  const restartGen=bump(); // schedule next match
+  setTimeout(()=>{ if(restartGen!==gen) return; startMatch(); }, 6000);
+}
+function startMatch(){
+  $("victor").classList.remove("show");
+  updateTiers();
+  applyFactions();
+  addChat(`New match — ${PLAYERS.A} (${FACTIONS[seatFaction.A].name}) vs ${PLAYERS.B} (${FACTIONS[seatFaction.B].name})`,"system");
+  running=true; playTurn(0);
+}
+
+/* ════════════════════════════ LIVE CHAT ════════════════════════════════ */
+const VIEWERS=["gpu_gandalf","tokenwhisperer","b3nchmark","ailurophile","promptlord","late2nite","quantqueen","modelmistress","serverhamster","coldstart_kid","yoloRunner","graddesc3nt","overfitz","temp0","contextwindow"];
+const AMBIENT=["this hype stack is insane","wall up!! anthrabbit stabilizing","TAM is coming i can feel it","Player 1 cooking 🔥","why no trade there","compute diff","that rationale tho 🤖","subscribe to watch boss tier","fallback bot W","copium for player 2","the open hands make this so readable","greedy keep","sheeesh"];
+let chatCount=0;
+function addChat(text,kind,user){
+  const box=$("chatMsgs"); const d=document.createElement("div"); d.className="cmsg "+(kind||"viewer");
+  if(kind==="system") d.innerHTML=`<span class="s">▸</span> ${esc(text)}`;
+  else d.innerHTML=`<span class="u">${esc(user||"you")}</span>${esc(text)}`;
+  box.appendChild(d);
+  while(box.children.length>120) box.removeChild(box.firstChild);
+  box.scrollTop=box.scrollHeight; chatCount++;
+}
+function logActions(t){ t.actions.forEach(a=>addChat(`${PLAYERS[t.seat]} — ${a}`,"system")); }
+function chatReact(t){
+  if(!ambient) return;
+  const burst = t.lethal? ["LETHAL!!","GGGG","POGGERS 🎉","ggwp","CALLED IT","player 2 is acqui-hired 💀"]
+                        : ["huge swing","ooooh","big tempo","that's the play","board is stacked now"];
+  let k=0; const n=t.lethal?5:3;
+  const fire=()=>{ if(k>=n) return; addChat(burst[k%burst.length], t.lethal?"hype":"viewer", VIEWERS[(chatCount+k)%VIEWERS.length]); k++; setTimeout(fire, 250+Math.random()*350); };
+  fire();
+}
+function ambientLoop(){
+  if(ambient && document.visibilityState!=="hidden"){
+    if(Math.random()<0.8) addChat(AMBIENT[Math.floor(Math.random()*AMBIENT.length)],"viewer",VIEWERS[Math.floor(Math.random()*VIEWERS.length)]);
+    if(Math.random()<0.12) addChat("have you tried scaling laws?","goblin","support_goblin");
+    const base=900+Math.random()*1800;
+    $("vcount").textContent=(1200+Math.floor(Math.random()*120)).toLocaleString()+" watching";
+    setTimeout(ambientLoop, base);
+  } else setTimeout(ambientLoop, 1500);
+}
+function sendChat(){
+  const inp=$("chatInput"); const v=inp.value.trim(); if(!v) return;
+  addChat(v,"you","you"); inp.value="";
+  if(/goblin|support|help/i.test(v)) setTimeout(()=>addChat("have you tried scaling laws?","goblin","support_goblin"),700);
+}
+$("chatSend").onclick=sendChat;
+$("chatInput").addEventListener("keydown",e=>{ if(e.key==="Enter") sendChat(); e.stopPropagation(); });
+
+/* ── panel collapse / expand ── */
+$("chatCollapse").onclick=()=>stage.classList.remove("chat-open");
+$("chatTab").onclick=()=>stage.classList.add("chat-open");
+$("agentCollapse").onclick=()=>stage.classList.remove("agent-open");
+$("agentTab").onclick=()=>stage.classList.add("agent-open");
+
+/* ════════════════════════ CONTROLS (auto-hide) ═════════════════════════ */
+let hudLocked=false, hideT=null;
+function showControls(){
+  $("controls").classList.remove("hidden");
+  clearTimeout(hideT);
+  hideT=setTimeout(()=>{ if(!hudLocked && !$("settings").classList.contains("show")) $("controls").classList.add("hidden"); }, 4000);
+}
+// ANY input refreshes the hide timer (fix: never hide mid-interaction)
+["pointermove","pointerdown","keydown","wheel","touchstart"].forEach(ev=>stage.addEventListener(ev,showControls,{passive:true}));
+$("controls").addEventListener("pointerenter",()=>{hudLocked=true;});
+$("controls").addEventListener("pointerleave",()=>{hudLocked=false;showControls();});
+$("settings").addEventListener("pointerenter",()=>{hudLocked=true;});
+$("settings").addEventListener("pointerleave",()=>{hudLocked=false;showControls();});
+
+$("btnSettings").onclick=()=>{ const s=$("settings"); s.classList.toggle("show"); $("btnSettings").classList.toggle("on",s.classList.contains("show")); hudLocked=s.classList.contains("show"); showControls(); };
+function bindToggle(id,fn){ const tg=$(id); tg.onclick=()=>{ tg.classList.toggle("on"); fn(tg.classList.contains("on")); }; }
+bindToggle("tgAnnotate",on=>stage.classList.toggle("annotate",on));
+bindToggle("tgAmbient",on=>{ambient=on;});
+
+/* matchup demo picker */
+(function(){ const a=$("selA"),b=$("selB");
+  Object.keys(FACTIONS).forEach(k=>{for(const s of[a,b]){const o=document.createElement("option");o.value=k;o.textContent=FACTIONS[k].name;s.appendChild(o);}});
+  a.value="closedai"; b.value="anthrabbit";
+  const onpick=()=>{ seatFaction={A:a.value,B:b.value}; bump(); applyFactions(); addChat("Matchup changed — restarting demo match","system"); startMatch(); };
+  a.onchange=onpick; b.onchange=onpick;
+})();
+/* agent-type pickers (full timer: 5s script / 60s live, no early skip) */
+(function(){ const a=$("agentA"),b=$("agentB"); a.value=seatAgent.A; b.value=seatAgent.B;
+  a.onchange=()=>{ seatAgent.A=a.value; updateTiers(); addChat(`${PLAYERS.A} agent → ${TIER_LABEL[a.value]}`,"system"); };
+  b.onchange=()=>{ seatAgent.B=b.value; updateTiers(); addChat(`${PLAYERS.B} agent → ${TIER_LABEL[b.value]}`,"system"); };
+})();
+
+/* ── lore on faction logo ── */
+function showLore(seat,anchor){
+  const fac=FACTIONS[seatFaction[seat]], pop=$("lorePop");
+  pop.innerHTML=`<h4 style="color:${fac.color}">${esc(fac.name)}</h4>
+    <div class="ll">${fac.lore.map(esc).join("<br><br>")}</div><div class="lk">↳ ${esc(fac.kwh)}</div>`;
+  const sb=stage.getBoundingClientRect(), ab=anchor.getBoundingClientRect();
+  let left=ab.left-sb.left; left=Math.max(sb.width*0.01,Math.min(left,sb.width*0.6));
+  pop.style.left=left+"px";
+  pop.style.top=(ab.top-sb.top>sb.height*0.5? (ab.top-sb.top-sb.height*0.22):(ab.bottom-sb.top+6))+"px";
+  pop.classList.add("show"); clearTimeout(pop._t); pop._t=setTimeout(()=>pop.classList.remove("show"),4500);
+}
+document.querySelector("#heroA .flogo").onclick=()=>showLore("A",document.querySelector("#heroA .flogo"));
+document.querySelector("#heroB .flogo").onclick=()=>showLore("B",document.querySelector("#heroB .flogo"));
+document.querySelector("#heroA .flogo").style.cursor="pointer";
+document.querySelector("#heroB .flogo").style.cursor="pointer";
+
+/* hero-skill (founder move) hover tooltip */
+["A","B"].forEach(s=>{ const fb=document.querySelector("#hero"+s+" .founder-box");
+  if(fb){ fb.onmouseenter=()=>showTip(fb, founderDetail(s)); fb.onmouseleave=hideTip; } });
+
+/* ── easter-egg props ── */
+let pets=0;
+$("bell").onclick=()=>{ const f=$("bellFace"); f.textContent="🧌"; toast('Support goblin: "have you tried scaling laws?"',"🛎");
+  addChat("have you tried scaling laws?","goblin","support_goblin"); setTimeout(()=>f.textContent="🛎",1400); };
+$("servercat").onclick=()=>{ pets++; const f=$("catFace"); f.textContent=pets<3?"🐈":pets<6?"🐈‍⬛":"😻";
+  if(pets===5) toast("The server-cat bats a stray data-packet across the floor.","🐈");
+  if(pets===10) toast("Achievement: Pettable Infra.","🏆"); };
+function toast(msg,ico){ const t=document.createElement("div"); t.className="toast"; t.innerHTML=`<span>${ico||"✦"}</span><span>${esc(msg)}</span>`;
+  $("toasts").appendChild(t); setTimeout(()=>t.remove(),3000); }
+
+/* ── boot ── */
+applyFactions(); renderState(REPLAY.turns[0]);
+addChat("Welcome to the AI Card Battle live channel — view-only, agents are playing.","system");
+addChat("nice, a live AI match","viewer","temp0");
+showControls(); ambientLoop();
+setTimeout(()=>startMatch(), 800);
+</script>
+</body>
+</html>

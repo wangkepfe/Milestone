@@ -1,0 +1,69 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Search and Index — a giant azure search bar with a magnifier ingesting a stream of data tiles that become drawn cards">
+  <defs>
+    <radialGradient id="si-bg" cx="50%" cy="28%" r="92%">
+      <stop offset="0%" stop-color="#15294A"/><stop offset="55%" stop-color="#0C1426"/><stop offset="100%" stop-color="#060B16"/>
+    </radialGradient>
+    <linearGradient id="si-bar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E6F1FF"/><stop offset="100%" stop-color="#A9C6F0"/>
+    </linearGradient>
+    <radialGradient id="si-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#4D8DF0" stop-opacity=".5"/><stop offset="100%" stop-color="#4D8DF0" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="si-card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#DCEAFF"/><stop offset="100%" stop-color="#9DB8E0"/>
+    </linearGradient>
+    <filter id="si-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="si-grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0"/></filter>
+    <radialGradient id="si-vig" cx="50%" cy="46%" r="72%"><stop offset="58%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".55"/></radialGradient>
+  </defs>
+
+  <rect width="400" height="300" fill="url(#si-bg)"/>
+  <g filter="url(#si-soft)" opacity=".6"><ellipse cx="200" cy="130" rx="170" ry="100" fill="#4D8DF0" opacity=".16"/></g>
+  <g opacity=".7"><rect x="0" y="236" width="400" height="64" fill="#0A1326"/></g>
+  <circle cx="200" cy="140" r="120" fill="url(#si-glow)"/>
+
+  <!-- incoming data tiles stream (the web) from the right -->
+  <g opacity=".85">
+    <g fill="#13284A" stroke="#2D5BA8" stroke-width="1">
+      <rect x="300" y="58" width="26" height="26" rx="3" transform="rotate(8 313 71)"/>
+      <rect x="346" y="92" width="22" height="22" rx="3" transform="rotate(-6 357 103)"/>
+      <rect x="312" y="120" width="24" height="24" rx="3" transform="rotate(12 324 132)"/>
+      <rect x="354" y="158" width="20" height="20" rx="3"/>
+      <rect x="318" y="186" width="22" height="22" rx="3" transform="rotate(-8 329 197)"/>
+    </g>
+    <g stroke="#4D8DF0" stroke-width="1.2" stroke-dasharray="3 4" opacity=".6" fill="none">
+      <path d="M312 71 q-60 20 -110 64"/><path d="M357 103 q-70 26 -150 50"/><path d="M324 132 q-60 14 -120 24"/>
+    </g>
+  </g>
+
+  <!-- the giant search bar -->
+  <g transform="translate(60 122)">
+    <rect x="0" y="0" width="220" height="56" rx="28" fill="url(#si-bar)" stroke="#4D8DF0" stroke-width="2"/>
+    <!-- cursor + query text -->
+    <text x="28" y="35" font-family="JetBrains Mono,monospace" font-size="16" fill="#1A3666">draw 2</text>
+    <rect x="96" y="18" width="2" height="22" fill="#2D5BA8"/>
+    <!-- the magnifier -->
+    <g transform="translate(184 28)">
+      <circle r="18" fill="none" stroke="#1A3666" stroke-width="5"/>
+      <line x1="13" y1="13" x2="30" y2="30" stroke="#1A3666" stroke-width="6" stroke-linecap="round"/>
+    </g>
+    <!-- rim light -->
+    <rect x="6" y="4" width="208" height="14" rx="7" fill="#FFFFFF" opacity=".4"/>
+  </g>
+
+  <!-- drawn cards spilling out the left -->
+  <g>
+    <g transform="translate(54 196) rotate(-12)">
+      <rect width="50" height="70" rx="6" fill="url(#si-card)" stroke="#4D8DF0" stroke-width="1.6"/>
+      <rect x="7" y="9" width="36" height="22" rx="3" fill="#2D5BA8"/><rect x="7" y="38" width="36" height="3" fill="#7E9AC8"/><rect x="7" y="46" width="26" height="3" fill="#7E9AC8"/>
+    </g>
+    <g transform="translate(94 206) rotate(8)">
+      <rect width="50" height="70" rx="6" fill="url(#si-card)" stroke="#4D8DF0" stroke-width="1.6"/>
+      <rect x="7" y="9" width="36" height="22" rx="3" fill="#2D5BA8"/><rect x="7" y="38" width="36" height="3" fill="#7E9AC8"/><rect x="7" y="46" width="26" height="3" fill="#7E9AC8"/>
+    </g>
+  </g>
+  <text x="200" y="288" font-family="JetBrains Mono,monospace" font-size="9" fill="#6FA6F5" text-anchor="middle" opacity=".8">// 6+ compute → draw 3</text>
+
+  <rect width="400" height="300" filter="url(#si-grain)" opacity=".05"/>
+  <rect width="400" height="300" fill="url(#si-vig)"/>
+</svg>

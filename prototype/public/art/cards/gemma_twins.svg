@@ -1,0 +1,68 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Gemma Twins, the Open Release — two identical open-release models side by side, one stepping into a dashed neutral Open-Source zone as a free copy">
+  <defs>
+    <radialGradient id="gt-bg" cx="50%" cy="28%" r="92%">
+      <stop offset="0%" stop-color="#15294A"/><stop offset="55%" stop-color="#0C1426"/><stop offset="100%" stop-color="#060B16"/>
+    </radialGradient>
+    <linearGradient id="gt-body" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6FA6F5"/><stop offset="100%" stop-color="#1E3E72"/>
+    </linearGradient>
+    <linearGradient id="gt-bodyB" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8FBBF8"/><stop offset="100%" stop-color="#2D5BA8"/>
+    </linearGradient>
+    <radialGradient id="gt-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#4D8DF0" stop-opacity=".4"/><stop offset="100%" stop-color="#4D8DF0" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="gt-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="gt-grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0"/></filter>
+    <radialGradient id="gt-vig" cx="50%" cy="46%" r="72%"><stop offset="58%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".55"/></radialGradient>
+  </defs>
+
+  <rect width="400" height="300" fill="url(#gt-bg)"/>
+  <g filter="url(#gt-soft)" opacity=".6"><ellipse cx="150" cy="130" rx="140" ry="90" fill="#4D8DF0" opacity=".16"/></g>
+  <g opacity=".7"><rect x="0" y="234" width="400" height="66" fill="#0A1326"/></g>
+
+  <!-- the shared Open-Source zone (dashed neutral no-man's-land, right) -->
+  <g transform="translate(254 60)">
+    <rect x="0" y="0" width="138" height="186" rx="12" fill="#0E1B2E" stroke="#6E7681" stroke-width="2" stroke-dasharray="8 7"/>
+    <!-- broken padlock motif (open) -->
+    <g transform="translate(26 22)" opacity=".7">
+      <rect x="0" y="10" width="18" height="14" rx="3" fill="none" stroke="#9FB3C8" stroke-width="2"/>
+      <path d="M3 10 v-3 a6 6 0 0 1 12 0" fill="none" stroke="#9FB3C8" stroke-width="2"/>
+      <path d="M15 4 l8 -6" stroke="#9FB3C8" stroke-width="2"/>
+    </g>
+    <text x="69" y="178" font-family="JetBrains Mono,monospace" font-size="9" fill="#6E7681" text-anchor="middle">OPEN SOURCE</text>
+  </g>
+  <ellipse cx="170" cy="250" rx="150" ry="14" fill="#0F1F3A" opacity=".7"/>
+  <circle cx="150" cy="140" r="96" fill="url(#gt-glow)"/>
+
+  <!-- twin A (the original, left) -->
+  <g transform="translate(124 154)">
+    <path d="M-34 84 L-22 -2 L0 -28 L22 -2 L34 84 Z" fill="url(#gt-body)"/>
+    <path d="M0 -28 L22 -2 L34 84 L0 84 Z" fill="#16294A" opacity=".4"/>
+    <rect x="-16" y="20" width="32" height="40" rx="5" fill="#0C1426" stroke="#22E0E0" stroke-width="1.2"/>
+    <text x="0" y="44" font-family="JetBrains Mono,monospace" font-size="11" fill="#22E0E0" text-anchor="middle" font-weight="700">G</text>
+    <circle cx="0" cy="-6" r="9" fill="#0C1426"/><circle cx="0" cy="-6" r="4.5" fill="#6FA6F5"/>
+    <path d="M-34 84 L-22 -2 L0 -28" fill="none" stroke="#FFF6E0" stroke-width="1.8" opacity=".6" stroke-linecap="round"/>
+  </g>
+
+  <!-- twin B (the free copy, stepping into the open zone) -->
+  <g transform="translate(322 158)" opacity=".96">
+    <path d="M-32 80 L-20 -2 L0 -26 L20 -2 L32 80 Z" fill="url(#gt-bodyB)"/>
+    <path d="M0 -26 L20 -2 L32 80 L0 80 Z" fill="#16294A" opacity=".4"/>
+    <rect x="-15" y="18" width="30" height="38" rx="5" fill="#0C1426" stroke="#22E0E0" stroke-width="1.2"/>
+    <text x="0" y="42" font-family="JetBrains Mono,monospace" font-size="10" fill="#22E0E0" text-anchor="middle" font-weight="700">G</text>
+    <circle cx="0" cy="-4" r="8" fill="#0C1426"/><circle cx="0" cy="-4" r="4" fill="#8FBBF8"/>
+    <!-- copy shimmer -->
+    <path d="M-32 80 L-20 -2 L0 -26" fill="none" stroke="#BFF6FF" stroke-width="1.6" opacity=".7" stroke-linecap="round"/>
+  </g>
+
+  <!-- the "fork → copy" link between them -->
+  <g stroke="#22E0E0" stroke-width="2" stroke-dasharray="4 4" opacity=".8" fill="none">
+    <path d="M158 120 q60 -20 130 30"/>
+  </g>
+  <g transform="translate(232 116)"><path d="M-7 -8 l8 -2 l-3 8 l8 -1 l-13 14 l3 -9 l-7 1 z" fill="#BFF6FF"/></g>
+  <text x="218" y="96" font-family="JetBrains Mono,monospace" font-size="9" fill="#6FA6F5">copy →</text>
+
+  <rect width="400" height="300" filter="url(#gt-grain)" opacity=".05"/>
+  <rect width="400" height="300" fill="url(#gt-vig)"/>
+</svg>

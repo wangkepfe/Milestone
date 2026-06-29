@@ -1,0 +1,70 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bardo the Hallucinator — a big overclocked model-creature smearing into an RGB-split glitch double-image with mismatched eyes and heat shimmer">
+  <defs>
+    <radialGradient id="bh-bg" cx="50%" cy="28%" r="92%">
+      <stop offset="0%" stop-color="#15294A"/><stop offset="55%" stop-color="#0C1426"/><stop offset="100%" stop-color="#060B16"/>
+    </radialGradient>
+    <linearGradient id="bh-body" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6FA6F5"/><stop offset="100%" stop-color="#1E3E72"/>
+    </linearGradient>
+    <radialGradient id="bh-heat" cx="50%" cy="80%" r="70%">
+      <stop offset="0%" stop-color="#FF8A3D" stop-opacity=".5"/><stop offset="100%" stop-color="#FF8A3D" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bh-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#4D8DF0" stop-opacity=".4"/><stop offset="100%" stop-color="#4D8DF0" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="bh-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="bh-wob" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="1.4"/></filter>
+    <filter id="bh-grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0"/></filter>
+    <radialGradient id="bh-vig" cx="50%" cy="46%" r="72%"><stop offset="58%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".55"/></radialGradient>
+  </defs>
+
+  <rect width="400" height="300" fill="url(#bh-bg)"/>
+  <g filter="url(#bh-soft)" opacity=".6"><ellipse cx="200" cy="130" rx="150" ry="95" fill="#4D8DF0" opacity=".15"/></g>
+  <g opacity=".7"><rect x="0" y="232" width="400" height="68" fill="#0A1326"/></g>
+  <ellipse cx="200" cy="252" rx="120" ry="16" fill="#0F1F3A" opacity=".7"/>
+  <ellipse cx="200" cy="240" rx="120" ry="60" fill="url(#bh-heat)"/>
+  <circle cx="200" cy="140" r="100" fill="url(#bh-glow)"/>
+
+  <!-- overclock heat shimmer waves -->
+  <g stroke="#FF8A3D" stroke-width="1.4" fill="none" opacity=".5">
+    <path d="M150 96 q8 -10 0 -20 q-8 -10 0 -20"/><path d="M250 96 q8 -10 0 -20 q-8 -10 0 -20"/><path d="M200 70 q8 -10 0 -20 q-8 -10 0 -20"/>
+  </g>
+
+  <!-- the hallucinating creature: RGB-split double-image -->
+  <g>
+    <!-- cyan ghost (offset left) -->
+    <g transform="translate(-7 3)" opacity=".55" filter="url(#bh-wob)">
+      <path d="M150 240 q-14 -90 50 -120 q64 30 50 120 z" fill="#22E0E0"/>
+    </g>
+    <!-- magenta ghost (offset right) -->
+    <g transform="translate(7 -2)" opacity=".5" filter="url(#bh-wob)">
+      <path d="M150 240 q-14 -90 50 -120 q64 30 50 120 z" fill="#FF4DD2"/>
+    </g>
+    <!-- core body -->
+    <path d="M150 240 q-14 -90 50 -120 q64 30 50 120 z" fill="url(#bh-body)"/>
+    <!-- datamosh scan slices across the body -->
+    <g opacity=".85">
+      <rect x="150" y="150" width="100" height="9" fill="#22E0E0" transform="translate(8 0)"/>
+      <rect x="150" y="178" width="100" height="7" fill="#FF4DD2" transform="translate(-9 0)"/>
+      <rect x="150" y="202" width="100" height="8" fill="#22E0E0" transform="translate(6 0)"/>
+    </g>
+    <!-- mismatched eyes (the hallucination tell) -->
+    <g>
+      <!-- big cyan eye -->
+      <circle cx="180" cy="138" r="14" fill="#0C1426"/><circle cx="180" cy="138" r="8" fill="#22E0E0"/><circle cx="177" cy="135" r="2.4" fill="#fff"/>
+      <!-- small magenta eye, offset / wrong place -->
+      <circle cx="220" cy="146" r="9" fill="#0C1426"/><circle cx="220" cy="146" r="4.5" fill="#FF4DD2"/>
+      <!-- a third stray eye (hallucination) -->
+      <circle cx="206" cy="120" r="5" fill="#0C1426"/><circle cx="206" cy="120" r="2.4" fill="#BFF6FF"/>
+    </g>
+    <!-- crooked grin -->
+    <path d="M174 170 q22 14 44 -2" fill="none" stroke="#0C1426" stroke-width="3" stroke-linecap="round"/>
+    <!-- glitch self-damage spark (downside hits own board) -->
+    <g transform="translate(252 196)"><path d="M-6 -8 l8 -2 l-3 8 l8 -1 l-13 14 l3 -9 l-7 1 z" fill="#FF4DD2"/></g>
+  </g>
+
+  <text x="60" y="60" font-family="JetBrains Mono,monospace" font-size="9" fill="#FF8A3D" opacity=".85">OVERCLOCK ⚠</text>
+
+  <rect width="400" height="300" filter="url(#bh-grain)" opacity=".05"/>
+  <rect width="400" height="300" fill="url(#bh-vig)"/>
+</svg>

@@ -1,0 +1,66 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Quantize — a fan of cards passing through a pixel-step quantization grid that bit-crushes them smaller as their cost numbers tick down by one">
+  <defs>
+    <radialGradient id="qz-bg" cx="50%" cy="28%" r="92%">
+      <stop offset="0%" stop-color="#0F3E40"/><stop offset="55%" stop-color="#0A2A2E"/><stop offset="100%" stop-color="#05181A"/>
+    </radialGradient>
+    <linearGradient id="qz-card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFE0BC"/><stop offset="100%" stop-color="#F0A35E"/>
+    </linearGradient>
+    <linearGradient id="qz-grid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#39C9C0" stop-opacity=".8"/><stop offset="100%" stop-color="#0E5E63" stop-opacity=".5"/>
+    </linearGradient>
+    <radialGradient id="qz-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FF8A3D" stop-opacity=".35"/><stop offset="100%" stop-color="#FF8A3D" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="qz-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="qz-grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0"/></filter>
+    <radialGradient id="qz-vig" cx="50%" cy="46%" r="72%"><stop offset="58%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".55"/></radialGradient>
+  </defs>
+
+  <rect width="400" height="300" fill="url(#qz-bg)"/>
+  <g filter="url(#qz-soft)" opacity=".6"><ellipse cx="200" cy="130" rx="160" ry="95" fill="#FF8A3D" opacity=".12"/><ellipse cx="200" cy="130" rx="120" ry="80" fill="#0E5E63" opacity=".4"/></g>
+  <g opacity=".7"><rect x="0" y="236" width="400" height="64" fill="#072024"/></g>
+  <circle cx="200" cy="140" r="110" fill="url(#qz-glow)"/>
+
+  <!-- the quantization grid (vertical, center) — a pixel lattice the cards pass through -->
+  <g transform="translate(200 150)">
+    <rect x="-10" y="-94" width="20" height="188" rx="4" fill="url(#qz-grid)"/>
+    <g stroke="#0A2A2E" stroke-width="1.4" opacity=".6"><line x1="-10" y1="-70" x2="10" y2="-70"/><line x1="-10" y1="-40" x2="10" y2="-40"/><line x1="-10" y1="-10" x2="10" y2="-10"/><line x1="-10" y1="20" x2="10" y2="20"/><line x1="-10" y1="50" x2="10" y2="50"/></g>
+    <g fill="#BFF6FF" opacity=".7"><rect x="-7" y="-66" width="5" height="5"/><rect x="2" y="-36" width="5" height="5"/><rect x="-7" y="-6" width="5" height="5"/><rect x="2" y="24" width="5" height="5"/></g>
+  </g>
+
+  <!-- card entering at full size (left, smooth) -->
+  <g transform="translate(70 110) rotate(-10)">
+    <rect width="66" height="92" rx="7" fill="url(#qz-card)" stroke="#FF8A3D" stroke-width="1.6"/>
+    <rect x="9" y="12" width="48" height="30" rx="4" fill="#0E5E63"/>
+    <rect x="9" y="50" width="48" height="3" fill="#C77A3E"/><rect x="9" y="58" width="36" height="3" fill="#C77A3E"/>
+    <circle cx="13" cy="13" r="9" fill="#06181A"/><text x="13" y="17" font-family="'Space Grotesk',sans-serif" font-weight="800" font-size="11" fill="#FFD9A8" text-anchor="middle">4</text>
+  </g>
+  <!-- card mid-quantization (pixel-stepped edges) -->
+  <g transform="translate(154 124) rotate(-4)">
+    <path d="M0 8 h8 v-8 h40 v8 h8 v68 h-8 v8 h-40 v-8 h-8 z" fill="url(#qz-card)" stroke="#39C9C0" stroke-width="1.4"/>
+    <g fill="#0E5E63"><rect x="10" y="14" width="36" height="22" rx="2"/></g>
+    <circle cx="12" cy="14" r="8" fill="#06181A"/><text x="12" y="18" font-family="'Space Grotesk',sans-serif" font-weight="800" font-size="10" fill="#FFD9A8" text-anchor="middle">3</text>
+  </g>
+
+  <!-- card exiting smaller / cheaper (right) -->
+  <g transform="translate(250 134) rotate(8)">
+    <rect width="50" height="70" rx="6" fill="url(#qz-card)" stroke="#FF8A3D" stroke-width="1.4"/>
+    <rect x="7" y="10" width="36" height="22" rx="3" fill="#0E5E63"/>
+    <circle cx="11" cy="11" r="8" fill="#06181A"/><text x="11" y="15" font-family="'Space Grotesk',sans-serif" font-weight="800" font-size="10" fill="#FFD9A8" text-anchor="middle">3</text>
+  </g>
+  <g transform="translate(306 150) rotate(-6)">
+    <rect width="42" height="58" rx="5" fill="url(#qz-card)" stroke="#FF8A3D" stroke-width="1.4"/>
+    <rect x="6" y="8" width="30" height="18" rx="2" fill="#0E5E63"/>
+    <circle cx="10" cy="10" r="7" fill="#06181A"/><text x="10" y="14" font-family="'Space Grotesk',sans-serif" font-weight="800" font-size="9" fill="#FFD9A8" text-anchor="middle">2</text>
+  </g>
+
+  <!-- "−1 hand cost" tag with ticking arrow -->
+  <g transform="translate(200 64)">
+    <rect x="-44" y="-14" width="88" height="28" rx="14" fill="#06181A" stroke="#39C9C0" stroke-width="1.3"/>
+    <text x="0" y="5" font-family="JetBrains Mono,monospace" font-size="11" fill="#39C9C0" text-anchor="middle" font-weight="700">cost −1 ▼</text>
+  </g>
+
+  <rect width="400" height="300" filter="url(#qz-grain)" opacity=".05"/>
+  <rect width="400" height="300" fill="url(#qz-vig)"/>
+</svg>

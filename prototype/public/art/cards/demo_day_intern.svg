@@ -1,0 +1,109 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Demo-Day Intern — an eager glass-and-chrome hype-bot presenting a v1.0 benchmark on a demo stage">
+  <defs>
+    <radialGradient id="ddi-bg" cx="42%" cy="30%" r="85%">
+      <stop offset="0%" stop-color="#16382A"/>
+      <stop offset="55%" stop-color="#0D1A14"/>
+      <stop offset="100%" stop-color="#070D0A"/>
+    </radialGradient>
+    <linearGradient id="ddi-spot" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7FF5C0" stop-opacity=".55"/>
+      <stop offset="100%" stop-color="#7FF5C0" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="ddi-chrome" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#EAFBF3"/>
+      <stop offset="45%" stop-color="#8FE9C4"/>
+      <stop offset="100%" stop-color="#11704F"/>
+    </linearGradient>
+    <linearGradient id="ddi-glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0E2C22" stop-opacity=".9"/>
+      <stop offset="100%" stop-color="#06150F" stop-opacity=".9"/>
+    </linearGradient>
+    <filter id="ddi-soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="9"/></filter>
+    <filter id="ddi-grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0"/></filter>
+    <radialGradient id="ddi-vig" cx="50%" cy="46%" r="72%"><stop offset="62%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".55"/></radialGradient>
+  </defs>
+
+  <rect width="400" height="300" fill="url(#ddi-bg)"/>
+
+  <!-- haze -->
+  <g filter="url(#ddi-soft)" opacity=".6">
+    <ellipse cx="120" cy="120" rx="90" ry="60" fill="#19C37D" opacity=".18"/>
+    <ellipse cx="300" cy="210" rx="120" ry="70" fill="#7FF5C0" opacity=".10"/>
+  </g>
+
+  <!-- back skyline: out-of-focus glass towers -->
+  <g filter="url(#ddi-soft)" opacity=".5">
+    <rect x="30" y="70" width="38" height="150" rx="3" fill="#123227"/>
+    <rect x="330" y="55" width="44" height="170" rx="3" fill="#123227"/>
+    <rect x="285" y="95" width="26" height="120" rx="3" fill="#0F271E"/>
+  </g>
+
+  <!-- mid: server racks -->
+  <g opacity=".85">
+    <rect x="0" y="196" width="400" height="104" fill="#0A1510"/>
+    <g fill="#0E2419">
+      <rect x="14" y="150" width="60" height="64" rx="4"/>
+      <rect x="84" y="160" width="52" height="54" rx="4"/>
+      <rect x="262" y="150" width="64" height="64" rx="4"/>
+      <rect x="334" y="158" width="52" height="56" rx="4"/>
+    </g>
+    <!-- rack LEDs -->
+    <g>
+      <circle cx="24" cy="160" r="2" fill="#5BD68A"/><circle cx="32" cy="160" r="2" fill="#3DD6F0"/><circle cx="40" cy="160" r="2" fill="#F4C04C"/>
+      <circle cx="272" cy="160" r="2" fill="#3DD6F0"/><circle cx="280" cy="160" r="2" fill="#5BD68A"/><circle cx="288" cy="160" r="2" fill="#FF5C5C" opacity=".8"/>
+      <circle cx="344" cy="168" r="2" fill="#5BD68A"/><circle cx="352" cy="168" r="2" fill="#3DD6F0"/>
+    </g>
+  </g>
+
+  <!-- keynote spotlight snap -->
+  <path d="M200 0 L120 230 L280 230 Z" fill="url(#ddi-spot)" opacity=".7"/>
+
+  <!-- demo stage podium -->
+  <ellipse cx="200" cy="248" rx="96" ry="16" fill="#0B201A"/>
+  <ellipse cx="200" cy="246" rx="78" ry="11" fill="#0E2C22"/>
+
+  <!-- floating benchmark sign the intern presents -->
+  <g transform="translate(286 96)">
+    <rect x="-2" y="-2" width="78" height="46" rx="6" fill="#0E2C22" stroke="#19C37D" stroke-width="1.5"/>
+    <text x="37" y="16" font-family="JetBrains Mono, ui-monospace, monospace" font-size="11" fill="#7FF5C0" text-anchor="middle" font-weight="700">v1.0</text>
+    <rect x="8" y="24" width="60" height="5" rx="2.5" fill="#0A1F18"/>
+    <rect x="8" y="24" width="44" height="5" rx="2.5" fill="#5BD68A"/>
+    <rect x="8" y="33" width="60" height="5" rx="2.5" fill="#0A1F18"/>
+    <rect x="8" y="33" width="30" height="5" rx="2.5" fill="#3DD6F0"/>
+  </g>
+
+  <!-- SUBJECT: eager glass-and-chrome hype-bot, sharp ascending body (glass cannon) -->
+  <g>
+    <!-- presenting arm to the sign -->
+    <path d="M196 150 L268 108 L276 120 L204 168 Z" fill="url(#ddi-chrome)"/>
+    <!-- sharp ascending chrome shoulders/body -->
+    <path d="M168 244 L150 150 L200 96 L250 150 L232 244 Z" fill="url(#ddi-chrome)"/>
+    <!-- body 2-step shadow side -->
+    <path d="M200 96 L250 150 L232 244 L200 244 Z" fill="#0F5C40" opacity=".45"/>
+    <!-- glass torso window with benchmark bar -->
+    <rect x="180" y="150" width="40" height="62" rx="6" fill="url(#ddi-glass)" stroke="#19C37D" stroke-width="1.5"/>
+    <rect x="187" y="198" width="26" height="7" rx="2" fill="#0A1F18"/>
+    <rect x="187" y="198" width="22" height="7" rx="2" fill="#5BD68A"/>
+    <rect x="187" y="186" width="26" height="6" rx="2" fill="#0A1F18"/>
+    <rect x="187" y="186" width="14" height="6" rx="2" fill="#3DD6F0"/>
+    <!-- head: sleek chrome dome, single benchmark eye -->
+    <path d="M200 70 L222 100 L200 122 L178 100 Z" fill="url(#ddi-chrome)"/>
+    <circle cx="200" cy="98" r="7.5" fill="#06150F"/>
+    <circle cx="200" cy="98" r="4.5" fill="#7FF5C0"/>
+    <circle cx="198" cy="96" r="1.6" fill="#EAFBF3"/>
+    <!-- lanyard badge -->
+    <rect x="192" y="158" width="16" height="11" rx="2" fill="#0B201A" stroke="#7FF5C0" stroke-width=".8"/>
+    <line x1="200" y1="122" x2="200" y2="158" stroke="#11704F" stroke-width="2"/>
+    <!-- one warm key rim light on the left edge -->
+    <path d="M168 244 L150 150 L200 96" fill="none" stroke="#FFF6E0" stroke-width="2" opacity=".8" stroke-linecap="round"/>
+    <path d="M178 100 L200 70" fill="none" stroke="#FFF6E0" stroke-width="1.6" opacity=".7" stroke-linecap="round"/>
+  </g>
+
+  <!-- "Ship It" hype-arrow tell rising off the sign -->
+  <g opacity=".95" transform="translate(330 70)">
+    <path d="M0 18 L8 2 L16 18 L10 18 L10 30 L6 30 L6 18 Z" fill="#7FF5C0"/>
+  </g>
+
+  <rect width="400" height="300" filter="url(#ddi-grain)" opacity=".05"/>
+  <rect width="400" height="300" fill="url(#ddi-vig)"/>
+</svg>

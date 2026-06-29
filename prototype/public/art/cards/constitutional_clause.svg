@@ -1,0 +1,73 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Constitutional Clause — an illuminated constitution scroll with a wax seal snaps a beam of judgment down onto a reckless cracking enemy model">
+  <defs>
+    <radialGradient id="cc-bg" cx="42%" cy="26%" r="92%">
+      <stop offset="0%" stop-color="#2A2150"/><stop offset="55%" stop-color="#1A1430"/><stop offset="100%" stop-color="#0E0A1C"/>
+    </radialGradient>
+    <linearGradient id="cc-scroll" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F6EFDD"/><stop offset="100%" stop-color="#D8C8A6"/>
+    </linearGradient>
+    <linearGradient id="cc-beam" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#CDB8FF" stop-opacity=".9"/><stop offset="100%" stop-color="#A07CFF" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="cc-seal" cx="40%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#C98CA8"/><stop offset="100%" stop-color="#7A2E50"/>
+    </radialGradient>
+    <radialGradient id="cc-aura" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F0E6D2" stop-opacity=".6"/><stop offset="100%" stop-color="#A07CFF" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="cc-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="cc-grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0"/></filter>
+    <radialGradient id="cc-vig" cx="50%" cy="46%" r="72%"><stop offset="58%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".56"/></radialGradient>
+  </defs>
+
+  <rect width="400" height="300" fill="url(#cc-bg)"/>
+
+  <g filter="url(#cc-soft)" opacity=".6">
+    <ellipse cx="160" cy="100" rx="140" ry="80" fill="#A07CFF" opacity=".18"/>
+    <ellipse cx="280" cy="210" rx="110" ry="60" fill="#3E3070" opacity=".5"/>
+  </g>
+
+  <g opacity=".7"><rect x="0" y="222" width="400" height="78" fill="#120D24"/></g>
+  <ellipse cx="270" cy="252" rx="120" ry="16" fill="#1E1640" opacity=".7"/>
+
+  <!-- illuminated constitution scroll, upper-left -->
+  <g transform="translate(96 96)">
+    <circle cx="34" cy="26" r="70" fill="url(#cc-aura)"/>
+    <!-- rolled top/bottom rods -->
+    <rect x="-6" y="-8" width="92" height="12" rx="6" fill="#8B6F47"/>
+    <rect x="-6" y="62" width="92" height="12" rx="6" fill="#8B6F47"/>
+    <!-- vellum sheet -->
+    <rect x="2" y="2" width="76" height="62" fill="url(#cc-scroll)"/>
+    <g stroke="#B49A6E" stroke-width="2" opacity=".7">
+      <line x1="12" y1="14" x2="68" y2="14"/><line x1="12" y1="24" x2="68" y2="24"/>
+      <line x1="12" y1="34" x2="60" y2="34"/><line x1="12" y1="44" x2="68" y2="44"/><line x1="12" y1="54" x2="50" y2="54"/>
+    </g>
+    <text x="40" y="-16" font-family="JetBrains Mono,monospace" font-size="8" fill="#F0E6D2" text-anchor="middle">CLAUSE §3</text>
+    <!-- wax seal -->
+    <circle cx="40" cy="74" r="12" fill="url(#cc-seal)" stroke="#F0E6D2" stroke-width="1"/>
+    <path d="M40 68 l3 5 l-3 5 l-3 -5 z" fill="#F0E6D2" opacity=".8"/>
+  </g>
+
+  <!-- beam of judgment striking down-right -->
+  <path d="M130 168 L240 130 L300 220 L168 196 Z" fill="url(#cc-beam)" opacity=".7"/>
+
+  <!-- reckless big-Attack enemy model, cracking under the clause -->
+  <g transform="translate(272 150)">
+    <!-- a hulking sharp aggressive model (high Attack) -->
+    <path d="M-40 96 L-30 8 L0 -28 L30 8 L40 96 Z" fill="#39304F"/>
+    <path d="M0 -28 L30 8 L40 96 L0 96 Z" fill="#241C3A"/>
+    <!-- angry eye -->
+    <path d="M-14 18 L8 12 L-2 30 Z" fill="#E25555"/>
+    <!-- big-attack blade arms -->
+    <path d="M-34 30 L-72 56 L-66 64 L-28 46 Z" fill="#4A3A6E"/>
+    <text x="-52" y="46" font-family="'Space Grotesk',sans-serif" font-weight="800" font-size="16" fill="#FF5C5C">4+</text>
+    <!-- fracture cracks from the clause -->
+    <path d="M0 -20 l-8 30 l10 16 l-12 22 l8 18" fill="none" stroke="#CDB8FF" stroke-width="2.4" opacity=".95"/>
+    <path d="M6 4 l10 20 l-8 14" fill="none" stroke="#CDB8FF" stroke-width="1.8" opacity=".8"/>
+    <!-- impact spark -->
+    <g transform="translate(-2 -24)"><path d="M-7 -8 l8 -2 l-3 8 l8 -1 l-13 14 l3 -9 l-7 1 z" fill="#F0E6D2"/></g>
+  </g>
+
+  <rect width="400" height="300" filter="url(#cc-grain)" opacity=".05"/>
+  <rect width="400" height="300" fill="url(#cc-vig)"/>
+</svg>

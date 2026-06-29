@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "style": "Corporate Mythic — flat-dimensional editorial SVG",
+  "viewBox": { "card": "0 0 400 300", "hero": "0 0 360 460", "scene": "0 0 1600 900" },
+  "spec": "STYLE.md",
+  "progress": { "cards": "40/40", "heroes": "4/4", "skills": "4/4", "background": "1/1", "ui": "done" },
+  "factions": {
+    "closedai":   { "name": "ClosedAI",   "chip": "🟢", "core": "#19C37D", "shadow": "#0D1A14", "accent": "#7FF5C0" },
+    "anthrabbit": { "name": "Anthrabbit", "chip": "🟣", "core": "#A07CFF", "shadow": "#1A1430", "accent": "#F0E6D2" },
+    "googlitch":  { "name": "Googlitch",  "chip": "🔵", "core": "#4D8DF0", "shadow": "#0C1426", "accent": "#22E0E0", "accent2": "#FF4DD2" },
+    "shallowseek":{ "name": "ShallowSeek","chip": "🟠", "core": "#FF8A3D", "shadow": "#0A2A2E", "accent": "#0E5E63" }
+  },
+  "cards": [
+    { "id": "demo_day_intern", "name": "Demo-Day Intern", "faction": "closedai", "status": "done", "concept": "Eager glass-chrome hype-bot on a demo stage holding a glowing v1.0 benchmark sign under a spotlight snap. Sharp ascending body, glass torso shows a green benchmark bar. Glass cannon." },
+    { "id": "vaporware_teaser", "name": "Vaporware Teaser", "faction": "closedai", "status": "done", "concept": "Keynote stage: a giant floating COMING SOON slide, a silhouetted presenter gesturing at an empty pedestal where the product is just a wisp of mint vapor. Announce = hype arrow." },
+    { "id": "hype4_omni", "name": "Hype-4 Omni", "faction": "closedai", "status": "done", "concept": "Taller hype-bot mid-launch firing a hype-ping bolt off-frame; four ascending benchmark chevrons, OMNI etched, +1 number pop." },
+    { "id": "closed_beta_brigade", "name": "Closed Beta Brigade", "faction": "closedai", "status": "done", "concept": "Squad of sleek stealth hype-bots in formation; front one sharp, the rest ghosted/translucent (Stealth Mode). BETA badges." },
+    { "id": "move_fast_break_prod", "name": "Move Fast, Break Prod", "faction": "closedai", "status": "done", "concept": "A glass server tower fracturing as a DEPLOY button is slammed; coral-red error sparks fly out three ways (3 dmg split). Move fast, break things." },
+    { "id": "series_f_frenzy", "name": "Series-F Frenzy", "faction": "closedai", "status": "done", "concept": "A funding-round frenzy — a hype-bot raining glowing 'F' funding chips over a row of smaller bots, all getting hype arrows." },
+    { "id": "surprise_keynote", "name": "Surprise Keynote", "faction": "closedai", "status": "done", "concept": "'One more thing' — a presenter whips a sheet off a hidden glass model under a blinding launch beam (Launch Day)." },
+    { "id": "pivot_to_hardware", "name": "Pivot to Hardware", "faction": "closedai", "status": "done", "concept": "A glossy launch device/cannon being bolted to the CEO podium; chrome, sharp, 3-Attack Launch weapon." },
+    { "id": "founder_mode_sam", "name": "Founder Mode Sam", "faction": "closedai", "status": "done", "concept": "Legendary founder caricature mid-keynote, halo of slide light, gesturing 'one more thing'; gold rarity trim, team hype radiating." },
+    { "id": "total_addressable_market", "name": "Total Addressable Market", "faction": "closedai", "status": "done", "concept": "An enormous market-cap arrow/pie chart firing as a beam straight at an off-frame CEO, ignoring walls. Legendary gold." },
+
+    { "id": "paperclip_auditor", "name": "Paperclip Auditor", "faction": "anthrabbit", "status": "done", "concept": "Earnest padded rabbit clutching a clipboard, standing behind a small foam guardrail wall. Rounded, defensive, calm." },
+    { "id": "red_team_rabbit", "name": "Red-Team Rabbit", "faction": "anthrabbit", "status": "done", "concept": "Rabbit in a red-team vest poking at a padded test rig, gaining a glowing safety-margin shield pip." },
+    { "id": "constitutional_clause", "name": "Constitutional Clause", "faction": "anthrabbit", "status": "done", "concept": "An illuminated 'constitution' scroll snapping a beam down onto a reckless big-Attack model; parchment + amethyst." },
+    { "id": "alignment_researcher", "name": "Alignment Researcher", "faction": "anthrabbit", "status": "done", "concept": "Rabbit researcher at a glowing alignment console, a guardrail wall behind, valuation heart mending (heal)." },
+    { "id": "sandbox_containment", "name": "Sandbox Containment", "faction": "anthrabbit", "status": "done", "concept": "An enemy model frozen inside a translucent padded sandbox cube; caution tape; a drawn card slips out." },
+    { "id": "failover_cluster", "name": "Failover Cluster", "faction": "anthrabbit", "status": "done", "concept": "A resilient layered wall-unit, redundant padded panels, Failover halo — mid-game fortress." },
+    { "id": "rapid_rollback", "name": "Rapid Rollback", "faction": "anthrabbit", "status": "done", "concept": "A big rewind/restore dial spinning back, valuation streaming back up, parchment glow + safety pips." },
+    { "id": "interpretability_lattice", "name": "Interpretability Lattice", "faction": "anthrabbit", "status": "done", "concept": "A glowing translucent lattice/scaffold of neurons being read by probes; ongoing engine; amethyst grid." },
+    { "id": "the_long_horizon_plan", "name": "The Long-Horizon Plan", "faction": "anthrabbit", "status": "done", "concept": "A vast horizon roadmap stretching to a distant sun; a sweep of safety-energy washing over a row of enemy models." },
+    { "id": "claudius", "name": "Claudius the Considerate", "faction": "anthrabbit", "status": "done", "concept": "Legendary towering padded rabbit-sage with a halo of caution tape and a constitution tome, fortress aura; gold trim." },
+
+    { "id": "pod_provisioner", "name": "Pod Provisioner", "faction": "googlitch", "status": "done", "concept": "A squat modular server-pod crawler, clean material-design, a guardrail panel, spinning up a +1 compute chip on sunset." },
+    { "id": "spin_up_tpu", "name": "Spin Up a TPU Pod", "faction": "googlitch", "status": "done", "concept": "A TPU pod powering on — a glowing cyan chip lattice, compute bolts, a drawn card; ramp." },
+    { "id": "index_crawler", "name": "Index Crawler", "faction": "googlitch", "status": "done", "concept": "A many-legged search-crawler critter scanning a wall of index tiles, one tile glowing (scry/draw); guardrail." },
+    { "id": "search_index", "name": "Search & Index", "faction": "googlitch", "status": "done", "concept": "A giant search bar ingesting the web into a card stream; clean grid; draw engine." },
+    { "id": "glitch_in_stack", "name": "Glitch in the Stack", "faction": "googlitch", "status": "done", "concept": "A clean server stack hit by an RGB-split datamosh bolt that fractures one enemy; cyan+magenta glitch tell." },
+    { "id": "bardo_hallucinator", "name": "Bardo the Hallucinator", "faction": "googlitch", "status": "done", "concept": "A big hallucinating model-creature smearing into a glitch double-image, eyes mismatched; overclock heat shimmer." },
+    { "id": "tpu_megapod", "name": "TPU Megapod", "faction": "googlitch", "status": "done", "concept": "A colossal stacked TPU megapod tower humming with cyan compute, +2 compute charges, modular grid." },
+    { "id": "sunset_protocol", "name": "Sunset Protocol", "faction": "googlitch", "status": "done", "concept": "A board-wide sunset wave decommissioning all models; a setting datacenter sun, fading silhouettes (AoE)." },
+    { "id": "gemma_twins", "name": "Gemma Twins, the Open Release", "faction": "googlitch", "status": "done", "concept": "Two identical open-release twin models, one stepping into a dashed Open-Source zone as a free copy." },
+    { "id": "gemini_ascendant", "name": "Gemini Ascendant, Frontier Titan", "faction": "googlitch", "status": "done", "concept": "Legendary colossal twin-faced frontier titan rising over the racks, a wipe-beam sweeping enemy models; Glitch fracture on one edge; gold trim." },
+
+    { "id": "distil_bot_v3", "name": "Distil-Bot V3", "faction": "shallowseek", "status": "done", "concept": "A scrappy little origami/paper bot compressing a big model into a tiny cheap clone; discount spark; Ship It." },
+    { "id": "token_faucet", "name": "Token Faucet", "faction": "shallowseek", "status": "done", "concept": "A neon faucet pouring out a school of tiny 1/1 token-fish; swarm; cheap-and-fast." },
+    { "id": "quantize", "name": "Quantize", "faction": "shallowseek", "status": "done", "concept": "A hand of cards being bit-crushed/quantized smaller, cost numbers ticking down; pixel-step compression motif." },
+    { "id": "open_weights_intern", "name": "Open-Weights Intern", "faction": "shallowseek", "status": "done", "concept": "An open-hoodie intern flinging open a weights repo, a card flying out (draw); flip-flops, scrappy." },
+    { "id": "fork_the_repo", "name": "Fork the Repo", "faction": "shallowseek", "status": "done", "concept": "A git-fork split: one model duplicating along a branching path into an exact copy; teal branch lines." },
+    { "id": "mixture_of_interns", "name": "Mixture-of-Interns", "faction": "shallowseek", "status": "done", "concept": "A cluster of small interns merging into one bigger guardrail unit, growing +1/+1 per buddy; swarm-to-wall." },
+    { "id": "sparse_activation", "name": "Sparse Activation", "faction": "shallowseek", "status": "done", "concept": "A sparse neural grid lighting only a few nodes that surge a whole row of fish with +Attack arrows; Ship It." },
+    { "id": "whale_class_cluster", "name": "Whale-Class Cluster", "faction": "shallowseek", "status": "done", "concept": "A whale-shaped compute cluster Launch weapon gaining charges as fish swim past; deep-sea teal." },
+    { "id": "inference_cascade", "name": "Inference Cascade", "faction": "shallowseek", "status": "done", "concept": "A cascading waterfall of inference tokens crashing as a wave straight at an off-frame CEO; scales with the swarm." },
+    { "id": "the_whale_open_sourced", "name": "The Whale, Open-Sourced", "faction": "shallowseek", "status": "done", "concept": "Legendary breaching open-source whale spilling a flood of token-fish from open weights; deep teal; gold trim." }
+  ],
+  "heroes": [
+    { "id": "ceo_closedai", "name": "ClosedAI CEO — The Hype Showman", "faction": "closedai", "status": "done", "concept": "Hoodie-to-blazer pivot, headset mic, gesturing at an invisible 'one more thing'." },
+    { "id": "ceo_anthrabbit", "name": "Anthrabbit CEO — The Earnest Safety Researcher", "faction": "anthrabbit", "status": "done", "concept": "Rabbit motif, clipboard 'constitution', calm to a fault, a halo of caution tape." },
+    { "id": "ceo_googlitch", "name": "Googlitch CEO — The Overextended Giant", "faction": "googlitch", "status": "done", "concept": "Too many tabs, a search bar for a mouth, occasional glitch-smear hallucination tell." },
+    { "id": "ceo_shallowseek", "name": "ShallowSeek CEO — The Scrappy Upstart", "faction": "shallowseek", "status": "done", "concept": "Hoodie + flip-flops, a pet whale, ships fast and cheap." }
+  ],
+  "skills": [
+    { "id": "skill_hype_ping", "name": "Hype Ping", "faction": "closedai", "status": "done", "concept": "A hype-arrow bolt pinging a target then sparking +Hype on a friendly." },
+    { "id": "skill_realign", "name": "Realign", "faction": "anthrabbit", "status": "done", "concept": "A mending valuation heart / safety shield re-aligning." },
+    { "id": "skill_index_scry", "name": "Index & Scry", "faction": "googlitch", "status": "done", "concept": "A crystal/lens scrying the top of the roadmap, one card drawn." },
+    { "id": "skill_spin_up", "name": "Spin Up", "faction": "shallowseek", "status": "done", "concept": "A quick compute-spark spin-up dial, +1 temporary compute." }
+  ],
+  "background": { "id": "datacenter_colosseum", "name": "The Datacenter Colosseum", "status": "done", "interactive": true, "file": "background/background.html", "concept": "Server-hall arena, two podiums, three depth planes, blinking LEDs, broadcast rim glow. Clickable hotspots: rack LED cascades, CEO quip bubbles, breakable open-source padlock (spills token-fish), broadcast on-air toggle, tower window-lighting, spinning fans, spotlight snap. Live telemetry ticker + crowd-hype counter." }
+}

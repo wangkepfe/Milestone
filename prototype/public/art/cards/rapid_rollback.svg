@@ -1,0 +1,64 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Rapid Rollback — a large glowing rewind dial spinning backward as golden Valuation hearts stream back up and Safety pips collect">
+  <defs>
+    <radialGradient id="rr-bg" cx="50%" cy="28%" r="92%">
+      <stop offset="0%" stop-color="#2A2150"/><stop offset="55%" stop-color="#1A1430"/><stop offset="100%" stop-color="#0E0A1C"/>
+    </radialGradient>
+    <linearGradient id="rr-dial" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#B79CFF"/><stop offset="100%" stop-color="#41327A"/>
+    </linearGradient>
+    <radialGradient id="rr-heart" cx="40%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#FFE9A8"/><stop offset="60%" stop-color="#F4C04C"/><stop offset="100%" stop-color="#A8780F"/>
+    </radialGradient>
+    <radialGradient id="rr-core" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#F0E6D2"/><stop offset="60%" stop-color="#CDB8FF"/><stop offset="100%" stop-color="#5A47A0"/>
+    </radialGradient>
+    <radialGradient id="rr-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#CDB8FF" stop-opacity=".55"/><stop offset="100%" stop-color="#A07CFF" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="rr-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="rr-grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0"/></filter>
+    <radialGradient id="rr-vig" cx="50%" cy="46%" r="72%"><stop offset="58%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".55"/></radialGradient>
+  </defs>
+
+  <rect width="400" height="300" fill="url(#rr-bg)"/>
+  <g filter="url(#rr-soft)" opacity=".6"><ellipse cx="170" cy="130" rx="150" ry="95" fill="#A07CFF" opacity=".18"/><ellipse cx="300" cy="90" rx="80" ry="70" fill="#F4C04C" opacity=".08"/></g>
+  <g opacity=".7"><rect x="0" y="228" width="400" height="72" fill="#120D24"/></g>
+
+  <!-- big rewind dial -->
+  <g transform="translate(160 150)">
+    <circle r="104" fill="url(#rr-glow)"/>
+    <circle r="80" fill="none" stroke="#3E3070" stroke-width="14"/>
+    <circle r="80" fill="none" stroke="url(#rr-dial)" stroke-width="10" stroke-dasharray="360 200" stroke-linecap="round" transform="rotate(-40)"/>
+    <!-- tick marks -->
+    <g stroke="#9B86D6" stroke-width="2" opacity=".7">
+      <line x1="0" y1="-92" x2="0" y2="-82"/><line x1="65" y1="-65" x2="58" y2="-58"/><line x1="92" y1="0" x2="82" y2="0"/>
+      <line x1="65" y1="65" x2="58" y2="58"/><line x1="0" y1="92" x2="0" y2="82"/><line x1="-65" y1="65" x2="-58" y2="58"/>
+      <line x1="-92" y1="0" x2="-82" y2="0"/><line x1="-65" y1="-65" x2="-58" y2="-58"/>
+    </g>
+    <!-- rewind double-arrow core -->
+    <circle r="44" fill="url(#rr-core)"/>
+    <g fill="#1A1430"><path d="M2 -16 L-18 0 L2 16 Z"/><path d="M22 -16 L2 0 L22 16 Z"/></g>
+    <!-- backward motion arrows -->
+    <path d="M70 -40 a82 82 0 0 0 -22 -34" fill="none" stroke="#CFE0F2" stroke-width="3" stroke-linecap="round"/>
+    <path d="M48 -74 l-2 14 l14 -4 z" fill="#CFE0F2"/>
+    <text x="0" y="74" font-family="JetBrains Mono,monospace" font-size="11" fill="#9FB3C8" text-anchor="middle" font-weight="700">ROLLBACK</text>
+  </g>
+
+  <!-- Valuation hearts streaming back up (+6) -->
+  <g>
+    <g transform="translate(296 196) scale(.9)"><path d="M0 14 C-17 2 -14 -12 -4 -12 C0 -12 0 -8 0 -7 C0 -8 0 -12 4 -12 C14 -12 17 2 0 14 Z" fill="url(#rr-heart)"/></g>
+    <g transform="translate(316 150)"><path d="M0 14 C-17 2 -14 -12 -4 -12 C0 -12 0 -8 0 -7 C0 -8 0 -12 4 -12 C14 -12 17 2 0 14 Z" fill="url(#rr-heart)"/></g>
+    <g transform="translate(300 104) scale(1.1)"><path d="M0 14 C-17 2 -14 -12 -4 -12 C0 -12 0 -8 0 -7 C0 -8 0 -12 4 -12 C14 -12 17 2 0 14 Z" fill="url(#rr-heart)"/></g>
+    <path d="M286 210 q40 -60 22 -118" fill="none" stroke="#F4C04C" stroke-width="2" stroke-dasharray="3 5" opacity=".55"/>
+    <text x="308" y="70" font-family="JetBrains Mono,monospace" font-size="13" fill="#F4C04C" text-anchor="middle" font-weight="700">+6</text>
+  </g>
+  <!-- overflow Safety pips -->
+  <g transform="translate(60 76)">
+    <circle r="9" fill="#9FB3C8"/><path d="M0 -4 l3 3 l-3 3 l-3 -3 z" fill="#1A1430"/>
+    <circle cx="22" r="9" fill="#9FB3C8"/><path d="M22 -4 l3 3 l-3 3 l-3 -3 z" fill="#1A1430"/>
+    <text x="11" y="26" font-family="JetBrains Mono,monospace" font-size="8" fill="#9FB3C8" text-anchor="middle">+SM</text>
+  </g>
+
+  <rect width="400" height="300" filter="url(#rr-grain)" opacity=".05"/>
+  <rect width="400" height="300" fill="url(#rr-vig)"/>
+</svg>

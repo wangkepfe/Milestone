@@ -1,0 +1,82 @@
+<svg viewBox="0 0 360 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ClosedAI CEO — the Hype Showman: a caricatured founder in a literal hoodie-to-blazer pivot, headset mic, raising a finger for 'one more thing' under a blinding launch light">
+  <defs>
+    <radialGradient id="hc-bg" cx="50%" cy="30%" r="90%">
+      <stop offset="0%" stop-color="#103A2A"/><stop offset="55%" stop-color="#0D1A14"/><stop offset="100%" stop-color="#060D0A"/>
+    </radialGradient>
+    <linearGradient id="hc-spot" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7FF5C0" stop-opacity=".5"/><stop offset="100%" stop-color="#7FF5C0" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="hc-halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFDF2" stop-opacity=".9"/><stop offset="55%" stop-color="#7FF5C0" stop-opacity=".3"/><stop offset="100%" stop-color="#19C37D" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="hc-skin" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F4DBC0"/><stop offset="100%" stop-color="#CB9E76"/></linearGradient>
+    <linearGradient id="hc-hoodie" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#19C37D"/><stop offset="100%" stop-color="#0C5E42"/></linearGradient>
+    <linearGradient id="hc-blazer" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#123F30"/><stop offset="100%" stop-color="#081E18"/></linearGradient>
+    <filter id="hc-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="9"/></filter>
+    <filter id="hc-grain"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0"/></filter>
+    <radialGradient id="hc-vig" cx="50%" cy="44%" r="74%"><stop offset="58%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".6"/></radialGradient>
+  </defs>
+
+  <rect width="360" height="460" fill="url(#hc-bg)"/>
+  <path d="M180 -20 L70 420 L290 420 Z" fill="url(#hc-spot)" opacity=".6"/>
+  <g filter="url(#hc-soft)" opacity=".5"><ellipse cx="180" cy="120" rx="150" ry="120" fill="#19C37D" opacity=".14"/></g>
+
+  <!-- keynote stage floor -->
+  <ellipse cx="180" cy="430" rx="150" ry="26" fill="#0B201A"/>
+  <ellipse cx="180" cy="426" rx="120" ry="18" fill="#0E2C22"/>
+
+  <circle cx="180" cy="150" r="120" fill="url(#hc-halo)"/>
+
+  <!-- torso: the literal hoodie-to-blazer pivot (split down the middle) -->
+  <g>
+    <!-- hoodie half (left) -->
+    <path d="M180 252 q-60 8 -84 60 q-14 32 -16 96 l100 0 z" fill="url(#hc-hoodie)"/>
+    <path d="M120 300 q14 -14 30 -18" fill="none" stroke="#0C5E42" stroke-width="3" opacity=".6"/>
+    <!-- hoodie hood bunched at shoulder -->
+    <path d="M120 268 q-10 22 6 40 q14 -6 18 -26 z" fill="#0C5E42"/>
+    <!-- blazer half (right) -->
+    <path d="M180 252 q60 8 84 60 q14 32 16 96 l-100 0 z" fill="url(#hc-blazer)"/>
+    <path d="M180 256 L196 360 L180 408 Z" fill="#0A2E22"/>
+    <!-- blazer lapel + pocket square (mint) -->
+    <path d="M210 268 L188 320 L214 360 L236 300 Z" fill="#0E342A"/>
+    <path d="M232 300 l10 -4 l-2 12 z" fill="#7FF5C0"/>
+    <!-- the split seam glowing -->
+    <line x1="180" y1="252" x2="180" y2="408" stroke="#7FF5C0" stroke-width="2" opacity=".7"/>
+    <!-- hoodie collar / tee -->
+    <path d="M156 256 q24 22 48 0 l0 -12 q-24 14 -48 0 z" fill="#0E342A"/>
+  </g>
+
+  <!-- neck + head -->
+  <rect x="166" y="216" width="28" height="30" rx="9" fill="url(#hc-skin)"/>
+  <ellipse cx="180" cy="180" rx="42" ry="46" fill="url(#hc-skin)"/>
+  <!-- close-cropped hair -->
+  <path d="M139 176 q4 -46 41 -46 q37 0 41 46 q-14 -18 -41 -16 q-27 -2 -41 16 z" fill="#3a2a1c"/>
+  <!-- knowing showman grin -->
+  <path d="M160 196 q20 12 40 0" fill="none" stroke="#7a4f33" stroke-width="3" stroke-linecap="round"/>
+  <path d="M162 198 q18 9 36 0 l0 4 q-18 8 -36 0 z" fill="#fff" opacity=".85"/>
+  <!-- confident eyes + raised brow -->
+  <circle cx="166" cy="172" r="3.4" fill="#2a1c10"/><circle cx="194" cy="172" r="3.4" fill="#2a1c10"/>
+  <path d="M156 163 l16 3 M184 166 l16 -4" stroke="#3a2a1c" stroke-width="2.6" stroke-linecap="round"/>
+  <!-- headset mic -->
+  <path d="M140 176 q40 -50 80 0" fill="none" stroke="#0A2E22" stroke-width="4"/>
+  <path d="M142 178 q-6 22 20 28" fill="none" stroke="#0A2E22" stroke-width="4"/>
+  <circle cx="166" cy="204" r="4" fill="#7FF5C0"/>
+
+  <!-- the "one more thing" raised finger arm -->
+  <path d="M232 270 L300 150 L316 158 L252 286 Z" fill="url(#hc-blazer)"/>
+  <rect x="298" y="128" width="14" height="30" rx="7" fill="url(#hc-skin)"/>
+  <circle cx="305" cy="122" r="12" fill="url(#hc-halo)"/>
+  <text x="305" y="104" font-family="JetBrains Mono,monospace" font-size="11" fill="#7FF5C0" text-anchor="middle">one more thing</text>
+
+  <!-- rim light -->
+  <path d="M139 176 q4 -46 41 -46" fill="none" stroke="#FFF6E0" stroke-width="2" opacity=".6" stroke-linecap="round"/>
+
+  <!-- nameplate -->
+  <g transform="translate(180 426)">
+    <rect x="-130" y="0" width="260" height="30" rx="8" fill="#0B201A" stroke="#19C37D" stroke-width="1.4"/>
+    <text x="0" y="20" font-family="'Space Grotesk',Archivo,sans-serif" font-size="15" font-weight="800" fill="#EAFBF3" text-anchor="middle">🟢 ClosedAI — The Hype Showman</text>
+  </g>
+
+  <rect width="360" height="460" filter="url(#hc-grain)" opacity=".05"/>
+  <rect width="360" height="460" fill="url(#hc-vig)"/>
+</svg>

@@ -1,0 +1,84 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hype-4 Omni — a tall glass hype-bot mid-launch firing a hype-ping bolt past four ascending benchmark chevrons">
+  <defs>
+    <radialGradient id="h4-bg" cx="40%" cy="28%" r="90%">
+      <stop offset="0%" stop-color="#17392B"/>
+      <stop offset="55%" stop-color="#0D1A14"/>
+      <stop offset="100%" stop-color="#070D0A"/>
+    </radialGradient>
+    <linearGradient id="h4-chrome" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#EAFBF3"/>
+      <stop offset="45%" stop-color="#7FE6BE"/>
+      <stop offset="100%" stop-color="#0E6346"/>
+    </linearGradient>
+    <linearGradient id="h4-chev" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#0E6346"/>
+      <stop offset="100%" stop-color="#7FF5C0"/>
+    </linearGradient>
+    <radialGradient id="h4-ping" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#EAFBF3"/>
+      <stop offset="40%" stop-color="#7FF5C0"/>
+      <stop offset="100%" stop-color="#7FF5C0" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="h4-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="h4-grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0"/></filter>
+    <radialGradient id="h4-vig" cx="50%" cy="46%" r="72%"><stop offset="60%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".55"/></radialGradient>
+  </defs>
+
+  <rect width="400" height="300" fill="url(#h4-bg)"/>
+
+  <g filter="url(#h4-soft)" opacity=".6">
+    <ellipse cx="150" cy="150" rx="110" ry="80" fill="#19C37D" opacity=".16"/>
+    <ellipse cx="320" cy="90" rx="90" ry="70" fill="#7FF5C0" opacity=".12"/>
+  </g>
+
+  <!-- back racks -->
+  <g opacity=".8">
+    <rect x="0" y="206" width="400" height="94" fill="#0A1510"/>
+    <g fill="#0E2419"><rect x="20" y="166" width="58" height="58" rx="4"/><rect x="318" y="170" width="60" height="54" rx="4"/></g>
+    <circle cx="30" cy="176" r="2" fill="#5BD68A"/><circle cx="38" cy="176" r="2" fill="#3DD6F0"/>
+    <circle cx="328" cy="180" r="2" fill="#3DD6F0"/><circle cx="336" cy="180" r="2" fill="#F4C04C"/>
+  </g>
+
+  <!-- four ascending benchmark chevrons (the "4" in Hype-4) -->
+  <g opacity=".9">
+    <path d="M250 240 l26 -16 l26 16 l-10 0 l-16 -10 l-16 10 z" fill="url(#h4-chev)" opacity=".6"/>
+    <path d="M250 214 l26 -16 l26 16 l-10 0 l-16 -10 l-16 10 z" fill="url(#h4-chev)" opacity=".75"/>
+    <path d="M250 188 l26 -16 l26 16 l-10 0 l-16 -10 l-16 10 z" fill="url(#h4-chev)" opacity=".9"/>
+    <path d="M250 162 l26 -16 l26 16 l-10 0 l-16 -10 l-16 10 z" fill="url(#h4-chev)"/>
+    <text x="276" y="116" font-family="JetBrains Mono, monospace" font-size="13" fill="#7FF5C0" text-anchor="middle" font-weight="700">+1</text>
+  </g>
+
+  <!-- stage glow -->
+  <ellipse cx="150" cy="262" rx="96" ry="14" fill="#0E2C22"/>
+
+  <!-- SUBJECT: tall hype-bot, sharp ascending body, arm raised firing a ping -->
+  <g>
+    <!-- legs / base -->
+    <path d="M122 262 L132 196 L168 196 L178 262 Z" fill="url(#h4-chrome)"/>
+    <path d="M150 196 L168 196 L178 262 L150 262 Z" fill="#0E6346" opacity=".4"/>
+    <!-- tall ascending torso (omni shard) -->
+    <path d="M118 200 L150 70 L182 200 Z" fill="url(#h4-chrome)"/>
+    <path d="M150 70 L182 200 L150 200 Z" fill="#0E6346" opacity=".45"/>
+    <!-- glass core showing OMNI benchmark -->
+    <rect x="134" y="120" width="32" height="64" rx="6" fill="#06150F" stroke="#19C37D" stroke-width="1.4"/>
+    <text x="150" y="142" font-family="JetBrains Mono, monospace" font-size="9" fill="#7FF5C0" text-anchor="middle" font-weight="700">OMNI</text>
+    <rect x="140" y="150" width="20" height="5" rx="2" fill="#0A1F18"/><rect x="140" y="150" width="17" height="5" rx="2" fill="#5BD68A"/>
+    <rect x="140" y="160" width="20" height="5" rx="2" fill="#0A1F18"/><rect x="140" y="160" width="13" height="5" rx="2" fill="#3DD6F0"/>
+    <rect x="140" y="170" width="20" height="5" rx="2" fill="#0A1F18"/><rect x="140" y="170" width="19" height="5" rx="2" fill="#7FF5C0"/>
+    <!-- head -->
+    <path d="M150 56 L168 84 L150 104 L132 84 Z" fill="url(#h4-chrome)"/>
+    <circle cx="150" cy="84" r="6.5" fill="#06150F"/><circle cx="150" cy="84" r="4" fill="#7FF5C0"/>
+    <!-- raised firing arm -->
+    <path d="M170 132 L236 96 L242 108 L176 146 Z" fill="url(#h4-chrome)"/>
+    <!-- rim light -->
+    <path d="M118 200 L150 70 L168 84" fill="none" stroke="#FFF6E0" stroke-width="2" opacity=".8" stroke-linecap="round"/>
+  </g>
+
+  <!-- the hype-ping bolt fired off-frame upper-right -->
+  <circle cx="248" cy="92" r="20" fill="url(#h4-ping)"/>
+  <path d="M242 86 l10 -2 l-3 8 l9 -1 l-14 14 l3 -9 l-8 1 z" fill="#EAFBF3"/>
+  <line x1="180" y1="120" x2="240" y2="94" stroke="#7FF5C0" stroke-width="2.5" stroke-linecap="round" opacity=".8"/>
+
+  <rect width="400" height="300" filter="url(#h4-grain)" opacity=".05"/>
+  <rect width="400" height="300" fill="url(#h4-vig)"/>
+</svg>

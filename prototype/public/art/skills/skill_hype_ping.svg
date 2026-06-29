@@ -1,0 +1,43 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hype Ping — ClosedAI founder move: a hype-arrow ping bolt strikes a target reticle and sparks +Hype, emerald emblem">
+  <defs>
+    <radialGradient id="shp-disc" cx="50%" cy="42%" r="60%">
+      <stop offset="0%" stop-color="#114030"/><stop offset="100%" stop-color="#06140E"/>
+    </radialGradient>
+    <linearGradient id="shp-ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7FF5C0"/><stop offset="50%" stop-color="#19C37D"/><stop offset="100%" stop-color="#0C5E42"/>
+    </linearGradient>
+    <radialGradient id="shp-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#7FF5C0" stop-opacity=".85"/><stop offset="100%" stop-color="#7FF5C0" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shp-grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .5 0"/></filter>
+  </defs>
+
+  <circle cx="100" cy="100" r="96" fill="url(#shp-ring)"/>
+  <circle cx="100" cy="100" r="86" fill="url(#shp-disc)"/>
+  <circle cx="100" cy="100" r="86" fill="none" stroke="#0C5E42" stroke-width="2"/>
+  <circle cx="100" cy="92" r="60" fill="url(#shp-glow)" opacity=".4"/>
+
+  <!-- target reticle being pinged -->
+  <g transform="translate(118 104)" stroke="#7FF5C0" stroke-width="2.4" fill="none" opacity=".8">
+    <circle r="20"/><circle r="9"/>
+    <line x1="0" y1="-26" x2="0" y2="-14"/><line x1="0" y1="14" x2="0" y2="26"/><line x1="-26" y1="0" x2="-14" y2="0"/><line x1="14" y1="0" x2="26" y2="0"/>
+  </g>
+  <circle cx="118" cy="104" r="4" fill="#FF5C5C"/>
+
+  <!-- the hype-arrow ping bolt striking it -->
+  <g>
+    <path d="M40 150 L78 92 L70 124 L96 104" fill="none" stroke="#EAFBF3" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- big ascending hype arrow -->
+    <path d="M62 96 l18 -30 l18 30 l-11 0 l0 22 l-14 0 l0 -22 z" fill="#7FF5C0"/>
+    <text x="80" y="44" font-family="JetBrains Mono,monospace" font-size="15" fill="#7FF5C0" text-anchor="middle" font-weight="700">+1</text>
+  </g>
+
+  <!-- compute cost gem -->
+  <g transform="translate(100 168)">
+    <circle r="15" fill="#0C1426" stroke="#3DD6F0" stroke-width="2"/>
+    <text y="5" font-family="'Space Grotesk',sans-serif" font-weight="800" font-size="16" fill="#3DD6F0" text-anchor="middle">2</text>
+  </g>
+  <text x="100" y="190" font-family="JetBrains Mono,monospace" font-size="11" fill="#7FF5C0" text-anchor="middle" font-weight="700">HYPE PING</text>
+
+  <circle cx="100" cy="100" r="96" fill="url(#shp-grain)" opacity=".05"/>
+</svg>

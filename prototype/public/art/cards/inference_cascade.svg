@@ -1,0 +1,60 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Inference Cascade — a cascading waterfall of inference tokens crashing as a surging wave straight toward an off-frame enemy CEO, scaling with the swarm">
+  <defs>
+    <radialGradient id="ica-bg" cx="36%" cy="30%" r="95%">
+      <stop offset="0%" stop-color="#0F4044"/><stop offset="55%" stop-color="#0A2A2E"/><stop offset="100%" stop-color="#05181A"/>
+    </radialGradient>
+    <linearGradient id="ica-wave" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FFE8C8" stop-opacity=".2"/><stop offset="55%" stop-color="#FF8A3D" stop-opacity=".7"/><stop offset="100%" stop-color="#FFE8C8"/>
+    </linearGradient>
+    <radialGradient id="ica-impact" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF"/><stop offset="40%" stop-color="#FFB36A"/><stop offset="100%" stop-color="#FF8A3D" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="ica-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FF8A3D" stop-opacity=".35"/><stop offset="100%" stop-color="#FF8A3D" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="ica-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="ica-glowf" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3"/></filter>
+    <filter id="ica-grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0"/></filter>
+    <radialGradient id="ica-vig" cx="50%" cy="46%" r="72%"><stop offset="58%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".55"/></radialGradient>
+  </defs>
+
+  <rect width="400" height="300" fill="url(#ica-bg)"/>
+  <g filter="url(#ica-soft)" opacity=".6"><ellipse cx="130" cy="130" rx="140" ry="100" fill="#FF8A3D" opacity=".13"/><ellipse cx="120" cy="150" rx="110" ry="90" fill="#0E5E63" opacity=".4"/></g>
+  <g opacity=".7"><rect x="0" y="236" width="400" height="64" fill="#062024"/></g>
+
+  <!-- the cascading source: stepped ledges spilling tokens (left) -->
+  <g transform="translate(30 36)">
+    <g fill="#0E5E63" opacity=".85">
+      <rect x="0" y="0" width="70" height="14" rx="3"/><rect x="14" y="40" width="70" height="14" rx="3"/><rect x="28" y="80" width="70" height="14" rx="3"/><rect x="42" y="120" width="70" height="14" rx="3"/>
+    </g>
+    <g fill="#1E6E70" opacity=".6"><rect x="0" y="14" width="70" height="6"/><rect x="14" y="54" width="70" height="6"/><rect x="28" y="94" width="70" height="6"/></g>
+  </g>
+
+  <!-- the falling token stream cascading down then surging right -->
+  <path d="M40 60 q-4 60 40 110 q60 40 320 36 l0 30 q-240 4 -340 -40 q-56 -28 -48 -90 q2 -36 16 -50 z" fill="url(#ica-wave)" opacity=".5"/>
+
+  <!-- tokens (tiny rounded squares) tumbling in the cascade -->
+  <g fill="#FFB36A">
+    <rect x="58" y="70" width="9" height="9" rx="2" transform="rotate(20 62 74)"/>
+    <rect x="80" y="100" width="9" height="9" rx="2" transform="rotate(-12 84 104)"/>
+    <rect x="104" y="130" width="10" height="10" rx="2" transform="rotate(28 109 135)"/>
+    <rect x="150" y="156" width="9" height="9" rx="2" transform="rotate(-18 154 160)"/>
+    <rect x="200" y="170" width="10" height="10" rx="2" transform="rotate(14 205 175)"/>
+    <rect x="252" y="178" width="9" height="9" rx="2" transform="rotate(-10 256 182)"/>
+    <rect x="300" y="182" width="10" height="10" rx="2" transform="rotate(22 305 187)"/>
+  </g>
+  <g fill="#FFD9A8" opacity=".8">
+    <rect x="120" y="110" width="7" height="7" rx="2"/><rect x="178" y="148" width="7" height="7" rx="2"/><rect x="236" y="166" width="7" height="7" rx="2"/><rect x="284" y="170" width="7" height="7" rx="2"/>
+  </g>
+
+  <!-- the crashing wave-front + impact on the off-frame CEO (right) -->
+  <rect x="150" y="178" width="240" height="16" fill="url(#ica-wave)" filter="url(#ica-glowf)" opacity=".9"/>
+  <circle cx="372" cy="186" r="36" fill="url(#ica-impact)" opacity=".95"/>
+  <text x="372" y="190" font-family="'Space Grotesk',sans-serif" font-weight="800" font-size="16" fill="#7a3208" text-anchor="middle">10</text>
+
+  <!-- scaling-laws tag -->
+  <g transform="translate(96 62)"><rect x="-50" y="-13" width="100" height="26" rx="13" fill="#06181A" stroke="#FF8A3D" stroke-width="1.2"/><text x="0" y="5" font-family="JetBrains Mono,monospace" font-size="9" fill="#FF8A3D" text-anchor="middle">models + scaling</text></g>
+
+  <rect width="400" height="300" filter="url(#ica-grain)" opacity=".05"/>
+  <rect width="400" height="300" fill="url(#ica-vig)"/>
+</svg>

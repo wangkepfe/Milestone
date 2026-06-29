@@ -1,0 +1,47 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Realign — Anthrabbit founder move: alignment arrows converge to mend a golden Valuation heart inside a safety shield, amethyst emblem">
+  <defs>
+    <radialGradient id="srl-disc" cx="50%" cy="42%" r="60%">
+      <stop offset="0%" stop-color="#241B45"/><stop offset="100%" stop-color="#0E0A1C"/>
+    </radialGradient>
+    <linearGradient id="srl-ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#CDB8FF"/><stop offset="50%" stop-color="#A07CFF"/><stop offset="100%" stop-color="#41327A"/>
+    </linearGradient>
+    <radialGradient id="srl-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#CDB8FF" stop-opacity=".8"/><stop offset="100%" stop-color="#A07CFF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="srl-heart" cx="40%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#FFE9A8"/><stop offset="60%" stop-color="#F4C04C"/><stop offset="100%" stop-color="#A8780F"/>
+    </radialGradient>
+    <linearGradient id="srl-shield" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#D6E3F0"/><stop offset="100%" stop-color="#9FB3C8"/></linearGradient>
+    <filter id="srl-grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .5 0"/></filter>
+  </defs>
+
+  <circle cx="100" cy="100" r="96" fill="url(#srl-ring)"/>
+  <circle cx="100" cy="100" r="86" fill="url(#srl-disc)"/>
+  <circle cx="100" cy="100" r="86" fill="none" stroke="#41327A" stroke-width="2"/>
+  <circle cx="100" cy="92" r="60" fill="url(#srl-glow)" opacity=".4"/>
+
+  <!-- safety shield holding the heart -->
+  <path d="M100 50 l34 14 v26 q0 32 -34 44 q-34 -12 -34 -44 v-26 z" fill="url(#srl-shield)" opacity=".22" stroke="#9FB3C8" stroke-width="1.6"/>
+
+  <!-- converging alignment arrows -->
+  <g stroke="#CDB8FF" stroke-width="3" fill="none" stroke-linecap="round" opacity=".9">
+    <path d="M54 66 l20 16"/><path d="M146 66 l-20 16"/><path d="M54 138 l20 -16"/><path d="M146 138 l-20 -16"/>
+  </g>
+  <g fill="#CDB8FF"><path d="M74 82 l-12 -2 l4 12 z"/><path d="M126 82 l12 -2 l-4 12 z"/><path d="M74 122 l-12 2 l4 -12 z"/><path d="M126 122 l12 2 l-4 -12 z"/></g>
+
+  <!-- the mended Valuation heart -->
+  <g transform="translate(100 96)">
+    <path d="M0 26 C-30 4 -25 -22 -7 -22 C0 -22 0 -14 0 -12 C0 -14 0 -22 7 -22 C25 -22 30 4 0 26 Z" fill="url(#srl-heart)" stroke="#FFE9A8" stroke-width="1.4"/>
+    <path d="M-3 -10 l5 5 l-5 5 l5 5 l-5 5" fill="none" stroke="#1A1430" stroke-width="1.8" opacity=".6"/>
+  </g>
+
+  <!-- compute cost gem -->
+  <g transform="translate(100 168)">
+    <circle r="15" fill="#0C1426" stroke="#3DD6F0" stroke-width="2"/>
+    <text y="5" font-family="'Space Grotesk',sans-serif" font-weight="800" font-size="16" fill="#3DD6F0" text-anchor="middle">2</text>
+  </g>
+  <text x="100" y="190" font-family="JetBrains Mono,monospace" font-size="11" fill="#CDB8FF" text-anchor="middle" font-weight="700">REALIGN</text>
+
+  <circle cx="100" cy="100" r="96" fill="url(#srl-grain)" opacity=".05"/>
+</svg>

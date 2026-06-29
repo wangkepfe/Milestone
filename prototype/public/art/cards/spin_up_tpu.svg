@@ -1,0 +1,66 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Spin Up a TPU Pod — a TPU chip board powering on with cyan compute bolts and a drawn card, ramping compute">
+  <defs>
+    <radialGradient id="su-bg" cx="50%" cy="30%" r="92%">
+      <stop offset="0%" stop-color="#15294A"/><stop offset="55%" stop-color="#0C1426"/><stop offset="100%" stop-color="#060B16"/>
+    </radialGradient>
+    <linearGradient id="su-board" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1F3A66"/><stop offset="100%" stop-color="#0E1F3A"/>
+    </linearGradient>
+    <radialGradient id="su-die" cx="40%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#BFF6FF"/><stop offset="50%" stop-color="#22E0E0"/><stop offset="100%" stop-color="#0A6E7A"/>
+    </radialGradient>
+    <radialGradient id="su-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#22E0E0" stop-opacity=".5"/><stop offset="100%" stop-color="#22E0E0" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="su-card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#DCEAFF"/><stop offset="100%" stop-color="#9DB8E0"/>
+    </linearGradient>
+    <filter id="su-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="su-grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0"/></filter>
+    <radialGradient id="su-vig" cx="50%" cy="46%" r="72%"><stop offset="58%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".55"/></radialGradient>
+  </defs>
+
+  <rect width="400" height="300" fill="url(#su-bg)"/>
+  <g filter="url(#su-soft)" opacity=".6"><ellipse cx="180" cy="140" rx="150" ry="100" fill="#22E0E0" opacity=".12"/><ellipse cx="180" cy="140" rx="120" ry="80" fill="#4D8DF0" opacity=".12"/></g>
+  <g opacity=".7"><rect x="0" y="234" width="400" height="66" fill="#0A1326"/></g>
+  <circle cx="180" cy="150" r="110" fill="url(#su-glow)"/>
+
+  <!-- the TPU board powering on, tilted -->
+  <g transform="translate(180 150) rotate(-6)">
+    <rect x="-110" y="-66" width="220" height="140" rx="10" fill="url(#su-board)" stroke="#2D5BA8" stroke-width="1.5"/>
+    <!-- circuit traces -->
+    <g stroke="#22E0E0" stroke-width="1.4" fill="none" opacity=".7">
+      <path d="M-110 -40 L-60 -40 L-60 -10"/><path d="M110 -30 L60 -30 L60 6"/>
+      <path d="M-110 40 L-70 40 L-70 10"/><path d="M110 50 L70 50 L70 20"/>
+      <path d="M-30 -66 L-30 -40"/><path d="M30 74 L30 40"/>
+    </g>
+    <g fill="#22E0E0" opacity=".9"><circle cx="-60" cy="-10" r="3"/><circle cx="60" cy="6" r="3"/><circle cx="-70" cy="10" r="3"/><circle cx="70" cy="20" r="3"/></g>
+    <!-- central TPU die glowing -->
+    <rect x="-40" y="-34" width="80" height="68" rx="6" fill="#0C1426" stroke="#22E0E0" stroke-width="2"/>
+    <rect x="-26" y="-20" width="52" height="40" rx="4" fill="url(#su-die)"/>
+    <text x="0" y="6" font-family="'Space Grotesk',sans-serif" font-weight="800" font-size="16" fill="#06222a">TPU</text>
+    <!-- pins -->
+    <g stroke="#22E0E0" stroke-width="2"><line x1="-40" y1="-20" x2="-50" y2="-20"/><line x1="-40" y1="0" x2="-50" y2="0"/><line x1="-40" y1="20" x2="-50" y2="20"/><line x1="40" y1="-20" x2="50" y2="-20"/><line x1="40" y1="0" x2="50" y2="0"/><line x1="40" y1="20" x2="50" y2="20"/></g>
+    <!-- rim light -->
+    <path d="M-110 74 L-110 -56 q0 -10 10 -10" fill="none" stroke="#FFF6E0" stroke-width="1.6" opacity=".55"/>
+  </g>
+
+  <!-- compute bolts surging up (+1 max compute) -->
+  <g fill="#BFF6FF">
+    <path d="M120 60 l14 -2 l-6 12 l12 -1 l-20 22 l5 -14 l-11 1 z"/>
+    <path d="M252 70 l11 -2 l-5 10 l9 -1 l-15 18 l4 -12 l-9 1 z" opacity=".85"/>
+  </g>
+  <text x="298" y="118" font-family="JetBrains Mono,monospace" font-size="12" fill="#22E0E0" font-weight="700">+1 ⚡</text>
+
+  <!-- the drawn card flying out -->
+  <g transform="translate(296 168) rotate(12)">
+    <rect x="0" y="0" width="54" height="76" rx="6" fill="url(#su-card)" stroke="#4D8DF0" stroke-width="1.6"/>
+    <rect x="8" y="10" width="38" height="24" rx="3" fill="#2D5BA8"/>
+    <rect x="8" y="40" width="38" height="3" rx="1.5" fill="#7E9AC8"/>
+    <rect x="8" y="48" width="30" height="3" rx="1.5" fill="#7E9AC8"/>
+    <text x="27" y="70" font-family="JetBrains Mono,monospace" font-size="8" fill="#2D5BA8" text-anchor="middle" font-weight="700">DRAW</text>
+  </g>
+
+  <rect width="400" height="300" filter="url(#su-grain)" opacity=".05"/>
+  <rect width="400" height="300" fill="url(#su-vig)"/>
+</svg>

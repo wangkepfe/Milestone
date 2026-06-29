@@ -1,0 +1,47 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Index and Scry — Googlitch founder move: a scrying lens over the top of the roadmap reveals two cards and draws one, azure emblem">
+  <defs>
+    <radialGradient id="sis-disc" cx="50%" cy="42%" r="60%">
+      <stop offset="0%" stop-color="#14294A"/><stop offset="100%" stop-color="#060B16"/>
+    </radialGradient>
+    <linearGradient id="sis-ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#8FBBF8"/><stop offset="50%" stop-color="#4D8DF0"/><stop offset="100%" stop-color="#16335c"/>
+    </linearGradient>
+    <radialGradient id="sis-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#22E0E0" stop-opacity=".8"/><stop offset="100%" stop-color="#22E0E0" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="sis-card" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#DCEAFF"/><stop offset="100%" stop-color="#9DB8E0"/></linearGradient>
+    <radialGradient id="sis-lens" cx="40%" cy="35%" r="70%"><stop offset="0%" stop-color="#BFF6FF" stop-opacity=".5"/><stop offset="100%" stop-color="#22E0E0" stop-opacity=".1"/></radialGradient>
+    <filter id="sis-grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .5 0"/></filter>
+  </defs>
+
+  <circle cx="100" cy="100" r="96" fill="url(#sis-ring)"/>
+  <circle cx="100" cy="100" r="86" fill="url(#sis-disc)"/>
+  <circle cx="100" cy="100" r="86" fill="none" stroke="#16335c" stroke-width="2"/>
+  <circle cx="100" cy="92" r="60" fill="url(#sis-glow)" opacity=".35"/>
+
+  <!-- top of the roadmap: two cards fanned -->
+  <g transform="translate(82 112)">
+    <g transform="rotate(-14)"><rect x="-26" y="-34" width="44" height="62" rx="6" fill="url(#sis-card)" stroke="#4D8DF0" stroke-width="1.6"/><rect x="-19" y="-26" width="30" height="18" rx="3" fill="#2D5BA8"/></g>
+    <!-- the drawn (glowing) card lifting out -->
+    <g transform="translate(34 -10) rotate(12)"><rect x="-22" y="-32" width="44" height="62" rx="6" fill="url(#sis-card)" stroke="#22E0E0" stroke-width="2"/><rect x="-15" y="-24" width="30" height="18" rx="3" fill="#0E5E63"/><path d="M0 8 l0 14 M-6 16 l6 6 l6 -6" stroke="#22E0E0" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+  </g>
+
+  <!-- the scrying lens / eye over the cards -->
+  <g transform="translate(100 84)">
+    <circle r="30" fill="url(#sis-lens)" stroke="#BFF6FF" stroke-width="3"/>
+    <circle r="30" fill="none" stroke="#4D8DF0" stroke-width="1.4"/>
+    <!-- eye iris -->
+    <ellipse cx="0" cy="0" rx="14" ry="10" fill="#0C1426"/>
+    <circle r="6" fill="#22E0E0"/><circle cx="-2" cy="-2" r="2" fill="#fff"/>
+    <line x1="22" y1="22" x2="40" y2="40" stroke="#8FBBF8" stroke-width="7" stroke-linecap="round"/>
+  </g>
+
+  <!-- compute cost gem -->
+  <g transform="translate(100 168)">
+    <circle r="15" fill="#0C1426" stroke="#3DD6F0" stroke-width="2"/>
+    <text y="5" font-family="'Space Grotesk',sans-serif" font-weight="800" font-size="16" fill="#3DD6F0" text-anchor="middle">2</text>
+  </g>
+  <text x="100" y="190" font-family="JetBrains Mono,monospace" font-size="10" fill="#8FBBF8" text-anchor="middle" font-weight="700">INDEX &amp; SCRY</text>
+
+  <circle cx="100" cy="100" r="96" fill="url(#sis-grain)" opacity=".05"/>
+</svg>

@@ -1,0 +1,80 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The Whale, Open-Sourced — a majestic breaching open-source whale spilling a flood of token-fish from its open weights, legendary gold trim">
+  <defs>
+    <radialGradient id="wo-bg" cx="50%" cy="26%" r="95%">
+      <stop offset="0%" stop-color="#114A50"/><stop offset="52%" stop-color="#0A2A2E"/><stop offset="100%" stop-color="#041517"/>
+    </radialGradient>
+    <linearGradient id="wo-whale" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3AA0A0"/><stop offset="60%" stop-color="#15585C"/><stop offset="100%" stop-color="#0A3034"/>
+    </linearGradient>
+    <linearGradient id="wo-belly" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8FE6DC"/><stop offset="100%" stop-color="#2E8C8C"/>
+    </linearGradient>
+    <linearGradient id="wo-gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFE9A8"/><stop offset="50%" stop-color="#F4C04C"/><stop offset="100%" stop-color="#8a5a12"/>
+    </linearGradient>
+    <radialGradient id="wo-burst" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFF4D6"/><stop offset="45%" stop-color="#FFB36A"/><stop offset="100%" stop-color="#FF8A3D" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="wo-glow" cx="50%" cy="44%" r="60%">
+      <stop offset="0%" stop-color="#39C9C0" stop-opacity=".45"/><stop offset="100%" stop-color="#39C9C0" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="wo-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="wo-grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0"/></filter>
+    <radialGradient id="wo-vig" cx="50%" cy="46%" r="72%"><stop offset="56%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".58"/></radialGradient>
+    <g id="wo-fish">
+      <path d="M0 0 q8 -6 16 0 q-8 6 -16 0 Z" fill="#FFB36A"/><path d="M16 0 l7 -5 l0 10 z" fill="#FF8A3D"/>
+      <circle cx="5" cy="0" r="1.5" fill="#06181A"/>
+    </g>
+  </defs>
+
+  <rect width="400" height="300" fill="url(#wo-bg)"/>
+
+  <!-- legendary gold corner rays -->
+  <g opacity=".5"><path d="M0 0 L130 0 L0 96 Z" fill="url(#wo-gold)" opacity=".12"/><path d="M400 300 L270 300 L400 204 Z" fill="url(#wo-gold)" opacity=".12"/></g>
+
+  <g filter="url(#wo-soft)" opacity=".6"><ellipse cx="200" cy="160" rx="180" ry="110" fill="#0E5E63" opacity=".5"/><ellipse cx="200" cy="110" rx="120" ry="80" fill="#FF8A3D" opacity=".1"/></g>
+
+  <!-- deep-sea light rays from above -->
+  <g opacity=".25" fill="#8FE6DC"><path d="M150 0 L120 300 L150 300 Z"/><path d="M250 0 L280 300 L250 300 Z"/><path d="M200 0 L195 300 L205 300 Z"/></g>
+  <circle cx="200" cy="150" r="120" fill="url(#wo-glow)"/>
+
+  <!-- the breaching whale (rising, three-quarter) -->
+  <g transform="translate(200 168)">
+    <!-- tail flukes raised behind -->
+    <path d="M-150 30 L-186 -16 L-168 8 L-188 44 L-150 50 Z" fill="url(#wo-whale)"/>
+    <!-- massive body breaching upward -->
+    <path d="M-150 40 q10 -96 96 -118 q96 -22 150 44 q22 34 -2 70 q-110 56 -222 16 q-26 -52 -22 -82 z" fill="url(#wo-whale)"/>
+    <!-- pale belly -->
+    <path d="M-128 56 q90 50 196 12 q-8 30 -44 42 q-96 22 -150 -18 q-12 -20 -2 -36 z" fill="url(#wo-belly)" opacity=".7"/>
+    <g stroke="#0A3034" stroke-width="2.4" opacity=".4"><path d="M-110 64 q92 40 178 4 M-96 82 q86 36 160 2"/></g>
+    <!-- gold open-source seam along the back -->
+    <path d="M-150 40 q10 -96 96 -118 q96 -22 150 44" fill="none" stroke="url(#wo-gold)" stroke-width="3" opacity=".85"/>
+    <!-- pectoral fin -->
+    <path d="M-30 70 q-26 38 -8 64 q26 -8 34 -44 z" fill="#0A3034"/>
+    <!-- eye, calm and wise -->
+    <circle cx="74" cy="-16" r="10" fill="#06181A"/><circle cx="74" cy="-16" r="5" fill="#8FE6DC"/><circle cx="72" cy="-18" r="1.8" fill="#fff"/>
+    <!-- the open "weights hatch" on the side, spilling a burst of light + fish -->
+    <g transform="translate(20 -8)">
+      <circle r="34" fill="url(#wo-burst)" opacity=".9"/>
+      <path d="M-26 -18 L26 -18 L20 22 L-20 22 Z" fill="#06181A" opacity=".5" stroke="url(#wo-gold)" stroke-width="1.4"/>
+      <text y="6" font-family="JetBrains Mono,monospace" font-size="9" fill="#FFD9A8" text-anchor="middle">OPEN</text>
+    </g>
+    <!-- rim light along the breaching back -->
+    <path d="M-54 -78 q40 -16 96 0" fill="none" stroke="#FFF6E0" stroke-width="2" opacity=".6" stroke-linecap="round"/>
+  </g>
+
+  <!-- the flood of token-fish spilling out (the swarm payoff) -->
+  <g>
+    <g transform="translate(250 96) rotate(-20) scale(1.2)"><use href="#wo-fish"/></g>
+    <g transform="translate(290 80) rotate(-30) scale(1.1)"><use href="#wo-fish"/></g>
+    <g transform="translate(320 110) rotate(-12) scale(1.15)"><use href="#wo-fish"/></g>
+    <g transform="translate(300 150) rotate(8) scale(1.25)"><use href="#wo-fish"/></g>
+    <g transform="translate(340 138) rotate(-18)"><use href="#wo-fish"/></g>
+    <g transform="translate(270 130) rotate(-4) scale(.9)"><use href="#wo-fish"/></g>
+  </g>
+
+  <text x="200" y="292" font-family="JetBrains Mono,monospace" font-size="8" fill="#FFB36A" text-anchor="middle" opacity=".7">// the whale, open-sourced</text>
+
+  <rect width="400" height="300" filter="url(#wo-grain)" opacity=".05"/>
+  <rect width="400" height="300" fill="url(#wo-vig)"/>
+</svg>

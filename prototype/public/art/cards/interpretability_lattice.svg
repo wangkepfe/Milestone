@@ -1,0 +1,71 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interpretability Lattice — a glowing translucent 3D lattice of neuron nodes read by probe lines and a magnifying lens, an ongoing value engine">
+  <defs>
+    <radialGradient id="il-bg" cx="50%" cy="28%" r="92%">
+      <stop offset="0%" stop-color="#2A2150"/><stop offset="55%" stop-color="#1A1430"/><stop offset="100%" stop-color="#0E0A1C"/>
+    </radialGradient>
+    <radialGradient id="il-node" cx="40%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#F0E6D2"/><stop offset="55%" stop-color="#CDB8FF"/><stop offset="100%" stop-color="#6F5BA8"/>
+    </radialGradient>
+    <radialGradient id="il-core" cx="40%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#FFFFFF"/><stop offset="50%" stop-color="#A07CFF"/><stop offset="100%" stop-color="#41327A"/>
+    </radialGradient>
+    <radialGradient id="il-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#A07CFF" stop-opacity=".5"/><stop offset="100%" stop-color="#A07CFF" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="il-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="il-grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0"/></filter>
+    <radialGradient id="il-vig" cx="50%" cy="46%" r="72%"><stop offset="58%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".55"/></radialGradient>
+  </defs>
+
+  <rect width="400" height="300" fill="url(#il-bg)"/>
+  <g filter="url(#il-soft)" opacity=".6"><ellipse cx="200" cy="135" rx="160" ry="100" fill="#A07CFF" opacity=".17"/></g>
+  <g opacity=".7"><rect x="0" y="232" width="400" height="68" fill="#120D24"/></g>
+  <ellipse cx="200" cy="252" rx="150" ry="14" fill="#1E1640" opacity=".7"/>
+  <circle cx="200" cy="140" r="110" fill="url(#il-glow)"/>
+
+  <!-- the 3D lattice cube of neurons -->
+  <g transform="translate(200 142)">
+    <!-- edges of a tilted cube grid (3x3 front + back, connected) -->
+    <g stroke="#6F5BA8" stroke-width="1.4" opacity=".7" fill="none">
+      <!-- front square grid -->
+      <path d="M-70 -52 L70 -52 L70 88 L-70 88 Z"/>
+      <line x1="-23" y1="-52" x2="-23" y2="88"/><line x1="23" y1="-52" x2="23" y2="88"/>
+      <line x1="-70" y1="-5" x2="70" y2="-5"/><line x1="-70" y1="42" x2="70" y2="42"/>
+      <!-- back square (offset for depth) -->
+      <path d="M-40 -82 L100 -82 L100 58 L-40 58 Z" opacity=".5"/>
+      <!-- depth connectors -->
+      <line x1="-70" y1="-52" x2="-40" y2="-82" opacity=".5"/><line x1="70" y1="-52" x2="100" y2="-82" opacity=".5"/>
+      <line x1="70" y1="88" x2="100" y2="58" opacity=".5"/><line x1="-70" y1="88" x2="-40" y2="58" opacity=".5"/>
+    </g>
+    <!-- nodes at the front intersections -->
+    <g>
+      <circle cx="-70" cy="-52" r="6" fill="url(#il-node)"/><circle cx="-23" cy="-52" r="6" fill="url(#il-node)"/><circle cx="23" cy="-52" r="6" fill="url(#il-node)"/><circle cx="70" cy="-52" r="6" fill="url(#il-node)"/>
+      <circle cx="-70" cy="-5" r="6" fill="url(#il-node)"/><circle cx="-23" cy="-5" r="8" fill="url(#il-core)"/><circle cx="23" cy="-5" r="6" fill="url(#il-node)"/><circle cx="70" cy="-5" r="6" fill="url(#il-node)"/>
+      <circle cx="-70" cy="42" r="6" fill="url(#il-node)"/><circle cx="-23" cy="42" r="6" fill="url(#il-node)"/><circle cx="23" cy="42" r="9" fill="url(#il-core)"/><circle cx="70" cy="42" r="6" fill="url(#il-node)"/>
+      <circle cx="-70" cy="88" r="6" fill="url(#il-node)"/><circle cx="-23" cy="88" r="6" fill="url(#il-node)"/><circle cx="23" cy="88" r="6" fill="url(#il-node)"/><circle cx="70" cy="88" r="6" fill="url(#il-node)"/>
+    </g>
+    <!-- probe readout lines from two nodes -->
+    <g stroke="#CFE0F2" stroke-width="1.4" stroke-dasharray="3 3" opacity=".85">
+      <line x1="23" y1="42" x2="86" y2="92"/><line x1="-23" y1="-5" x2="-86" y2="-44"/>
+    </g>
+    <rect x="86" y="92" width="44" height="18" rx="3" fill="#1A1430" stroke="#A07CFF" stroke-width="1"/>
+    <text x="108" y="105" font-family="JetBrains Mono,monospace" font-size="8" fill="#CDB8FF" text-anchor="middle">0.93</text>
+  </g>
+
+  <!-- magnifying lens reading the lattice -->
+  <g transform="translate(118 96)">
+    <circle r="30" fill="#CDB8FF" opacity=".12" stroke="#CDB8FF" stroke-width="3"/>
+    <circle r="30" fill="none" stroke="#F0E6D2" stroke-width="1.2"/>
+    <line x1="22" y1="22" x2="46" y2="46" stroke="#9B86D6" stroke-width="7" stroke-linecap="round"/>
+    <path d="M-12 -8 a16 16 0 0 1 18 -4" fill="none" stroke="#F0E6D2" stroke-width="2" opacity=".6"/>
+  </g>
+
+  <!-- ongoing engine: per-turn +2 valuation tag -->
+  <g transform="translate(330 70)">
+    <rect x="-30" y="-12" width="60" height="24" rx="12" fill="#1A1430" stroke="#F4C04C" stroke-width="1.2"/>
+    <text x="0" y="5" font-family="JetBrains Mono,monospace" font-size="9" fill="#F4C04C" text-anchor="middle">↻ +2/turn</text>
+  </g>
+
+  <rect width="400" height="300" filter="url(#il-grain)" opacity=".05"/>
+  <rect width="400" height="300" fill="url(#il-vig)"/>
+</svg>

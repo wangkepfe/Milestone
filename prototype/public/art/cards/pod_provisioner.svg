@@ -1,0 +1,68 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pod Provisioner — a squat modular server-pod crawler in clean material-design with a guardrail panel, spinning up a cyan +1 compute chip">
+  <defs>
+    <radialGradient id="pp-bg" cx="48%" cy="28%" r="92%">
+      <stop offset="0%" stop-color="#15294A"/><stop offset="55%" stop-color="#0C1426"/><stop offset="100%" stop-color="#060B16"/>
+    </radialGradient>
+    <linearGradient id="pp-pod" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6FA6F5"/><stop offset="100%" stop-color="#2D5BA8"/>
+    </linearGradient>
+    <linearGradient id="pp-pod2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3E6FC0"/><stop offset="100%" stop-color="#1A3666"/>
+    </linearGradient>
+    <radialGradient id="pp-chip" cx="40%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#BFF6FF"/><stop offset="55%" stop-color="#22E0E0"/><stop offset="100%" stop-color="#0A6E7A"/>
+    </radialGradient>
+    <radialGradient id="pp-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#4D8DF0" stop-opacity=".45"/><stop offset="100%" stop-color="#4D8DF0" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="pp-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="pp-grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0"/></filter>
+    <radialGradient id="pp-vig" cx="50%" cy="46%" r="72%"><stop offset="60%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".55"/></radialGradient>
+  </defs>
+
+  <rect width="400" height="300" fill="url(#pp-bg)"/>
+  <g filter="url(#pp-soft)" opacity=".6"><ellipse cx="200" cy="120" rx="150" ry="90" fill="#4D8DF0" opacity=".17"/></g>
+
+  <!-- clean grid floor (material-design) -->
+  <g stroke="#1F3A66" stroke-width="1" opacity=".6">
+    <line x1="0" y1="232" x2="400" y2="232"/><line x1="0" y1="262" x2="400" y2="262"/>
+    <line x1="60" y1="222" x2="20" y2="300"/><line x1="160" y1="222" x2="150" y2="300"/><line x1="240" y1="222" x2="250" y2="300"/><line x1="340" y1="222" x2="380" y2="300"/>
+  </g>
+  <ellipse cx="200" cy="250" rx="120" ry="16" fill="#0F1F3A" opacity=".7"/>
+  <circle cx="200" cy="150" r="100" fill="url(#pp-glow)"/>
+
+  <!-- squat modular server-pod, boxy clean -->
+  <g>
+    <!-- little crawler legs -->
+    <g fill="url(#pp-pod2)"><rect x="128" y="218" width="14" height="28" rx="5"/><rect x="258" y="218" width="14" height="28" rx="5"/></g>
+    <!-- pod body: stacked modular units -->
+    <rect x="120" y="118" width="160" height="108" rx="16" fill="url(#pp-pod)"/>
+    <rect x="120" y="118" width="160" height="30" rx="15" fill="#8FBBF8" opacity=".5"/>
+    <!-- modular rack slots -->
+    <g fill="#16294A"><rect x="136" y="158" width="128" height="16" rx="4"/><rect x="136" y="182" width="128" height="16" rx="4"/></g>
+    <g fill="#22E0E0"><circle cx="146" cy="166" r="3"/><circle cx="146" cy="190" r="3"/></g>
+    <g fill="#5BD68A"><circle cx="158" cy="166" r="3"/><circle cx="158" cy="190" r="3"/></g>
+    <!-- single calm sentinel eye (Guardrail) -->
+    <rect x="176" y="128" width="48" height="20" rx="10" fill="#0C1426"/>
+    <circle cx="200" cy="138" r="6" fill="#6FA6F5"/><circle cx="200" cy="138" r="3" fill="#BFF6FF"/>
+    <!-- guardrail shield emblem -->
+    <path d="M200 198 l14 6 v10 q0 12 -14 16 q-14 -4 -14 -16 v-10 z" fill="#0C1426" stroke="#6FA6F5" stroke-width="1.4"/>
+    <path d="M193 214 l5 5 l9 -11" fill="none" stroke="#4D8DF0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- rim light -->
+    <path d="M120 226 L120 134 q0 -16 16 -16" fill="none" stroke="#FFF6E0" stroke-width="1.8" opacity=".6" stroke-linecap="round"/>
+  </g>
+
+  <!-- spinning up a +1 compute chip (On Sunset) -->
+  <g transform="translate(312 86)">
+    <circle r="36" fill="url(#pp-glow)"/>
+    <rect x="-22" y="-22" width="44" height="44" rx="6" fill="#0C1426" stroke="#22E0E0" stroke-width="1.6"/>
+    <rect x="-12" y="-12" width="24" height="24" rx="3" fill="url(#pp-chip)"/>
+    <!-- chip pins -->
+    <g stroke="#22E0E0" stroke-width="2"><line x1="-22" y1="-10" x2="-30" y2="-10"/><line x1="-22" y1="2" x2="-30" y2="2"/><line x1="22" y1="-10" x2="30" y2="-10"/><line x1="22" y1="2" x2="30" y2="2"/></g>
+    <text x="0" y="5" font-family="'Space Grotesk',sans-serif" font-weight="800" font-size="16" fill="#06222a">⚡</text>
+    <text x="0" y="40" font-family="JetBrains Mono,monospace" font-size="9" fill="#22E0E0" text-anchor="middle" font-weight="700">+1</text>
+  </g>
+
+  <rect width="400" height="300" filter="url(#pp-grain)" opacity=".05"/>
+  <rect width="400" height="300" fill="url(#pp-vig)"/>
+</svg>

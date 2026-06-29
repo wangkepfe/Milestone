@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI Card Battle — Art Gallery</title>
+<style>
+  :root{
+    --void:#0B0E14; --surface:#141A23; --edge:#2A323D; --ink:#E6EDF3; --dim:#8B97A6;
+    --perf:#FF5C5C; --rel:#5BD68A; --val:#F4C04C; --cmp:#3DD6F0; --safe:#9FB3C8;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:radial-gradient(120% 90% at 50% 0%, #11161f 0%, var(--void) 60%);color:var(--ink);
+    font:14px/1.5 'Inter',ui-sans-serif,system-ui,Segoe UI,Roboto,sans-serif;}
+  header{padding:22px 28px 8px;border-bottom:1px solid var(--edge);position:sticky;top:0;
+    background:linear-gradient(var(--void),rgba(11,14,20,.86));backdrop-filter:blur(6px);z-index:5;}
+  h1{margin:0;font:800 22px/1.1 'Space Grotesk','Archivo',sans-serif;letter-spacing:.4px;}
+  h1 .sub{color:var(--dim);font-weight:500;font-size:13px;font-family:'Inter';}
+  .prog{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;font:12px 'JetBrains Mono',ui-monospace,monospace;}
+  .pill{border:1px solid var(--edge);border-radius:20px;padding:3px 11px;color:var(--dim);background:#0d1219;}
+  .pill b{color:var(--rel);}
+  main{padding:18px 28px 80px;max-width:1280px;margin:0 auto;}
+  h2{font:700 14px 'JetBrains Mono',monospace;color:var(--dim);letter-spacing:1px;text-transform:uppercase;
+    margin:30px 0 12px;display:flex;align-items:center;gap:10px;}
+  h2::after{content:"";flex:1;height:1px;background:var(--edge);}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px;}
+  /* card frame */
+  .card{background:var(--surface);border-radius:14px;padding:10px;position:relative;overflow:hidden;
+    border:1px solid var(--edge);box-shadow:0 6px 22px rgba(0,0,0,.45);transition:transform .15s, box-shadow .15s;}
+  .card.done{cursor:pointer;}
+  .card.done:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(0,0,0,.6);}
+  .card .art{aspect-ratio:4/3;border-radius:9px;overflow:hidden;background:#070d0a;border:2px solid var(--fhue,#2A323D);position:relative;}
+  .card .art img{width:100%;height:100%;display:block;}
+  .card .todo{display:flex;align-items:center;justify-content:center;height:100%;color:var(--dim);
+    font:12px 'JetBrains Mono',monospace;text-align:center;padding:14px;border:2px dashed var(--edge);border-radius:7px;}
+  .card .meta{display:flex;align-items:center;gap:8px;margin-top:9px;}
+  .card .chip{font-size:15px;line-height:1;}
+  .card .nm{font:600 13px 'Space Grotesk',sans-serif;flex:1;}
+  .card .tok{position:absolute;right:12px;bottom:46px;width:62px;height:62px;border-radius:50%;
+    overflow:hidden;border:2px solid var(--fhue,#2A323D);box-shadow:0 4px 12px rgba(0,0,0,.6);background:#070d0a;}
+  .card .tok img{width:150%;height:150%;margin:-15% 0 0 -25%;}
+  .card .tok::after{content:"92px";position:absolute;left:0;right:0;bottom:-16px;text-align:center;
+    font:9px 'JetBrains Mono',monospace;color:var(--dim);}
+  .card .cc{position:absolute;top:14px;left:14px;width:22px;height:22px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #9af0ff, var(--cmp));border:1px solid #0a3a44;
+    display:flex;align-items:center;justify-content:center;font:700 11px 'Inter';color:#06222a;}
+  .card .concept{font-size:11px;color:var(--dim);margin-top:6px;line-height:1.35;max-height:0;overflow:hidden;transition:max-height .25s;}
+  .card.done:hover .concept{max-height:120px;}
+  .empty{color:var(--dim);font-style:italic;padding:20px;}
+  footer{color:var(--dim);font:11px 'JetBrains Mono',monospace;text-align:center;padding:30px;border-top:1px solid var(--edge);}
+</style>
+</head>
+<body>
+<header>
+  <h1>⚔ AI Card Battle <span class="sub">— Art Gallery · Corporate Mythic</span></h1>
+  <div class="prog" id="prog"></div>
+</header>
+<main id="main"><div class="empty">Loading manifest…</div></main>
+<footer id="foot"></footer>
+
+<script>
+const CHIPS={closedai:"🟢",anthrabbit:"🟣",googlitch:"🔵",shallowseek:"🟠"};
+const $=s=>document.querySelector(s);
+
+function frame(a, kind){
+  const f = MAN.factions[a.faction]||{};
+  const hue = f.core||"#2A323D";
+  const file = a.status==="done" ? (a.file || `${kind}/${a.id}.svg`) : null;
+  const isHtml = !!file && file.endsWith(".html");
+  const el = document.createElement("div");
+  el.className="card"+(a.status==="done"?" done":"");
+  el.style.setProperty("--fhue",hue);
+  const art = !file ? `<div class="todo">◷ queued<br>${a.concept?(a.concept.slice(0,70)+"…"):""}</div>`
+    : isHtml ? `<iframe src="${file}" style="width:340%;height:340%;transform:scale(.294);transform-origin:0 0;border:0;pointer-events:none" scrolling="no" tabindex="-1"></iframe>
+                <div style="position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px">
+                  <span style="background:rgba(8,11,16,.82);border:1px solid var(--fhue);border-radius:20px;padding:4px 12px;font:600 12px 'JetBrains Mono',monospace;color:#5BD68A">▶ open interactive</span></div>`
+    : `<img src="${file}" alt="${a.name}" loading="lazy"/>`;
+  el.innerHTML = `
+    <div class="art" style="${isHtml?'aspect-ratio:16/9':''}">${art}</div>
+    ${file&&kind==="cards"?`<div class="tok"><img src="${file}" alt=""></div>`:""}
+    <div class="meta"><span class="chip">${CHIPS[a.faction]||"·"}</span><span class="nm">${a.name}</span></div>
+    ${a.concept?`<div class="concept">${a.concept}</div>`:""}`;
+  if(file) el.addEventListener("click",()=>window.open(file,"_blank"));
+  return el;
+}
+function section(title, items, kind){
+  const h=document.createElement("h2"); h.textContent=title; $("#main").appendChild(h);
+  const g=document.createElement("div"); g.className="grid";
+  items.forEach(a=>g.appendChild(frame(a,kind))); $("#main").appendChild(g);
+}
+let MAN=null;
+(async()=>{
+  MAN = await (await fetch("MANIFEST.json?"+Date.now())).json();
+  $("#main").innerHTML="";
+  // progress pills
+  $("#prog").innerHTML = Object.entries(MAN.progress).map(([k,v])=>`<span class="pill">${k} <b>${v}</b></span>`).join("");
+  // cards grouped by faction
+  const order=["closedai","anthrabbit","googlitch","shallowseek"];
+  for(const fk of order){
+    const fc=MAN.factions[fk];
+    const cards=MAN.cards.filter(c=>c.faction===fk);
+    section(`${fc.chip} ${fc.name} — Cards`, cards, "cards");
+  }
+  if(MAN.heroes) section("◆ Hero Profiles", MAN.heroes, "heroes");
+  if(MAN.skills) section("✦ Founder Moves (Skills)", MAN.skills, "skills");
+  if(MAN.background) section("▦ Background", [MAN.background], "background");
+  $("#foot").textContent = `Corporate Mythic · hand-authored SVG · validate every card at the 92px token (top-right) · ${new Date().toISOString().slice(0,10)}`;
+})().catch(e=>{$("#main").innerHTML=`<div class="empty">Failed to load: ${e}</div>`;});
+</script>
+</body>
+</html>

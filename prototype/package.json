@@ -1,0 +1,22 @@
+{
+  "name": "ai-card-battle-prototype",
+  "version": "0.0.1",
+  "type": "module",
+  "private": true,
+  "description": "Phase-0 headless prototype: deterministic rules engine + heuristic bot + bot-vs-bot runner.",
+  "scripts": {
+    "start": "node src/runner.js",
+    "match": "node src/runner.js",
+    "bench": "node src/runner.js --games 200 --quiet",
+    "rr": "node src/runner.js --rr --games 150 --search",
+    "server": "node src/server.js",
+    "llm-match": "node src/llm-match.js",
+    "enginetest": "node src/test_engine.js",
+    "apitest": "node src/test_api.js",
+    "pvptest": "node src/test_pvp.js",
+    "scripttest": "node src/test_script.js",
+    "workertest": "node src/test_worker.js",
+    "uitest": "node src/test_ui.js",
+    "test": "node src/test_engine.js && node src/test_api.js && node src/test_pvp.js && node src/test_script.js && node src/test_worker.js && node src/test_ui.js"
+  }
+}

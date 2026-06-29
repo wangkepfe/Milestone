@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI Card Battle — Play (PvP)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#0B0E14; --surface:#141A23; --edge:#2A323D; --ink:#E6EDF3; --dim:#8B97A6;
+    --perf:#FF5C5C; --rel:#5BD68A; --val:#F4C04C; --cmp:#3DD6F0; --safe:#9FB3C8;
+    --closedai:#19C37D; --anthrabbit:#A07CFF; --googlitch:#4D8DF0; --shallowseek:#FF8A3D;
+    --disp:'Space Grotesk','Archivo',ui-sans-serif,system-ui,sans-serif;
+    --body:'Inter',ui-sans-serif,system-ui,Segoe UI,Roboto,sans-serif;
+    --mono:'JetBrains Mono','IBM Plex Mono',ui-monospace,SFMono-Regular,monospace;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;min-height:100vh;background:
+      radial-gradient(120% 80% at 50% -10%, #11161f 0%, var(--void) 55%), var(--void);
+    color:var(--ink);font:14px/1.45 var(--body);}
+  a{color:inherit;}
+  button{background:var(--surface);color:var(--ink);border:1px solid var(--edge);
+    border-radius:7px;padding:7px 13px;font:13px var(--body);cursor:pointer;}
+  button:hover:not(:disabled){border-color:var(--cmp);}
+  button:disabled{opacity:.4;cursor:not-allowed;}
+  button.primary{background:linear-gradient(#10402e,#0c2c20);border-color:var(--closedai);color:#9af5cd;font-weight:600;}
+  select{background:var(--surface);color:var(--ink);border:1px solid var(--edge);border-radius:7px;padding:6px 11px;font:13px var(--body);}
+  .hidden{display:none !important;}
+
+  /* ---------- top bar ---------- */
+  header{display:flex;gap:12px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--edge);
+    background:linear-gradient(var(--void),rgba(11,14,20,.7));position:sticky;top:0;z-index:20;backdrop-filter:blur(6px);}
+  header h1{font:700 16px/1 var(--disp);margin:0;letter-spacing:.4px;}
+  header h1 .m{color:var(--dim);font:500 11px var(--body);}
+  header .sp{flex:1;}
+  .youtag{font:700 11px var(--mono);border-radius:5px;padding:2px 8px;color:var(--void);background:var(--myhue,#888);}
+  .turnpill{font:700 12px var(--mono);border:1px solid var(--edge);border-radius:20px;padding:4px 12px;color:var(--dim);}
+  .turnpill.mine{color:var(--void);background:var(--val);border-color:var(--val);animation:pulse 1.6s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.55;}}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--dim);box-shadow:0 0 8px currentColor;}
+  .dot.green{background:var(--rel);color:var(--rel);} .dot.amber{background:var(--val);color:var(--val);} .dot.red{background:var(--perf);color:var(--perf);}
+
+  /* ---------- arena ---------- */
+  .arena{max-width:1180px;margin:0 auto;padding:12px 16px 150px;display:flex;flex-direction:column;gap:10px;}
+  .seat{position:relative;background:var(--surface);border:1px solid var(--edge);border-radius:14px;padding:10px 14px;overflow:hidden;}
+  .seat::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.10;
+    background:linear-gradient(var(--grad-dir,90deg), var(--fh) 0%, transparent 42%);}
+  .seat.active{border-color:var(--fh);box-shadow:0 0 0 1px var(--fh) inset, 0 0 26px -8px var(--fh);}
+  .ceo{display:flex;align-items:center;gap:12px;position:relative;z-index:1;}
+  .ceo .avatar{position:relative;width:50px;height:64px;border-radius:9px;border:2px solid var(--fh);object-fit:cover;
+    background:#070d0a;flex:none;box-shadow:0 4px 14px rgba(0,0,0,.5);}
+  .heroport{position:relative;flex:none;}
+  .heroport.targetable{cursor:pointer;}
+  .heroport .cross{position:absolute;inset:-5px;border:2px dashed var(--perf);border-radius:11px;animation:pulse 1.1s infinite;pointer-events:none;}
+  .heroport .wpn{position:absolute;bottom:-7px;right:-7px;background:#0c1118;border:1px solid var(--perf);border-radius:7px;
+    font:700 10px var(--mono);color:var(--perf);padding:1px 5px;white-space:nowrap;}
+  .heroport.weaponready{cursor:pointer;} .heroport.weaponready .avatar{box-shadow:0 0 0 2px var(--perf),0 4px 14px rgba(0,0,0,.5);}
+  .ceo .who{display:flex;flex-direction:column;gap:3px;min-width:0;}
+  .ceo .nm{font:700 14px var(--disp);color:var(--fh);display:flex;align-items:center;gap:7px;}
+  .ceo .nm .seatTag{font:700 10px var(--mono);color:var(--void);background:var(--fh);border-radius:4px;padding:1px 5px;}
+  .stats{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+  .stat{background:#0c1118;border:1px solid var(--edge);border-radius:20px;padding:2px 9px;font:12px var(--mono);color:var(--dim);display:flex;align-items:center;gap:4px;}
+  .stat b{font-weight:700;} .stat.val b{color:var(--val);} .stat.safe b{color:var(--safe);}
+  .pips{display:flex;gap:3px;align-items:center;}
+  .pip{width:9px;height:13px;border-radius:2px;background:#0c1118;border:1px solid var(--edge);}
+  .pip.on{background:var(--cmp);border-color:var(--cmp);box-shadow:0 0 6px -1px var(--cmp);}
+  .pip.temp{background:var(--val);border-color:var(--val);box-shadow:0 0 7px -1px var(--val);}
+  .orb{margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:2px;flex:none;}
+  .orb img{width:46px;height:46px;border-radius:50%;box-shadow:0 3px 12px rgba(0,0,0,.6);}
+  .orb.live img{cursor:pointer;outline:2px solid var(--fh);outline-offset:2px;animation:pulse 2s infinite;}
+  .orb.used{filter:grayscale(1);opacity:.45;}
+  .orb .pwn{font:700 9px var(--mono);color:var(--dim);} .orb.live .pwn{color:var(--fh);}
+
+  .lbl{color:var(--dim);font:10px var(--mono);text-transform:uppercase;letter-spacing:.9px;margin:8px 0 5px;position:relative;z-index:1;}
+  .row{display:flex;gap:8px;flex-wrap:wrap;min-height:30px;position:relative;z-index:1;}
+
+  /* ---------- board token ---------- */
+  .tok{position:relative;width:90px;height:116px;border-radius:9px;overflow:hidden;background:var(--surface);
+    border:2px solid var(--fh);box-shadow:0 4px 14px rgba(0,0,0,.5);display:flex;flex-direction:column;transition:transform .08s,box-shadow .12s;}
+  .tok .art{height:62px;background:#070d0a center/cover no-repeat;border-bottom:1px solid var(--edge);}
+  .tok .noart{height:62px;display:flex;align-items:center;justify-content:center;color:var(--dim);font:9px var(--mono);background:linear-gradient(160deg,#0d141c,#0a0f16);text-align:center;padding:4px;}
+  .tok .cn{font:600 10px/1.1 var(--disp);padding:4px 5px 2px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .tok .kw{font:8px var(--mono);color:var(--dim);padding:0 5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .tok .ppx{margin-top:auto;display:flex;justify-content:space-between;padding:3px 5px;}
+  .tok .ppx .p{font:700 12px var(--mono);display:flex;align-items:center;gap:2px;}
+  .tok .ppx .atk{color:var(--perf);} .tok .ppx .hp{color:var(--rel);}
+  .tok.shared{border-style:dashed;border-color:#6E7681;}
+  .tok .glyph{position:absolute;top:3px;right:4px;font:9px var(--mono);background:rgba(11,14,20,.78);border:1px solid var(--fh);border-radius:10px;padding:0 5px;color:var(--fh);}
+  .tok.sick{filter:grayscale(.55) brightness(.8);}
+  .tok.sick::after{content:"💤";position:absolute;top:2px;left:4px;font-size:11px;}
+  .tok.ready{cursor:pointer;box-shadow:0 0 0 2px var(--rel),0 4px 14px rgba(0,0,0,.5);animation:bob 1.6s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+  .tok.selected{transform:translateY(-8px) scale(1.04);box-shadow:0 0 0 3px var(--val),0 10px 22px rgba(0,0,0,.6);z-index:5;}
+  .tok.targetable{cursor:crosshair;box-shadow:0 0 0 2px var(--perf),0 0 18px -3px var(--perf);animation:pulse 1.1s infinite;}
+  .tok.targetable.friendly{box-shadow:0 0 0 2px var(--cmp),0 0 18px -3px var(--cmp);}
+  .tok.staged{cursor:crosshair;box-shadow:0 0 0 3px var(--perf),0 0 22px -2px var(--perf);animation:none;}
+  .tok .x2{position:absolute;bottom:22px;right:4px;font:700 9px var(--mono);color:var(--val);background:rgba(11,14,20,.8);border-radius:8px;padding:0 4px;}
+  .cardback{width:50px;height:70px;border-radius:7px;border:1px solid var(--fh);
+    background:linear-gradient(150deg,color-mix(in srgb,var(--fh) 26%, #0b0e14),#0b0e14 70%);
+    display:flex;align-items:center;justify-content:center;color:var(--fh);font:700 16px var(--disp);box-shadow:0 3px 10px rgba(0,0,0,.5);}
+  .deckstack{display:flex;align-items:center;gap:5px;color:var(--dim);font:11px var(--mono);}
+
+  /* ---------- your hand ---------- */
+  #handArea{position:relative;}
+  .hand{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+  .hcard{position:relative;width:108px;height:150px;border-radius:11px;overflow:hidden;background:var(--surface);
+    border:2px solid var(--fh);box-shadow:0 5px 16px rgba(0,0,0,.55);display:flex;flex-direction:column;transition:transform .1s,box-shadow .12s;}
+  .hcard .art{height:74px;background:#070d0a center/cover no-repeat;border-bottom:1px solid var(--edge);}
+  .hcard .noart{height:74px;display:flex;align-items:center;justify-content:center;color:var(--dim);font:9px var(--mono);}
+  .hcard .cost{position:absolute;top:5px;left:5px;width:24px;height:24px;border-radius:50%;background:var(--cmp);color:#04222b;
+    font:700 13px var(--mono);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.5);}
+  .hcard .cn{font:600 11px/1.15 var(--disp);padding:5px 6px 2px;}
+  .hcard .tx{font:9px/1.2 var(--body);color:var(--dim);padding:0 6px;flex:1;overflow:hidden;}
+  .hcard .ppx{display:flex;justify-content:space-between;padding:3px 6px 5px;}
+  .hcard .ppx .p{font:700 13px var(--mono);} .hcard .ppx .atk{color:var(--perf);} .hcard .ppx .hp{color:var(--rel);}
+  .hcard .needtgt{position:absolute;top:5px;right:5px;font:10px var(--mono);color:var(--val);background:rgba(11,14,20,.8);border-radius:8px;padding:0 5px;}
+  .hcard.playable{cursor:pointer;} .hcard.playable:hover{transform:translateY(-10px);}
+  .hcard.disabled{filter:grayscale(.85) brightness(.7);opacity:.6;} .hcard.disabled .cost{background:var(--perf);color:#2a0808;}
+  .hcard.selected{transform:translateY(-16px) scale(1.05);box-shadow:0 0 0 3px var(--val),0 14px 26px rgba(0,0,0,.65);z-index:6;}
+
+  /* ---------- center lane ---------- */
+  .lane{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;min-height:34px;padding:2px 0;}
+  .lane .ln{font:700 11px var(--mono);color:var(--dim);letter-spacing:1px;}
+  #shared{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+  #toasts{position:fixed;left:50%;top:64px;transform:translateX(-50%);z-index:30;display:flex;flex-direction:column;gap:6px;align-items:center;pointer-events:none;}
+  .toast{background:rgba(11,14,20,.92);border:1px solid var(--edge);border-radius:8px;padding:5px 12px;font:12px var(--mono);color:var(--ink);
+    box-shadow:0 4px 14px rgba(0,0,0,.5);animation:toastIn .25s ease, toastOut .4s ease 3.6s forwards;}
+  @keyframes toastIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;}}
+  @keyframes toastOut{to{opacity:0;transform:translateY(-8px);}}
+
+  /* ---------- action bar (sticky bottom) ---------- */
+  #bar{position:fixed;left:0;right:0;bottom:0;z-index:25;background:linear-gradient(rgba(11,14,20,0),var(--void) 38%);
+    padding:10px 16px 14px;display:flex;align-items:center;gap:10px;justify-content:center;}
+  #ribbon{flex:1;max-width:560px;background:#0c1118;border:1px solid var(--edge);border-radius:10px;padding:9px 14px;
+    font:13px var(--mono);color:var(--ink);min-height:38px;display:flex;align-items:center;}
+  #ribbon .hl{color:var(--val);} #ribbon.warn{border-color:var(--perf);color:#ffd0d0;}
+  #endgem{width:62px;height:62px;border-radius:50%;border:none;flex:none;cursor:pointer;color:#04220f;font:700 12px var(--disp);
+    background:radial-gradient(circle at 35% 30%, #2a3a32, #0c2c20);box-shadow:0 0 0 2px var(--edge);transition:box-shadow .2s;}
+  #endgem.live{background:radial-gradient(circle at 35% 30%, color-mix(in srgb,var(--myhue) 60%,#fff), var(--myhue));
+    box-shadow:0 0 0 2px var(--myhue),0 0 24px -2px var(--myhue);color:#04220f;animation:pulse 1.8s infinite;}
+  #endgem:disabled{opacity:.35;cursor:not-allowed;animation:none;}
+
+  /* ---------- overlays ---------- */
+  .overlay{position:fixed;inset:0;z-index:40;background:rgba(7,10,16,.84);backdrop-filter:blur(4px);
+    display:flex;align-items:center;justify-content:center;padding:20px;}
+  .panel{background:var(--surface);border:1px solid var(--edge);border-radius:16px;padding:26px 28px;max-width:440px;width:100%;
+    box-shadow:0 20px 60px rgba(0,0,0,.6);}
+  .panel h2{font:700 20px var(--disp);margin:0 0 4px;}
+  .panel p{color:var(--dim);margin:6px 0 16px;font-size:13px;}
+  .panel .field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+  .panel .field label{font:11px var(--mono);color:var(--dim);text-transform:uppercase;letter-spacing:.6px;}
+  .panel .field select{width:100%;}
+  .linkbox{display:flex;gap:6px;margin:6px 0 4px;}
+  .linkbox input{flex:1;background:#0c1118;border:1px solid var(--edge);border-radius:7px;color:var(--ink);font:11px var(--mono);padding:8px;}
+  .spin{width:34px;height:34px;border-radius:50%;border:3px solid var(--edge);border-top-color:var(--cmp);animation:spin 1s linear infinite;margin:10px auto;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .veilbig{font:700 22px var(--disp);text-align:center;}
+  .veilsub{color:var(--dim);text-align:center;font:13px var(--body);margin-top:4px;}
+  .banner{text-align:center;}
+  .banner .big{font:700 30px var(--disp);margin-bottom:6px;}
+  .banner.win .big{color:var(--rel);} .banner.lose .big{color:var(--perf);} .banner.draw .big{color:var(--val);}
+
+  @media(max-width:760px){
+    .tok{width:74px;height:98px;} .tok .art{height:48px;}
+    .hcard{width:92px;height:132px;} .hcard .art{height:60px;}
+    .arena{padding-bottom:150px;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>⚔ AI Card Battle <span class="m">— player vs player</span></h1>
+  <span class="sp"></span>
+  <span class="youtag" id="youtag"></span>
+  <span class="turnpill" id="turnpill">—</span>
+  <span class="dot" id="conn" title="connection"></span>
+  <button id="concedeBtn" class="hidden">Concede</button>
+  <a href="/" ><button title="Spectator / replay mode">Spectate</button></a>
+</header>
+
+<div class="arena" id="game" style="display:none">
+  <div class="seat" id="seatOpp"></div>
+  <div class="lane"><span class="ln" id="laneLabel">—</span><div id="shared"></div></div>
+  <div class="seat" id="seatYou"></div>
+  <div id="handArea"><div class="lbl">▸ Your hand</div><div class="hand" id="hand"></div></div>
+</div>
+
+<div id="toasts"></div>
+
+<div id="bar" class="hidden">
+  <div id="ribbon">Loading…</div>
+  <button id="cancelBtn" class="hidden">Cancel</button>
+  <button id="confirmBtn" class="primary hidden">Confirm ▶</button>
+  <button id="endgem" title="End your turn">END<br>TURN</button>
+</div>
+
+<!-- lobby / join / waiting / game-over overlays -->
+<div class="overlay" id="overlay">
+  <div class="panel" id="panel"></div>
+</div>
+
+<script>
+const HUE={closedai:"#19C37D",anthrabbit:"#A07CFF",googlitch:"#4D8DF0",shallowseek:"#FF8A3D"};
+const SKILL={closedai:"skill_hype_ping",anthrabbit:"skill_realign",googlitch:"skill_index_scry",shallowseek:"skill_spin_up"};
+const FACTIONS=[["closedai","ClosedAI"],["anthrabbit","Anthrabbit"],["googlitch","Googlitch"],["shallowseek","ShallowSeek"]];
+const KW_GLYPH={"Guardrail":"🛡","Ship It":"🚀","Hype":"📈","Glitch":"▓","Stealth Mode":"👁","Launch Day":"☀","Failover":"♻","Overclock":"🔥","Monetize":"$","On Deploy":"⚙","On Sunset":"🌇","Scaling Laws":"∑","Open Source":"⛓","Parallelize":"⇉"};
+const $=(id)=>document.getElementById(id);
+const sleep=(ms)=>new Promise(r=>setTimeout(r,ms));
+
+// ---- global game model ----
+const G={ matchId:null, token:null, seat:null, opp:null, turnToken:null, status:null,
+  state:null, legal:[], index:null, result:null, joined:{A:false,B:false}, aKey:null, bKey:null,
+  busy:false, waitActive:false, phase:"lobby", note:null };
+let sel=null;            // selection state machine (null = IDLE)
+let CAT={}, HP={}, NAME2ID={};
+
+function factionOf(seat){ return seat==="A"?G.aKey:G.bKey; }
+function hueOf(seat){ return HUE[factionOf(seat)]||"#8B97A6"; }
+function companyName(fk){ return (FACTIONS.find(f=>f[0]===fk)||[null,fk])[1]; }
+
+// ---------------- boot / routing ----------------
+async function boot(){
+  try{ const r=await fetch("/cards"); const j=await r.json(); CAT=j.cards||{}; HP=j.heroPowers||{}; }catch(e){}
+  try{ const m=await (await fetch("/art/MANIFEST.json")).json(); for(const c of m.cards) NAME2ID[c.name]=c.id; }catch(e){}
+  const q=new URLSearchParams(location.search);
+  let token=q.get("token"), mid=q.get("m");
+  if(!token){ const ss=sessionStorage.getItem("pvp:last"); if(ss){ try{ const o=JSON.parse(ss); token=o.token; mid=o.m; }catch{} } }
+  if(token){ G.token=token; G.seat=token.split("-")[0]; G.opp=G.seat==="A"?"B":"A"; G.matchId=mid||token.split("-").slice(1).join("-"); await joinFlow(); }
+  else showLobby();
+  // Passive resync on focus — but NOT while a selection is in progress (a refresh
+  // rebuilds state and would silently wipe the player's mid-turn pick).
+  const passiveRefresh=()=>{ if(G.phase==="game"&&!G.busy&&!sel) refresh(); };
+  window.addEventListener("focus",passiveRefresh);
+  document.addEventListener("visibilitychange",()=>{ if(!document.hidden) passiveRefresh(); });
+}
+
+function showLobby(){
+  G.phase="lobby"; $("overlay").classList.remove("hidden");
+  const opts=(sel)=>FACTIONS.map(([k,n])=>`<option value="${k}" ${k===sel?"selected":""}>${n}</option>`).join("");
+  $("panel").innerHTML=`
+    <h2>Create a PvP match</h2>
+    <p>Two players, two devices. Pick both factions, create the match, then send the seat-2 link to your opponent. Hands are hidden — each player only sees their own.</p>
+    <div class="field"><label>Seat A — you</label><select id="fa">${opts("closedai")}</select></div>
+    <div class="field"><label>Seat B — opponent</label><select id="fb">${opts("anthrabbit")}</select></div>
+    <button class="primary" id="createBtn" style="width:100%;padding:10px">Create match ▶</button>`;
+  $("createBtn").onclick=createMatch;
+}
+
+async function createMatch(){
+  $("createBtn").disabled=true; $("createBtn").textContent="Creating…";
+  const a=$("fa").value, b=$("fb").value;
+  const r=await (await fetch("/match",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({a,b,mode:"human"})})).json();
+  G.matchId=r.matchId; G.seat="A"; G.opp="B"; G.token=r.tokens.A; G.aKey=a; G.bKey=b;
+  sessionStorage.setItem("pvp:last",JSON.stringify({m:G.matchId,token:G.token}));
+  history.replaceState(null,"",`/play?m=${G.matchId}&token=${encodeURIComponent(G.token)}`);
+  const link=`${location.origin}/play?m=${G.matchId}&token=${encodeURIComponent(r.tokens.B)}`;
+  G.phase="joinwait";
+  $("panel").innerHTML=`
+    <h2>Match created</h2>
+    <p>You are <b style="color:${HUE[a]}">Seat A · ${companyName(a)}</b>. Send this link to your opponent (Seat B · ${companyName(b)}):</p>
+    <div class="linkbox"><input id="lnk" readonly value="${link}"><button id="copyBtn">Copy</button></div>
+    <div class="spin"></div>
+    <div class="veilsub">Waiting for your opponent to open their link…</div>`;
+  $("copyBtn").onclick=()=>{ const i=$("lnk"); i.select(); try{ navigator.clipboard.writeText(i.value); }catch{} document.execCommand&&document.execCommand("copy"); $("copyBtn").textContent="Copied ✓"; };
+  await refresh();
+  pollJoin();
+}
+
+async function joinFlow(){
+  G.phase="joinwait";
+  $("overlay").classList.remove("hidden");
+  $("panel").innerHTML=`<h2>Joining…</h2><div class="spin"></div>`;
+  sessionStorage.setItem("pvp:last",JSON.stringify({m:G.matchId,token:G.token}));
+  const ok=await refresh();
+  if(!ok){ $("panel").innerHTML=`<h2>Match not found</h2><p>This match link is invalid or expired.</p><button class="primary" onclick="location.href='/play'">Back to lobby</button>`; return; }
+  if(G.bothJoined) return; // refresh() already entered the game
+  $("panel").innerHTML=`<h2>Joined — Seat ${G.seat}</h2><p>You are <b style="color:${hueOf(G.seat)}">${companyName(factionOf(G.seat))}</b>.</p><div class="spin"></div><div class="veilsub">Waiting for the other player…</div>`;
+  pollJoin();
+}
+
+async function pollJoin(){
+  while(G.phase==="joinwait"){
+    await sleep(1400);
+    const ok=await refresh();
+    if(!ok) continue;
+    if(G.joined.A&&G.joined.B){ return; } // refresh -> enterGame
+  }
+}
+
+// ---------------- networking ----------------
+async function refresh(){
+  try{
+    const r=await fetch(`/match/${G.matchId}/state?token=${encodeURIComponent(G.token)}`);
+    if(r.status===404){ return false; }
+    const p=await r.json();
+    if(p.error){ return false; }
+    hydrate(p);
+    return true;
+  }catch(e){ setConn("red"); return false; }
+}
+
+async function postAction(id){
+  const r=await fetch(`/match/${G.matchId}/action`,{method:"POST",headers:{"content-type":"application/json"},
+    body:JSON.stringify({token:G.token,turnToken:G.turnToken,actionIds:[id]})});
+  const p=await r.json();
+  if(r.status===400) G.note="Board refreshed — that move was no longer legal.";
+  else if(r.status===409) G.note=null;
+  hydrate(p);
+}
+
+async function concede(){
+  await fetch(`/match/${G.matchId}/concede`,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({token:G.token})});
+  await refresh();
+}
+
+// ---------------- hydrate / index ----------------
+function hydrate(p){
+  if(p.aKey) G.aKey=p.aKey; if(p.bKey) G.bKey=p.bKey;
+  if(p.state) G.state=p.state;
+  if(p.joined) G.joined=p.joined;
+  G.bothJoined=!!p.bothJoined;
+  if(p.status) G.status=p.status;
+  G.legal = (G.status==="your_turn") ? (p.legalActions||[]) : [];
+  if(G.status==="your_turn"&&p.turnToken) G.turnToken=p.turnToken;
+  if(p.result) G.result=p.result;
+  buildIndex();
+  // enter the game once both players are present
+  if(G.phase!=="game" && G.bothJoined && G.state){ enterGame(); }
+  if(G.phase!=="game") return;
+  sel=null;
+  render();
+  if(G.status==="game_over"){ showGameOver(); }
+  else if(G.status==="waiting_opponent"){ $("overlay").classList.add("hidden"); startWaitLoop(); }
+  else { $("overlay").classList.add("hidden"); setConn("green"); }
+}
+
+function buildIndex(){
+  const ix={ byCard:new Map(), byAttacker:new Map(), hero:{exists:false,requiresTarget:false,targets:new Set(),cost:null}, heroAtk:new Set(), canEnd:false };
+  for(const a of G.legal){
+    if(a.id==="end"){ ix.canEnd=true; continue; }
+    if(a.kind==="play_card"){
+      let e=ix.byCard.get(a.cardIid); if(!e){ e={noTarget:false,targets:new Set(),cost:a.cost,cardId:a.cardId}; ix.byCard.set(a.cardIid,e); }
+      if(a.targetId==null) e.noTarget=true; else e.targets.add(a.targetId);
+      e.cost=a.cost;
+    } else if(a.kind==="attack"){
+      let s=ix.byAttacker.get(a.attackerIid); if(!s){ s=new Set(); ix.byAttacker.set(a.attackerIid,s); } s.add(a.targetId);
+    } else if(a.kind==="hero_power"){
+      ix.hero.exists=true; ix.hero.cost=a.cost; if(a.targetId!=null){ ix.hero.requiresTarget=true; ix.hero.targets.add(a.targetId); }
+    } else if(a.kind==="hero_attack"){ ix.heroAtk.add(a.targetId); }
+  }
+  G.index=ix;
+}
+
+function enterGame(){
+  G.phase="game"; $("overlay").classList.add("hidden");
+  $("game").style.display=""; $("bar").classList.remove("hidden"); $("concedeBtn").classList.remove("hidden");
+  document.documentElement.style.setProperty("--myhue",hueOf(G.seat));
+  $("youtag").textContent=`YOU · ${companyName(factionOf(G.seat))}`;
+  $("youtag").style.setProperty("--myhue",hueOf(G.seat));
+  sel=null; render();
+  if(G.status==="waiting_opponent") startWaitLoop();
+}
+
+// ---------------- rendering ----------------
+function setConn(c){ const d=$("conn"); d.className="dot "+c; }
+function isTargeting(){ return sel && sel.needsTarget; }
+
+function modelToken(m, seat){
+  const mine=seat===G.seat;
+  const fh=seat==="shared"?"#6E7681":hueOf(seat);
+  const el=document.createElement("div");
+  el.className="tok"+(seat==="shared"?" shared":"");
+  el.style.setProperty("--fh",fh);
+  el.dataset.iid=m.iid; el.dataset.tid=m.iid; if(mine) el.dataset.mine="1";
+  const art=m.cardId?`/art/cards/${m.cardId}.svg`:null;
+  const g=(m.keywords&&m.keywords.length)?(KW_GLYPH[m.keywords[0]]||""):"";
+  const kw=(m.keywords&&m.keywords.length)?m.keywords.join(" · "):"";
+  const par=m.keywords&&m.keywords.includes("Parallelize");
+  el.innerHTML=`${art?`<div class="art" style="background-image:url('${art}')"></div>`:`<div class="noart">${m.name||""}</div>`}
+    ${g?`<span class="glyph">${g}</span>`:""}
+    ${par?`<span class="x2">×2</span>`:""}
+    <div class="cn">${m.name||m.cardId||"?"}</div>${kw?`<div class="kw">${kw}</div>`:""}
+    <div class="ppx"><span class="p atk">⚔ ${m.attack}</span><span class="p hp">🛡 ${m.health}</span></div>`;
+  el.title=(CAT[m.cardId]&&CAT[m.cardId].text)||kw||m.name||"";
+  // affordances
+  if(G.status==="your_turn"){
+    if(mine && m.summoningSick && !G.index.byAttacker.has(m.iid)) el.classList.add("sick");
+    if(!sel){
+      if(mine && G.index.byAttacker.has(m.iid)) el.classList.add("ready");   // attack-ready only when idle
+    } else {
+      if(sel.kind==="attack"&&sel.iid===m.iid) el.classList.add("selected");
+      if(isTargeting()&&sel.targets.has(m.iid)){ el.classList.add("targetable"); if(seat===G.seat) el.classList.add("friendly"); }
+      if(sel.staged===m.iid) el.classList.add("staged");
+    }
+  } else if(mine && m.summoningSick){ el.classList.add("sick"); }
+  return el;
+}
+
+function heroPortrait(seat){
+  const fk=factionOf(seat), fh=hueOf(seat);
+  const p=G.state.players[seat];
+  const wrap=document.createElement("div"); wrap.className="heroport"; wrap.dataset.tid="HERO_"+seat;
+  const mine=seat===G.seat;
+  wrap.innerHTML=`<img class="avatar" src="/art/heroes/ceo_${fk}.svg" alt="${companyName(fk)} CEO" onerror="this.style.visibility='hidden'"/>`;
+  wrap.style.setProperty("--fh",fh);
+  if(G.status==="your_turn"&&sel&&isTargeting()&&sel.targets.has("HERO_"+seat)){ wrap.classList.add("targetable"); wrap.insertAdjacentHTML("beforeend",`<span class="cross"></span>`); }
+  if(mine && p.launch){ wrap.insertAdjacentHTML("beforeend",`<span class="wpn">⚔${p.launch.attack}·${p.launch.charges}⚡</span>`); }
+  if(mine && !sel && G.index.heroAtk.size){ wrap.classList.add("weaponready"); wrap.dataset.weapon="1"; }  // clickable only when idle
+  return wrap;
+}
+
+function computePips(p){
+  const max=p.compute.max, cur=p.compute.current||0, temp=p.compute.temp||0;
+  let h='<span class="pips">';
+  for(let i=0;i<max;i++) h+=`<span class="pip ${i<cur?'on':''}"></span>`;
+  for(let i=0;i<temp;i++) h+=`<span class="pip temp"></span>`;
+  return h+`</span>`;
+}
+
+function renderCeoRow(seat,container){
+  const p=G.state.players[seat], fk=factionOf(seat), fh=hueOf(seat), mine=seat===G.seat;
+  const row=document.createElement("div"); row.className="ceo";
+  const port=heroPortrait(seat);
+  const who=document.createElement("div"); who.className="who";
+  who.innerHTML=`<div class="nm" style="--fh:${fh}"><span class="seatTag" style="background:${fh}">${seat}</span>${companyName(fk)}</div>
+    <div class="stats">
+      <span class="stat val">💰 <b>${p.valuation}</b></span>
+      ${p.armor>0?`<span class="stat safe">🛡 <b>+${p.armor}</b></span>`:""}
+      <span class="stat" title="Compute (mana)">⚡ ${computePips(p)}</span>
+      ${mine?`<span class="stat">🂠 ${p.handCount??(p.hand?p.hand.length:0)} · 📚 ${p.deckCount??0}</span>`:""}
+    </div>`;
+  // hero power orb
+  const orb=document.createElement("div"); orb.className="orb";
+  const hpName=(HP[p.company]&&HP[p.company].name)||"Founder Move";
+  const live = mine && G.status==="your_turn" && G.index.hero.exists && !sel;  // clickable only when idle
+  const used = mine && p.hero && p.hero.usedThisTurn;
+  if(live) orb.classList.add("live"); if(used&&!live) orb.classList.add("used");
+  if(live) orb.dataset.power="1";
+  orb.innerHTML=`<img src="/art/skills/${SKILL[fk]}.svg" alt="${hpName}" title="${hpName}${G.index&&G.index.hero.cost!=null&&live?' — ⚡'+G.index.hero.cost:''}" onerror="this.style.visibility='hidden'"/><span class="pwn">${live?'⚡'+(G.index.hero.cost):hpName.split(' ')[0]}</span>`;
+  row.append(port,who,orb);
+  container.append(row);
+}
+
+function renderSeat(elId,seat,isOpp){
+  const el=$(elId); const fk=factionOf(seat), fh=hueOf(seat);
+  el.className="seat"+(G.state.turnOf===seat?" active":"");
+  el.style.setProperty("--fh",fh);
+  el.style.setProperty("--grad-dir",seat==="A"?"90deg":"270deg");
+  el.innerHTML="";
+  const p=G.state.players[seat];
+  if(isOpp){
+    renderCeoRow(seat,el);
+    // opponent hidden hand + deck
+    const hl=document.createElement("div"); hl.className="lbl"; hl.textContent="▸ Hand (hidden)";
+    const hr=document.createElement("div"); hr.className="row"; hr.style.alignItems="center";
+    const n=p.handCount||0;
+    for(let i=0;i<n;i++){ const b=document.createElement("div"); b.className="cardback"; b.style.setProperty("--fh",fh); b.textContent="?"; hr.append(b); }
+    if(!n) hr.innerHTML='<span class="lbl" style="margin:0">— empty —</span>';
+    const ds=document.createElement("span"); ds.className="deckstack"; ds.textContent=`📚 ${p.deckCount||0} in deck`;
+    hr.append(ds);
+    el.append(hl,hr);
+    const bl=document.createElement("div"); bl.className="lbl"; bl.textContent="▸ Data center";
+    const board=document.createElement("div"); board.className="row";
+    for(const m of p.board) board.append(modelToken(m,seat));
+    if(!p.board.length) board.innerHTML='<span class="lbl" style="margin:0">— empty —</span>';
+    el.append(bl,board);
+  } else {
+    const bl=document.createElement("div"); bl.className="lbl"; bl.textContent="▸ Your data center";
+    const board=document.createElement("div"); board.className="row"; board.id="youBoard";
+    for(const m of p.board) board.append(modelToken(m,seat));
+    if(!p.board.length) board.innerHTML='<span class="lbl" style="margin:0">— deploy Models here —</span>';
+    el.append(bl,board);
+    renderCeoRow(seat,el);
+  }
+}
+
+function renderShared(){
+  const sh=$("shared"); sh.innerHTML="";
+  for(const m of (G.state.shared||[])) sh.append(modelToken(m,"shared"));
+  $("laneLabel").textContent=`TURN ${G.state.turnNumber?.[G.state.turnOf]??""} · ${companyName(factionOf(G.state.turnOf))} to act`;
+}
+
+function renderHand(){
+  const h=$("hand"); h.innerHTML="";
+  const p=G.state.players[G.seat]; const fh=hueOf(G.seat);
+  const hand=p.hand||[];
+  if(!hand.length){ h.innerHTML='<span class="lbl">— empty —</span>'; return; }
+  for(const c of hand){
+    const def=CAT[c.cardId]||{name:c.cardId,cost:"?",type:"",keywords:[],text:""};
+    const info=G.index.byCard.get(c.iid);
+    const playable=G.status==="your_turn"&&!!info;
+    const needsT=info&&!info.noTarget&&info.targets.size>0;
+    const cost=info?info.cost:def.cost;
+    const art=c.cardId?`/art/cards/${c.cardId}.svg`:null;
+    const el=document.createElement("div");
+    el.className="hcard"+(playable?" playable":" disabled")+(sel&&sel.kind==="play"&&sel.cardIid===c.iid?" selected":"");
+    el.style.setProperty("--fh",fh); el.dataset.card=c.iid;
+    const isModel=def.type==="Model"||def.type==="Legendary Model";
+    el.innerHTML=`${art?`<div class="art" style="background-image:url('${art}')"></div>`:`<div class="noart">${def.name}</div>`}
+      <div class="cost">${cost}</div>
+      ${needsT?`<span class="needtgt">⊹ target</span>`:""}
+      <div class="cn">${def.name}</div>
+      <div class="tx">${def.text||""}</div>
+      ${isModel?`<div class="ppx"><span class="p atk">⚔ ${def.attack??0}</span><span class="p hp">🛡 ${def.health??1}</span></div>`:`<div class="ppx"><span class="p" style="color:var(--dim);font:600 9px var(--mono)">${def.type}</span></div>`}`;
+    el.title=`${def.name} — ⚡${def.cost} ${def.type}\n${def.text||""}`;
+    h.append(el);
+  }
+}
+
+function renderBar(){
+  const rb=$("ribbon"); rb.className=""; const ct=$("confirmBtn"), cc=$("cancelBtn"), eg=$("endgem");
+  ct.classList.add("hidden"); cc.classList.add("hidden");
+  if(G.status!=="your_turn"){ eg.disabled=true; eg.classList.remove("live"); rb.textContent=G.status==="game_over"?"Match over.":"Waiting for your opponent…"; return; }
+  eg.disabled=false;
+  const hasMoves=G.legal.some(a=>a.id!=="end");
+  eg.classList.toggle("live",!hasMoves);
+  if(G.note){ rb.className="warn"; rb.textContent=G.note; G.note=null; cc.classList.add("hidden"); return; }
+  if(!sel){ rb.innerHTML=`Your turn. <span class="hl">Click a card to play, a glowing Model to attack, your Founder Move, or End Turn.</span>`; return; }
+  cc.classList.remove("hidden");
+  if(sel.kind==="play"){
+    const def=CAT[sel.cardId]||{name:sel.cardId};
+    if(!sel.needsTarget){ rb.innerHTML=`Deploy <span class="hl">${def.name}</span> — click your data center or Confirm.`; ct.textContent="Deploy ▶"; ct.classList.remove("hidden"); }
+    else if(!sel.staged){ rb.innerHTML=`<span class="hl">${def.name}</span> — choose a target. <span style="color:var(--dim)">(Esc to cancel)</span>`; }
+    else { rb.innerHTML=`Confirm <span class="hl">${def.name}</span> → ${targetName(sel.staged)}`; ct.textContent="Confirm ▶"; ct.classList.remove("hidden"); }
+  } else if(sel.kind==="attack"){
+    if(!sel.staged){ rb.innerHTML=`<span class="hl">${nameOfIid(sel.iid)}</span> attacks — pick a target.`; }
+    else { rb.innerHTML=`Confirm: <span class="hl">${nameOfIid(sel.iid)}</span> ⚔ ${targetName(sel.staged)}`; ct.textContent="Attack ▶"; ct.classList.remove("hidden"); }
+  } else if(sel.kind==="hero"){
+    const nm=(HP[G.state.players[G.seat].company]&&HP[G.state.players[G.seat].company].name)||"Founder Move";
+    if(!sel.needsTarget){ rb.innerHTML=`Use <span class="hl">${nm}</span> — click Confirm.`; ct.textContent="Use ▶"; ct.classList.remove("hidden"); }
+    else if(!sel.staged){ rb.innerHTML=`<span class="hl">${nm}</span> — choose a target.`; }
+    else { rb.innerHTML=`Confirm <span class="hl">${nm}</span> → ${targetName(sel.staged)}`; ct.textContent="Use ▶"; ct.classList.remove("hidden"); }
+  } else if(sel.kind==="weapon"){
+    if(!sel.staged){ rb.innerHTML=`<span class="hl">Launch weapon</span> — pick a target.`; }
+    else { rb.innerHTML=`Confirm: Launch ⚔ ${targetName(sel.staged)}`; ct.textContent="Attack ▶"; ct.classList.remove("hidden"); }
+  }
+}
+
+function render(){
+  if(!G.state) return;
+  // turn pill
+  const tp=$("turnpill"); const mine=G.status==="your_turn";
+  tp.className="turnpill"+(mine?" mine":"");
+  if(G.status==="game_over") tp.textContent="MATCH OVER";
+  else if(mine) tp.textContent=`YOUR TURN · T${G.state.turnNumber?.[G.seat]??""}`;
+  else tp.textContent=`${companyName(factionOf(G.opp))} THINKING…`;
+  setConn(G.status==="game_over"?"green":mine?"green":"amber");
+  renderSeat("seatOpp",G.opp,true);
+  renderSeat("seatYou",G.seat,false);
+  renderShared();
+  renderHand();
+  renderBar();
+}
+
+// ---------------- helpers for names ----------------
+function nameOfIid(iid){ for(const s of ["A","B"]){ const p=G.state.players[s]; const m=(p.board||[]).find(x=>x.iid===iid); if(m) return m.name; } const sm=(G.state.shared||[]).find(x=>x.iid===iid); return sm?sm.name:iid; }
+function targetName(tid){ if(tid==="HERO_"+G.seat) return "your CEO"; if(tid==="HERO_"+G.opp) return companyName(factionOf(G.opp))+" CEO"; return nameOfIid(tid); }
+
+// ---------------- selection state machine ----------------
+function selectCard(cardIid){
+  const info=G.index.byCard.get(cardIid); if(!info) return;
+  if(info.noTarget && info.targets.size===0){ sel={kind:"play",cardIid,cardId:info.cardId,needsTarget:false,staged:null}; }
+  else { sel={kind:"play",cardIid,cardId:info.cardId,needsTarget:true,targets:info.targets,staged:null}; }
+  render();
+}
+function selectAttacker(iid){ const t=G.index.byAttacker.get(iid); if(!t) return; sel={kind:"attack",iid,needsTarget:true,targets:t,staged:null}; render(); }
+function selectHero(){ const h=G.index.hero; if(!h.exists) return; if(h.requiresTarget) sel={kind:"hero",needsTarget:true,targets:h.targets,staged:null}; else sel={kind:"hero",needsTarget:false,staged:null}; render(); }
+function selectWeapon(){ if(!G.index.heroAtk.size) return; sel={kind:"weapon",needsTarget:true,targets:G.index.heroAtk,staged:null}; render(); }
+
+function onTarget(tid){ if(!sel||!sel.needsTarget||!sel.targets.has(tid)) return; if(sel.staged===tid){ confirmSel(); return; } sel.staged=tid; render(); }
+function cancel(){ sel=null; G.note=null; render(); }
+
+function buildId(){
+  if(!sel) return null;
+  if(sel.kind==="play") return sel.needsTarget?`play:${sel.cardIid}:${sel.staged}`:`play:${sel.cardIid}`;
+  if(sel.kind==="attack") return `atk:${sel.iid}:${sel.staged}`;
+  if(sel.kind==="hero") return sel.needsTarget?`hero:${sel.staged}`:`hero`;
+  if(sel.kind==="weapon") return `heroatk:${sel.staged}`;
+  return null;
+}
+function confirmSel(){
+  if(!sel) return;
+  if(sel.needsTarget&&!sel.staged) return;
+  const id=buildId(); commit(id);
+}
+
+async function commit(id){
+  if(G.busy||!id) return;
+  if(!G.legal.some(a=>a.id===id)){ G.note="That move is no longer legal — board refreshed."; sel=null; render(); return; }
+  G.busy=true; setConn("amber");
+  try{ await postAction(id); } finally { G.busy=false; }
+}
+
+async function clickEnd(){
+  if(G.busy||G.status!=="your_turn") return;
+  const hasMoves=G.legal.some(a=>a.id!=="end");
+  if(hasMoves){ const ok=confirm("You still have moves available. End your turn anyway?"); if(!ok) return; }
+  sel=null; G.busy=true; setConn("amber");
+  try{ await postAction("end"); } finally { G.busy=false; }
+}
+
+// ---------------- waiting / recap ----------------
+async function startWaitLoop(){
+  if(G.waitActive) return; G.waitActive=true;
+  const before=G.state;
+  setConn("amber");
+  while(G.status==="waiting_opponent"){
+    let p;
+    try{ const r=await fetch(`/match/${G.matchId}/wait?token=${encodeURIComponent(G.token)}`); p=await r.json(); }
+    catch(e){ setConn("red"); await sleep(1500); continue; }
+    const stillWaiting=(p.status==="waiting_opponent");
+    hydrate(p);
+    if(G.status==="your_turn"){ recap(before,G.state); break; }
+    if(G.status==="game_over"){ break; }
+    if(stillWaiting) setConn("amber");
+  }
+  G.waitActive=false;
+}
+
+function recap(before,after){
+  if(!before||!after) return;
+  const lines=[];
+  const me=G.seat, opp=G.opp;
+  const mb=before.players[me], ma=after.players[me];
+  const hpBefore=mb.valuation+mb.armor, hpAfter=ma.valuation+ma.armor;
+  if(hpAfter<hpBefore) lines.push(`You took ${hpBefore-hpAfter} damage`);
+  else if(hpAfter>hpBefore) lines.push(`You gained ${hpAfter-hpBefore} life/armor`);
+  // opponent board changes
+  const oa=after.players[opp].board||[], ob=before.players[opp].board||[];
+  const obIds=new Set(ob.map(x=>x.iid));
+  for(const m of oa) if(!obIds.has(m.iid)) lines.push(`Opponent deployed ${m.name}`);
+  // your board losses
+  const maIds=new Set((ma.board||[]).map(x=>x.iid));
+  for(const m of (mb.board||[])) if(!maIds.has(m.iid)) lines.push(`Your ${m.name} was destroyed`);
+  // opponent cards played (hand count drop beyond their draw)
+  const hcB=before.players[opp].handCount||0, hcA=after.players[opp].handCount||0;
+  if(lines.length===0) lines.push("Opponent ended their turn");
+  toast(lines.slice(0,5));
+}
+function toast(lines){
+  const c=$("toasts");
+  for(const l of lines){ const d=document.createElement("div"); d.className="toast"; d.textContent=l; c.append(d); setTimeout(()=>d.remove(),4200); }
+}
+
+// ---------------- game over ----------------
+function showGameOver(){
+  G.phase="game"; // keep board visible behind
+  try{ sessionStorage.removeItem("pvp:last"); }catch{}   // so reload / "New match" returns to the lobby, not this finished match
+  const r=G.result||{}; const win=r.winner===G.seat, draw=!r.winner;
+  $("overlay").classList.remove("hidden");
+  const cls=draw?"draw":win?"win":"lose";
+  const head=draw?"Draw":win?"🏆 Victory":"Defeat";
+  const reasonMap={lethal:"by lethal",burnout:"by Model Collapse",concede:"by concession",draw_mutual:"— mutual collapse",draw_ply_cap:"— stalemate (ply cap)"};
+  $("panel").innerHTML=`<div class="banner ${cls}"><div class="big">${head}</div>
+    <p>${draw?"Both companies collapsed":(win?"You win":"You lose")} ${reasonMap[r.reason]||""}.</p>
+    <div style="display:flex;gap:8px;justify-content:center;margin-top:10px">
+      <button class="primary" onclick="location.href='/play'">New match</button>
+      <button onclick="location.href='/'">Spectate</button>
+    </div></div>`;
+  $("bar").classList.add("hidden");
+}
+
+// ---------------- global click + keyboard ----------------
+function onClick(e){
+  if(G.phase!=="game"||G.busy) return;
+  const t=e.target;
+  if(t.closest("#cancelBtn")) return cancel();
+  if(t.closest("#confirmBtn")) return confirmSel();
+  if(t.closest("#endgem")) return clickEnd();
+  if(G.status!=="your_turn") return;
+  // targeting: a target click
+  if(sel&&sel.needsTarget){
+    const tgt=t.closest("[data-tid]");
+    if(tgt&&sel.targets.has(tgt.dataset.tid)){ onTarget(tgt.dataset.tid); return; }
+    return cancel();
+  }
+  // no-target selection pending confirm: clicking the deploy zone commits
+  if(sel&&!sel.needsTarget){
+    if(t.closest("#youBoard")){ confirmSel(); return; }
+    return cancel();
+  }
+  // IDLE
+  const card=t.closest("[data-card]");
+  if(card&&G.index.byCard.has(card.dataset.card)) return selectCard(card.dataset.card);
+  const mine=t.closest('[data-mine="1"]');
+  if(mine&&G.index.byAttacker.has(mine.dataset.iid)) return selectAttacker(mine.dataset.iid);
+  if(t.closest("[data-power]")&&G.index.hero.exists) return selectHero();
+  if(t.closest("[data-weapon]")&&G.index.heroAtk.size) return selectWeapon();
+}
+document.addEventListener("click",onClick);
+document.addEventListener("keydown",(e)=>{ if(e.key==="Escape") cancel(); else if(e.key==="Enter"&&G.phase==="game"&&G.status==="your_turn"&&!G.busy){ if(sel) confirmSel(); else clickEnd(); } });
+$("concedeBtn").onclick=()=>{ if(confirm("Concede the match?")) concede(); };
+
+boot();
+</script>
+</body>
+</html>

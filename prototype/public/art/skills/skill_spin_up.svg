@@ -1,0 +1,50 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Spin Up — ShallowSeek founder move: a spinning compute dial sparks a plus-one temporary compute bolt, amber emblem">
+  <defs>
+    <radialGradient id="ssu-disc" cx="50%" cy="42%" r="60%">
+      <stop offset="0%" stop-color="#0F3E40"/><stop offset="100%" stop-color="#05181A"/>
+    </radialGradient>
+    <linearGradient id="ssu-ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFD9A8"/><stop offset="50%" stop-color="#FF8A3D"/><stop offset="100%" stop-color="#0E5E63"/>
+    </linearGradient>
+    <radialGradient id="ssu-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFB36A" stop-opacity=".8"/><stop offset="100%" stop-color="#FF8A3D" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="ssu-core" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#FFE8C8"/><stop offset="50%" stop-color="#FF8A3D"/><stop offset="100%" stop-color="#B5521A"/>
+    </radialGradient>
+    <filter id="ssu-grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .5 0"/></filter>
+  </defs>
+
+  <circle cx="100" cy="100" r="96" fill="url(#ssu-ring)"/>
+  <circle cx="100" cy="100" r="86" fill="url(#ssu-disc)"/>
+  <circle cx="100" cy="100" r="86" fill="none" stroke="#0E5E63" stroke-width="2"/>
+  <circle cx="100" cy="92" r="60" fill="url(#ssu-glow)" opacity=".4"/>
+
+  <!-- the spinning dial: a broken ring of motion arcs -->
+  <g transform="translate(100 92)">
+    <circle r="48" fill="none" stroke="#1E6E70" stroke-width="9"/>
+    <circle r="48" fill="none" stroke="#FF8A3D" stroke-width="9" stroke-linecap="round" stroke-dasharray="170 130" transform="rotate(-50)"/>
+    <!-- motion spin arrows -->
+    <path d="M44 -18 a48 48 0 0 0 -16 -28" fill="none" stroke="#FFD9A8" stroke-width="3" stroke-linecap="round"/>
+    <path d="M28 -50 l-2 16 l15 -6 z" fill="#FFD9A8"/>
+    <!-- tick marks -->
+    <g stroke="#FFB36A" stroke-width="2" opacity=".6"><line x1="0" y1="-44" x2="0" y2="-36"/><line x1="38" y1="-22" x2="32" y2="-18"/><line x1="38" y1="22" x2="32" y2="18"/><line x1="-38" y1="0" x2="-30" y2="0"/></g>
+    <!-- compute spark core -->
+    <circle r="26" fill="#06181A" stroke="#FF8A3D" stroke-width="1.6"/>
+    <circle r="17" fill="url(#ssu-core)"/>
+    <!-- lightning bolt -->
+    <path d="M2 -16 l-10 18 l8 0 l-4 16 l12 -22 l-8 0 z" fill="#06181A"/>
+  </g>
+
+  <!-- +1 temp compute tag -->
+  <text x="148" y="60" font-family="JetBrains Mono,monospace" font-size="15" fill="#FFB36A" text-anchor="middle" font-weight="700">+1</text>
+
+  <!-- compute cost gem -->
+  <g transform="translate(100 168)">
+    <circle r="15" fill="#0C1426" stroke="#3DD6F0" stroke-width="2"/>
+    <text y="5" font-family="'Space Grotesk',sans-serif" font-weight="800" font-size="16" fill="#3DD6F0" text-anchor="middle">2</text>
+  </g>
+  <text x="100" y="190" font-family="JetBrains Mono,monospace" font-size="11" fill="#FFB36A" text-anchor="middle" font-weight="700">SPIN UP</text>
+
+  <circle cx="100" cy="100" r="96" fill="url(#ssu-grain)" opacity=".05"/>
+</svg>

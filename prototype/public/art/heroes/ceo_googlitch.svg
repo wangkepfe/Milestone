@@ -1,0 +1,77 @@
+<svg viewBox="0 0 360 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Googlitch CEO — the Overextended Giant: a large founder ringed by too many floating browser tabs, a search bar for a mouth, one half of the face smeared into an RGB-split glitch">
+  <defs>
+    <radialGradient id="hg-bg" cx="50%" cy="28%" r="92%">
+      <stop offset="0%" stop-color="#15294A"/><stop offset="55%" stop-color="#0C1426"/><stop offset="100%" stop-color="#060B16"/>
+    </radialGradient>
+    <radialGradient id="hg-halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#BFE0FF" stop-opacity=".4"/><stop offset="100%" stop-color="#4D8DF0" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="hg-skin" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#EAD3B8"/><stop offset="100%" stop-color="#BE9270"/></linearGradient>
+    <linearGradient id="hg-suit" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2D5BA8"/><stop offset="100%" stop-color="#10254A"/></linearGradient>
+    <linearGradient id="hg-tab" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1B3358"/><stop offset="100%" stop-color="#0E1F3A"/></linearGradient>
+    <filter id="hg-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="9"/></filter>
+    <filter id="hg-grain"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0"/></filter>
+    <radialGradient id="hg-vig" cx="50%" cy="44%" r="74%"><stop offset="58%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".6"/></radialGradient>
+  </defs>
+
+  <rect width="360" height="460" fill="url(#hg-bg)"/>
+  <g filter="url(#hg-soft)" opacity=".55"><ellipse cx="180" cy="150" rx="170" ry="140" fill="#4D8DF0" opacity=".15"/></g>
+  <ellipse cx="180" cy="430" rx="150" ry="26" fill="#0A1326"/>
+  <circle cx="180" cy="180" r="130" fill="url(#hg-halo)"/>
+
+  <!-- too many floating browser tabs orbiting the head -->
+  <g font-family="JetBrains Mono,monospace" font-size="8" fill="#6FA6F5">
+    <g transform="translate(46 96) rotate(-12)"><rect width="78" height="26" rx="5" fill="url(#hg-tab)" stroke="#2D5BA8" stroke-width="1"/><circle cx="12" cy="13" r="4" fill="#FF5C5C"/><text x="44" y="17" text-anchor="middle">tab 1</text></g>
+    <g transform="translate(244 78) rotate(10)"><rect width="78" height="26" rx="5" fill="url(#hg-tab)" stroke="#2D5BA8" stroke-width="1"/><circle cx="12" cy="13" r="4" fill="#5BD68A"/><text x="44" y="17" text-anchor="middle">tab 2</text></g>
+    <g transform="translate(28 168) rotate(8)"><rect width="74" height="24" rx="5" fill="url(#hg-tab)" stroke="#2D5BA8" stroke-width="1"/><circle cx="11" cy="12" r="3.5" fill="#F4C04C"/><text x="42" y="16" text-anchor="middle">tab 3</text></g>
+    <g transform="translate(266 158) rotate(-9)"><rect width="74" height="24" rx="5" fill="url(#hg-tab)" stroke="#2D5BA8" stroke-width="1"/><circle cx="11" cy="12" r="3.5" fill="#22E0E0"/><text x="42" y="16" text-anchor="middle">tab 4</text></g>
+    <g transform="translate(40 232) rotate(-6)"><rect width="70" height="22" rx="5" fill="url(#hg-tab)" stroke="#2D5BA8" stroke-width="1" opacity=".8"/><text x="35" y="15" text-anchor="middle">tab 5</text></g>
+    <g transform="translate(256 232) rotate(7)"><rect width="70" height="22" rx="5" fill="url(#hg-tab)" stroke="#2D5BA8" stroke-width="1" opacity=".8"/><text x="35" y="15" text-anchor="middle">+9 more</text></g>
+  </g>
+
+  <!-- broad overextended torso -->
+  <path d="M180 256 q-78 6 -104 64 q-14 32 -14 96 l236 0 q0 -64 -14 -96 q-26 -58 -104 -64 z" fill="url(#hg-suit)"/>
+  <path d="M180 258 L196 360 L180 416 L164 360 Z" fill="#0E2447"/>
+  <!-- collar + many-colored lanyard -->
+  <path d="M156 258 q24 22 48 0 l-10 -12 q-14 8 -28 0 z" fill="#1B3358"/>
+  <path d="M180 256 l-6 60 l6 0 z" fill="#22E0E0"/><path d="M180 256 l6 60 l-6 0 z" fill="#FF4DD2"/>
+
+  <!-- neck + big head -->
+  <rect x="164" y="216" width="32" height="30" rx="9" fill="url(#hg-skin)"/>
+  <ellipse cx="180" cy="182" rx="48" ry="46" fill="url(#hg-skin)"/>
+  <!-- thinning hair -->
+  <path d="M136 174 q6 -42 44 -42 q38 0 44 42 q-16 -16 -44 -14 q-28 -2 -44 14 z" fill="#5a4632"/>
+
+  <!-- LEFT half of the face: normal, slightly weary -->
+  <g>
+    <circle cx="162" cy="176" r="3.6" fill="#2a1c10"/>
+    <path d="M150 167 l16 4" stroke="#5a4632" stroke-width="2.4" stroke-linecap="round"/>
+    <!-- bag under eye (tired) -->
+    <path d="M152 186 q10 4 18 0" fill="none" stroke="#a07a58" stroke-width="1.6" opacity=".6"/>
+  </g>
+  <!-- RIGHT half of the face: glitch-smeared (RGB split) -->
+  <g opacity=".92">
+    <rect x="196" y="160" width="44" height="40" fill="#22E0E0" opacity=".5" transform="translate(4 0)"/>
+    <rect x="196" y="160" width="44" height="40" fill="#FF4DD2" opacity=".45" transform="translate(-4 0)"/>
+    <rect x="196" y="170" width="44" height="6" fill="#0C1426"/>
+    <rect x="196" y="188" width="44" height="5" fill="#0C1426"/>
+    <circle cx="200" cy="176" r="3.6" fill="#0C1426"/>
+  </g>
+  <!-- the SEARCH BAR for a mouth -->
+  <g transform="translate(180 210)">
+    <rect x="-40" y="-9" width="80" height="20" rx="10" fill="#E6F1FF" stroke="#4D8DF0" stroke-width="1.6"/>
+    <text x="-30" y="5" font-family="JetBrains Mono,monospace" font-size="9" fill="#1A3666">how to...</text>
+    <circle cx="26" cy="1" r="6" fill="none" stroke="#1A3666" stroke-width="2"/><line x1="30" y1="5" x2="36" y2="11" stroke="#1A3666" stroke-width="2.4" stroke-linecap="round"/>
+  </g>
+  <!-- rim light (only the non-glitched side) -->
+  <path d="M136 174 q6 -42 44 -42" fill="none" stroke="#FFF6E0" stroke-width="2" opacity=".5" stroke-linecap="round"/>
+
+  <!-- nameplate -->
+  <g transform="translate(180 426)">
+    <rect x="-140" y="0" width="280" height="30" rx="8" fill="#0A1326" stroke="#4D8DF0" stroke-width="1.4"/>
+    <text x="0" y="20" font-family="'Space Grotesk',Archivo,sans-serif" font-size="14" font-weight="800" fill="#E6F1FF" text-anchor="middle">🔵 Googlitch — The Overextended Giant</text>
+  </g>
+
+  <rect width="360" height="460" filter="url(#hg-grain)" opacity=".05"/>
+  <rect width="360" height="460" fill="url(#hg-vig)"/>
+</svg>

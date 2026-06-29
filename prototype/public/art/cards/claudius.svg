@@ -1,0 +1,91 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Claudius the Considerate — a towering robed rabbit-sage with a caution-tape halo, holding a glowing constitution tome before a shield-fortress aura, legendary gold trim">
+  <defs>
+    <radialGradient id="cl-bg" cx="50%" cy="24%" r="95%">
+      <stop offset="0%" stop-color="#332658"/><stop offset="52%" stop-color="#1A1430"/><stop offset="100%" stop-color="#0C0818"/>
+    </radialGradient>
+    <linearGradient id="cl-fur" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F6EFDD"/><stop offset="100%" stop-color="#CDBC9C"/>
+    </linearGradient>
+    <linearGradient id="cl-robe" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8E76D8"/><stop offset="100%" stop-color="#3E3070"/>
+    </linearGradient>
+    <linearGradient id="cl-robe2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6F5BA8"/><stop offset="100%" stop-color="#2A2150"/>
+    </linearGradient>
+    <radialGradient id="cl-tome" cx="50%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#FFFFFF"/><stop offset="45%" stop-color="#CDB8FF"/><stop offset="100%" stop-color="#5A47A0"/>
+    </radialGradient>
+    <linearGradient id="cl-gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFE9A8"/><stop offset="50%" stop-color="#F4C04C"/><stop offset="100%" stop-color="#8a5a12"/>
+    </linearGradient>
+    <radialGradient id="cl-aura" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#CDB8FF" stop-opacity=".55"/><stop offset="100%" stop-color="#A07CFF" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="cl-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="cl-grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0"/></filter>
+    <radialGradient id="cl-vig" cx="50%" cy="46%" r="72%"><stop offset="56%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".58"/></radialGradient>
+  </defs>
+
+  <rect width="400" height="300" fill="url(#cl-bg)"/>
+
+  <!-- legendary gold corner rays -->
+  <g opacity=".5"><path d="M0 0 L130 0 L0 96 Z" fill="url(#cl-gold)" opacity=".12"/><path d="M400 300 L270 300 L400 204 Z" fill="url(#cl-gold)" opacity=".12"/></g>
+
+  <g filter="url(#cl-soft)" opacity=".6"><ellipse cx="200" cy="120" rx="160" ry="100" fill="#A07CFF" opacity=".18"/></g>
+
+  <!-- the shield-fortress aura behind -->
+  <g transform="translate(200 156)" opacity=".5">
+    <path d="M0 -130 l108 40 v70 q0 96 -108 134 q-108 -38 -108 -134 v-70 z" fill="url(#cl-aura)"/>
+    <path d="M0 -120 l96 36 v64 q0 86 -96 120 q-96 -34 -96 -120 v-64 z" fill="none" stroke="#9FB3C8" stroke-width="2" opacity=".5"/>
+  </g>
+
+  <!-- caution-tape halo -->
+  <g transform="translate(200 72)">
+    <ellipse cx="0" cy="0" rx="48" ry="15" fill="none" stroke="url(#cl-gold)" stroke-width="9"/>
+    <g fill="#1A1430" opacity=".8"><path d="M-40 -6 l8 12 h-7 l-8 -12 z"/><path d="M-18 -9 l8 14 h-7 l-8 -14 z"/><path d="M6 -9 l8 14 h-7 l-8 -14 z"/><path d="M30 -6 l8 12 h-7 l-8 -12 z"/></g>
+  </g>
+
+  <!-- the rabbit-sage -->
+  <g>
+    <!-- long sage ears -->
+    <path d="M180 64 q-12 -52 2 -64 q14 12 10 60 z" fill="url(#cl-fur)"/>
+    <path d="M220 64 q12 -52 -2 -64 q-14 12 -10 60 z" fill="url(#cl-fur)"/>
+    <!-- robe body (wide, fortress-like) -->
+    <path d="M118 284 q-8 -120 50 -150 l64 0 q58 30 50 150 z" fill="url(#cl-robe)"/>
+    <path d="M168 134 L150 284 L184 284 L190 138 Z" fill="url(#cl-robe2)"/>
+    <path d="M232 134 L250 284 L216 284 L210 138 Z" fill="url(#cl-robe2)"/>
+    <!-- gold robe trim -->
+    <path d="M118 284 q-8 -120 50 -150" fill="none" stroke="url(#cl-gold)" stroke-width="3" opacity=".8"/>
+    <path d="M282 284 q8 -120 -50 -150" fill="none" stroke="url(#cl-gold)" stroke-width="3" opacity=".8"/>
+    <!-- head -->
+    <circle cx="200" cy="104" r="38" fill="url(#cl-fur)"/>
+    <!-- wise half-closed eyes + small round spectacles -->
+    <circle cx="186" cy="102" r="9" fill="none" stroke="url(#cl-gold)" stroke-width="1.6"/><circle cx="214" cy="102" r="9" fill="none" stroke="url(#cl-gold)" stroke-width="1.6"/>
+    <line x1="195" y1="102" x2="205" y2="102" stroke="url(#cl-gold)" stroke-width="1.6"/>
+    <path d="M180 102 q6 4 12 0 M208 102 q6 4 12 0" fill="none" stroke="#2A2150" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M192 120 q8 4 16 0" fill="none" stroke="#7a5f7a" stroke-width="2.2" stroke-linecap="round"/>
+    <ellipse cx="200" cy="113" rx="3" ry="2.4" fill="#C98CA8"/>
+    <!-- a small sage beard tuft -->
+    <path d="M192 126 q8 18 16 0 q-2 14 -8 16 q-6 -2 -8 -16 z" fill="#E9E0CC"/>
+    <!-- the glowing constitution tome held forward -->
+    <g transform="translate(200 196)">
+      <ellipse cx="0" cy="0" rx="58" ry="26" fill="url(#cl-aura)"/>
+      <path d="M-46 -18 L0 -10 L46 -18 L46 22 L0 30 L-46 22 Z" fill="url(#cl-tome)" stroke="url(#cl-gold)" stroke-width="1.6"/>
+      <line x1="0" y1="-10" x2="0" y2="30" stroke="#5A47A0" stroke-width="2"/>
+      <g stroke="#5A47A0" stroke-width="1.4" opacity=".7"><line x1="-36" y1="-6" x2="-8" y2="-2"/><line x1="-36" y1="4" x2="-8" y2="8"/><line x1="8" y1="-2" x2="36" y2="-6"/><line x1="8" y1="8" x2="36" y2="4"/></g>
+      <!-- monetize/heal heart rising from the tome -->
+      <g transform="translate(0 -34)"><path d="M0 14 C-15 3 -12 -10 -3 -10 C0 -10 0 -7 0 -6 C0 -7 0 -10 3 -10 C12 -10 15 3 0 14 Z" fill="url(#cl-gold)"/></g>
+    </g>
+    <!-- paws holding the tome -->
+    <path d="M150 178 q-6 16 6 26 l16 -8 q-10 -10 -6 -24 z" fill="url(#cl-fur)"/>
+    <path d="M250 178 q6 16 -6 26 l-16 -8 q10 -10 6 -24 z" fill="url(#cl-fur)"/>
+    <!-- rim light -->
+    <path d="M180 64 q-12 -52 2 -64" fill="none" stroke="#FFF6E0" stroke-width="1.8" opacity=".6" stroke-linecap="round"/>
+    <path d="M165 104 a38 38 0 0 1 18 -32" fill="none" stroke="#FFF6E0" stroke-width="1.6" opacity=".55"/>
+  </g>
+
+  <text x="200" y="294" font-family="JetBrains Mono,monospace" font-size="8" fill="#CDB8FF" text-anchor="middle" opacity=".7">// considerate by construction</text>
+
+  <rect width="400" height="300" filter="url(#cl-grain)" opacity=".05"/>
+  <rect width="400" height="300" fill="url(#cl-vig)"/>
+</svg>

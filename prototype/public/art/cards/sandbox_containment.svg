@@ -1,0 +1,78 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sandbox Containment — an angry enemy model frozen inside a translucent padded sandbox cube ringed with caution tape, a drawn card slipping out">
+  <defs>
+    <radialGradient id="sc-bg" cx="50%" cy="28%" r="92%">
+      <stop offset="0%" stop-color="#2A2150"/><stop offset="55%" stop-color="#1A1430"/><stop offset="100%" stop-color="#0E0A1C"/>
+    </radialGradient>
+    <linearGradient id="sc-cube" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#B79CFF" stop-opacity=".30"/><stop offset="100%" stop-color="#5A47A0" stop-opacity=".18"/>
+    </linearGradient>
+    <linearGradient id="sc-tape" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#F4C04C"/><stop offset="100%" stop-color="#D89A1C"/>
+    </linearGradient>
+    <linearGradient id="sc-card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F6EFDD"/><stop offset="100%" stop-color="#D8C8A6"/>
+    </linearGradient>
+    <radialGradient id="sc-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#CDB8FF" stop-opacity=".5"/><stop offset="100%" stop-color="#A07CFF" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="sc-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="sc-grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0"/></filter>
+    <radialGradient id="sc-vig" cx="50%" cy="46%" r="72%"><stop offset="60%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".55"/></radialGradient>
+  </defs>
+
+  <rect width="400" height="300" fill="url(#sc-bg)"/>
+
+  <g filter="url(#sc-soft)" opacity=".6">
+    <ellipse cx="190" cy="120" rx="150" ry="90" fill="#A07CFF" opacity=".18"/>
+  </g>
+  <g opacity=".7"><rect x="0" y="226" width="400" height="74" fill="#120D24"/></g>
+  <ellipse cx="190" cy="252" rx="150" ry="16" fill="#1E1640" opacity=".7"/>
+  <circle cx="186" cy="140" r="96" fill="url(#sc-glow)"/>
+
+  <!-- the translucent padded sandbox cube (isometric) -->
+  <g transform="translate(116 70)">
+    <!-- back faces -->
+    <path d="M30 30 L150 30 L150 150 L30 150 Z" fill="url(#sc-cube)"/>
+    <path d="M30 30 L60 6 L180 6 L150 30 Z" fill="#6F5BA8" opacity=".22"/>
+    <path d="M150 30 L180 6 L180 126 L150 150 Z" fill="#4A3A85" opacity=".22"/>
+    <!-- padded corner bumpers (rounded) -->
+    <g fill="#5A47A0">
+      <circle cx="30" cy="30" r="8"/><circle cx="150" cy="30" r="8"/><circle cx="30" cy="150" r="8"/><circle cx="150" cy="150" r="8"/>
+      <circle cx="60" cy="6" r="7"/><circle cx="180" cy="6" r="7"/><circle cx="180" cy="126" r="7"/>
+    </g>
+    <!-- glass edges -->
+    <path d="M30 30 L150 30 L150 150 L30 150 Z" fill="none" stroke="#CDB8FF" stroke-width="2" opacity=".8"/>
+    <path d="M30 30 L60 6 L180 6 L150 30 M150 30 L180 6 M150 150 L180 126 L180 6" fill="none" stroke="#9B86D6" stroke-width="1.6" opacity=".7"/>
+
+    <!-- trapped angry enemy model inside (suppressed) -->
+    <g transform="translate(90 92)">
+      <path d="M-26 56 L-18 -2 L0 -24 L18 -2 L26 56 Z" fill="#39304F"/>
+      <path d="M0 -24 L18 -2 L26 56 L0 56 Z" fill="#241C3A"/>
+      <!-- angry suppressed eyes (X'd out abilities) -->
+      <path d="M-12 6 l8 8 M-4 6 l-8 8" stroke="#E25555" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M12 6 l-8 8 M4 6 l8 8" stroke="#E25555" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M-8 34 q8 -6 16 0" fill="none" stroke="#7a4f7a" stroke-width="2.4" stroke-linecap="round"/>
+      <!-- "no attack" suppression ring -->
+      <circle cx="0" cy="14" r="34" fill="none" stroke="#9FB3C8" stroke-width="2" stroke-dasharray="5 5" opacity=".7"/>
+    </g>
+  </g>
+
+  <!-- caution tape across the cube -->
+  <g transform="translate(116 168) rotate(-12)">
+    <rect x="-10" y="0" width="220" height="20" fill="url(#sc-tape)"/>
+    <g fill="#1A1430"><path d="M4 0 l14 20 h-12 l-14 -20 z"/><path d="M38 0 l14 20 h-12 l-14 -20 z"/><path d="M72 0 l14 20 h-12 l-14 -20 z"/><path d="M106 0 l14 20 h-12 l-14 -20 z"/><path d="M140 0 l14 20 h-12 l-14 -20 z"/><path d="M174 0 l14 20 h-12 l-14 -20 z"/></g>
+    <text x="100" y="-4" font-family="JetBrains Mono,monospace" font-size="8" fill="#F4C04C">CONTAINED</text>
+  </g>
+
+  <!-- the drawn card slipping out (top-right) -->
+  <g transform="translate(286 64) rotate(14)">
+    <rect x="0" y="0" width="58" height="80" rx="6" fill="url(#sc-card)" stroke="#A07CFF" stroke-width="1.6"/>
+    <rect x="8" y="10" width="42" height="26" rx="3" fill="#3E3070"/>
+    <rect x="8" y="42" width="42" height="3" rx="1.5" fill="#B49A6E"/>
+    <rect x="8" y="50" width="34" height="3" rx="1.5" fill="#B49A6E"/>
+    <text x="29" y="72" font-family="JetBrains Mono,monospace" font-size="9" fill="#5A47A0" text-anchor="middle" font-weight="700">DRAW</text>
+  </g>
+
+  <rect width="400" height="300" filter="url(#sc-grain)" opacity=".05"/>
+  <rect width="400" height="300" fill="url(#sc-vig)"/>
+</svg>
