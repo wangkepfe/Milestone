@@ -12,7 +12,7 @@ export const HAND_MAX = 8;
 export const PLY_CAP = 80; // hard termination backstop
 // Balance knob: cap on Anthrabbit's Safety Margin (armor). Infinity = as-designed
 // (the over-tuned version). Set env SM_CAP=10 to apply the balance-review fix.
-const SM_CAP = process.env.SM_CAP ? Number(process.env.SM_CAP) : Infinity;
+const SM_CAP = (typeof process !== "undefined" && process.env && process.env.SM_CAP) ? Number(process.env.SM_CAP) : Infinity;
 
 // ---------- deterministic RNG (mulberry32 over an integer in state) ----------
 function rngFloat(S) {

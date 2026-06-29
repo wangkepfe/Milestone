@@ -248,6 +248,14 @@ async function handler(req, res) {
         return send(res, 200, stateFor(m, seat));
       }
     }
+    // Shared rules engine, served to the client for local (single-player / bot) play.
+    if (req.method === "GET" && url.pathname.startsWith("/engine/")) {
+      const name = url.pathname.slice("/engine/".length);
+      if (["engine.js", "cards.js", "bot.js"].includes(name)) {
+        res.writeHead(200, { "content-type": "text/javascript" });
+        return res.end(fs.readFileSync(fileURLToPath(new URL("./" + name, import.meta.url))));
+      }
+    }
     if (tryStatic(req, res, url.pathname)) return;
     send(res, 404, { error: "not found" });
   } catch (e) {
