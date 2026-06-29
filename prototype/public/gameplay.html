@@ -1119,7 +1119,7 @@ document.querySelector("#heroB .flogo").style.cursor="pointer";
 
 /* hero-skill (founder move) hover tooltip */
 ["A","B"].forEach(s=>{ const fb=document.querySelector("#hero"+s+" .founder-box");
-  if(fb){ fb.onmouseenter=()=>showTip(fb, founderDetail(s), FACTIONS[seatFaction[s]].color); fb.onmouseleave=hideTip; } });
+  if(fb){ fb.onmouseenter=()=>{ if(!LIVE || CFG.view==="spectator" || fb._heroAvailable) showTip(fb, founderDetail(s), FACTIONS[seatFaction[s]].color); }; fb.onmouseleave=hideTip; } });
 
 /* ── easter-egg props ── */
 let pets=0;
@@ -1200,7 +1200,7 @@ function engineToView(S){
     n:Math.max(S.turnNumber.A,S.turnNumber.B)||1, seat:S.turnOf,
     shared:S.shared.map(m=>({ name:m.name||ename(m.cardId), a:m.attack, h:m.health })) };
 }
-function leTagIids(sel, arr){ const els=document.querySelectorAll(sel+" .bcard, "+sel+" .hcard");
+function leTagIids(sel, arr){ const els=document.querySelectorAll(sel+" .bcard, "+sel+" .hcard, "+sel+" .scard");
   els.forEach((el,i)=>{ if(arr[i]) el.dataset.iid=arr[i].iid; }); }
 function leTargetEl(tid){ if(tid==="HERO_"+YOU_SEAT)return $("hero"+YOU_SEAT); if(tid==="HERO_"+OPP_SEAT)return $("hero"+OPP_SEAT);
   return document.querySelector('[data-iid="'+CSS.escape(tid)+'"]'); }
@@ -1210,8 +1210,12 @@ function renderLive(){
   const S=LE.S, my=YOU_SEAT, opp=OPP_SEAT;
   renderState(engineToView(S)); setActive(S.turnOf);
   leTagIids("#board"+my, S.players[my].board); leTagIids("#board"+opp, S.players[opp].board);
-  leTagIids("#hand"+my, S.players[my].hand);
+  leTagIids("#hand"+my, S.players[my].hand); leTagIids("#sharedZone", S.shared);
   leClearTargets();
+  // drop any stale interactive handlers from the previous human turn (covers the bot-turn
+  // window below and re-render-after-cancel); fresh ones are re-attached when it's myTurn.
+  document.querySelectorAll("#hand"+my+" .hcard, #board"+my+" .bcard").forEach(el=>{ el.onclick=null; el.classList.remove("playable","can-attack"); });
+  const fb0=document.querySelector("#hero"+my+" .founder-box"); if(fb0){ fb0.onclick=null; fb0.classList.remove("usable"); fb0._heroAvailable=false; }
   const term=LE.eng.isTerminal(S);
   if(term.over){ $("endturnBtn").classList.remove("show"); leEnd(term); return; }
   const myTurn=S.turnOf===my;
@@ -1226,15 +1230,18 @@ function renderLive(){
   document.querySelectorAll("#hand"+my+" .hcard").forEach(el=>{ const acts=byCard[el.dataset.iid]; if(acts){ el.classList.add("playable"); el.onclick=()=>lePlay(acts); } });
   document.querySelectorAll("#board"+my+" .bcard").forEach(el=>{ const acts=byAtk[el.dataset.iid]; if(acts){ el.classList.add("can-attack"); el.onclick=()=>lePlay(acts); } });
   const fb=document.querySelector("#hero"+my+" .founder-box");
-  if(fb){ fb.classList.toggle("usable", hero.length>0); fb.onclick = hero.length ? ()=>lePlay(hero) : null; }
+  if(fb){ fb._heroAvailable = hero.length>0; fb.classList.toggle("usable", hero.length>0); fb.onclick = hero.length ? ()=>lePlay(hero) : null; }
 }
 function lePlay(acts){ if(acts.length===1 && acts[0].targetId==null) return leApply(acts[0].id); leEnterTargeting(acts); }
-function leEnterTargeting(acts){ leClearTargets(); stage.classList.add("targeting");
-  acts.forEach(a=>{ const el=leTargetEl(a.targetId); if(el){ el.classList.add("targetable"); el.__leClick=ev=>{ if(ev)ev.stopPropagation(); leApply(a.id); }; el.addEventListener("click", el.__leClick); } }); }
+function leEnterTargeting(acts){ leClearTargets(); stage.classList.add("targeting"); let foundAny=false;
+  acts.forEach(a=>{ const el=leTargetEl(a.targetId); if(el){ foundAny=true; el.classList.add("targetable"); el.__leClick=ev=>{ if(ev)ev.stopPropagation(); leApply(a.id); }; el.addEventListener("click", el.__leClick); } });
+  if(!foundAny){ console.error("No target elements found for", acts); leClearTargets(); } }  // never leave the stage in targeting limbo
 function leApply(id){ leClearTargets(); const r=LE.eng.applyAction(LE.S, YOU_SEAT, {id}); if(!r||!r.ok) return;
   renderLive(); if(r.endedTurn && !LE.eng.isTerminal(LE.S).over) leBotPlay(); }
 async function leBotPlay(){ const g=leBump(); renderLive(); await leSleep(5000); if(g!==LE.gen) return;
-  LE.bot.takeTurn(LE.S, OPP_SEAT, {beam:4,depth:4}); renderLive(); }
+  try { LE.bot.takeTurn(LE.S, OPP_SEAT, {beam:4,depth:4}); }
+  catch(e){ console.error("Bot play failed:", e); try{ LE.eng.applyAction(LE.S, OPP_SEAT, {id:"end"}); }catch(_){} }  // never strand the UI mid-bot-turn
+  renderLive(); }
 function leEnd(term){ const w=term.winner, fac=FACTIONS[seatFaction[w||YOU_SEAT]];
   const v=$("victor"); v.className="victor seat"+(w||YOU_SEAT)+" show"; v.style.setProperty("--seat",fac.color);
   $("victorName").textContent = w===YOU_SEAT?"You win":(w?"You lose":"Draw");
