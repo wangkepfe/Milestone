@@ -322,6 +322,20 @@ input{font-family:inherit}
 .hs-card .hs-fm{font-family:var(--font-mono); font-size:1.2cqh; color:var(--ink-2); padding:.2cqh 1cqh 1cqh}
 .hs-foot{margin-top:2.2cqh; color:var(--ink-2); font-size:1.5cqh; font-family:var(--font-mono)}
 
+/* ── interactive local play (human vs bot) ── */
+.hcard.playable{cursor:pointer; box-shadow:0 0 0 .22cqh var(--accent) inset, 0 0 2.4cqh -.4cqh var(--accent); animation:pulseGlow 1.7s ease-in-out infinite}
+.bcard.can-attack{cursor:pointer; box-shadow:0 0 0 .22cqh var(--accent) inset, 0 0 2.4cqh -.4cqh var(--accent)}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 .22cqh var(--accent) inset, 0 0 1.6cqh -.6cqh var(--accent)}50%{box-shadow:0 0 0 .28cqh var(--accent) inset, 0 0 3cqh -.2cqh var(--accent)}}
+.targetable{cursor:crosshair!important; box-shadow:0 0 0 .26cqh var(--danger) inset, 0 0 3cqh -.3cqh var(--danger)!important; position:relative; z-index:35}
+.stage.targeting .battlefield::after{content:"Pick a target — Esc to cancel"; position:absolute; top:.6cqh; left:50%; transform:translateX(-50%);
+  font-family:var(--font-mono); font-size:1.4cqh; color:var(--danger); background:rgba(12,14,20,.9); padding:.3cqh 1cqw; border-radius:1cqh; z-index:40}
+.founder-box.usable{box-shadow:0 0 0 .2cqh var(--accent) inset; cursor:pointer}
+.endturn-btn{position:absolute; right:2.2cqw; bottom:21cqh; z-index:30; display:none; align-items:center; gap:.5cqw;
+  background:linear-gradient(180deg,var(--accent),#caa024); color:var(--ink-on); font-weight:700; font-size:1.9cqh;
+  padding:1cqh 1.8cqw; border-radius:1cqh; box-shadow:0 1.2cqh 3cqh -1cqh var(--accent); transition:transform .12s}
+.endturn-btn.show{display:flex}
+.endturn-btn:hover{transform:translateY(-.3cqh) scale(1.03)}
+
 /* ─────────────────── CONTROLS / SETTINGS (auto-hide) ────────────────── */
 .controls{position:absolute; top:1.2cqh; right:calc(var(--chatW) + 1.4cqw); z-index:30; display:flex; gap:.5cqw;
   transition:opacity .4s, transform .4s}
@@ -576,6 +590,9 @@ input{font-family:inherit}
   <div class="toasts" id="toasts"></div>
 
   <!-- end-of-match victor -->
+  <!-- interactive play: end-turn button -->
+  <button class="endturn-btn" id="endturnBtn">End turn ▶</button>
+
   <!-- hero select (pre-match, 60s) -->
   <div class="heroselect" id="heroSelect">
     <div class="hs-head"><span id="hsTitle">Choose your hero</span><span class="hs-timer" id="hsTimer">1:00</span></div>
@@ -878,7 +895,7 @@ function actionDetail(a, seat){
 function renderHero(seat,t){
   const s=t[seat], fac=FACTIONS[seatFaction[seat]];
   $("val"+seat).textContent=s.val;
-  $("cmp"+seat).textContent=s.maxC+"/"+s.maxC;
+  $("cmp"+seat).textContent=(s.curC!=null?s.curC:s.maxC)+"/"+s.maxC;
   $("handC"+seat).textContent=s.hand.length;
   $("deckC"+seat).textContent=s.deck;
   $("arm"+seat).innerHTML=Array(s.arm).fill('<span class="pip"></span>').join("");
@@ -1166,6 +1183,73 @@ function showHeroSelect(){
   });
 }
 
+/* ════════════════════ LIVE LOCAL PLAY — real engine, human vs bot ════════════════════ */
+const LIVE = CFG.mode==="play" && seatKind.A==="human" && seatKind.B==="bot"; // single-player / human-vs-bot
+const LE = { eng:null, bot:null, cards:null, S:null, gen:0 };
+function leBump(){ return ++LE.gen; }
+function leSleep(ms){ const g=LE.gen; return new Promise(r=>setTimeout(()=>{ if(g===LE.gen) r(); }, ms)); }
+function ename(cardId){ const d=LE.cards.CARDS[cardId]; return d?d.name:cardId; }
+function engineToView(S){
+  const mk=seat=>{ const p=S.players[seat]; const mine=(seat===YOU_SEAT)||CFG.view==="spectator";
+    return { val:p.valuation, arm:p.armor, maxC:p.compute.max, curC:p.compute.current,
+      hand: mine ? p.hand.map(c=>ename(c.cardId)) : Array(p.hand.length).fill("?"),
+      deck: p.deck.length,
+      board: p.board.map(m=>({ name:m.name||ename(m.cardId), a:m.attack, h:m.health, kw:m.keywords||[],
+        sick:m.summoningSick, stealth:m.stealth, shield:m.failover, hurt:(m.maxHealth!=null && m.health<m.maxHealth) })) }; };
+  return { A:mk("A"), B:mk("B"), scaling:(S.scaling.A+S.scaling.B), collapse:"—",
+    n:Math.max(S.turnNumber.A,S.turnNumber.B)||1, seat:S.turnOf,
+    shared:S.shared.map(m=>({ name:m.name||ename(m.cardId), a:m.attack, h:m.health })) };
+}
+function leTagIids(sel, arr){ const els=document.querySelectorAll(sel+" .bcard, "+sel+" .hcard");
+  els.forEach((el,i)=>{ if(arr[i]) el.dataset.iid=arr[i].iid; }); }
+function leTargetEl(tid){ if(tid==="HERO_"+YOU_SEAT)return $("hero"+YOU_SEAT); if(tid==="HERO_"+OPP_SEAT)return $("hero"+OPP_SEAT);
+  return document.querySelector('[data-iid="'+CSS.escape(tid)+'"]'); }
+function leClearTargets(){ stage.classList.remove("targeting");
+  document.querySelectorAll(".targetable").forEach(e=>{ e.classList.remove("targetable"); if(e.__leClick){ e.removeEventListener("click",e.__leClick); e.__leClick=null; } }); }
+function renderLive(){
+  const S=LE.S, my=YOU_SEAT, opp=OPP_SEAT;
+  renderState(engineToView(S)); setActive(S.turnOf);
+  leTagIids("#board"+my, S.players[my].board); leTagIids("#board"+opp, S.players[opp].board);
+  leTagIids("#hand"+my, S.players[my].hand);
+  leClearTargets();
+  const term=LE.eng.isTerminal(S);
+  if(term.over){ $("endturnBtn").classList.remove("show"); leEnd(term); return; }
+  const myTurn=S.turnOf===my;
+  $("endturnBtn").classList.toggle("show", myTurn && (CFG.single || earlyEndAllowed()));
+  const ts = myTurn ? turnSeconds(my) : 5;
+  runTimer(S.turnOf, ts==null?0:ts, ts==null);
+  if(!myTurn) return;
+  const la=LE.eng.legalActions(S,my), byCard={}, byAtk={}, hero=[];
+  for(const a of la){ if(a.kind==="play_card")(byCard[a.cardIid]=byCard[a.cardIid]||[]).push(a);
+    else if(a.kind==="attack")(byAtk[a.attackerIid]=byAtk[a.attackerIid]||[]).push(a);
+    else if(a.kind==="hero_power")hero.push(a); }
+  document.querySelectorAll("#hand"+my+" .hcard").forEach(el=>{ const acts=byCard[el.dataset.iid]; if(acts){ el.classList.add("playable"); el.onclick=()=>lePlay(acts); } });
+  document.querySelectorAll("#board"+my+" .bcard").forEach(el=>{ const acts=byAtk[el.dataset.iid]; if(acts){ el.classList.add("can-attack"); el.onclick=()=>lePlay(acts); } });
+  const fb=document.querySelector("#hero"+my+" .founder-box");
+  if(fb){ fb.classList.toggle("usable", hero.length>0); fb.onclick = hero.length ? ()=>lePlay(hero) : null; }
+}
+function lePlay(acts){ if(acts.length===1 && acts[0].targetId==null) return leApply(acts[0].id); leEnterTargeting(acts); }
+function leEnterTargeting(acts){ leClearTargets(); stage.classList.add("targeting");
+  acts.forEach(a=>{ const el=leTargetEl(a.targetId); if(el){ el.classList.add("targetable"); el.__leClick=ev=>{ if(ev)ev.stopPropagation(); leApply(a.id); }; el.addEventListener("click", el.__leClick); } }); }
+function leApply(id){ leClearTargets(); const r=LE.eng.applyAction(LE.S, YOU_SEAT, {id}); if(!r||!r.ok) return;
+  renderLive(); if(r.endedTurn && !LE.eng.isTerminal(LE.S).over) leBotPlay(); }
+async function leBotPlay(){ const g=leBump(); renderLive(); await leSleep(5000); if(g!==LE.gen) return;
+  LE.bot.takeTurn(LE.S, OPP_SEAT, {beam:4,depth:4}); renderLive(); }
+function leEnd(term){ const w=term.winner, fac=FACTIONS[seatFaction[w||YOU_SEAT]];
+  const v=$("victor"); v.className="victor seat"+(w||YOU_SEAT)+" show"; v.style.setProperty("--seat",fac.color);
+  $("victorName").textContent = w===YOU_SEAT?"You win":(w?"You lose":"Draw");
+  $("victorReason").textContent = (term.reason||"")+" · Turn "+Math.max(LE.S.turnNumber.A,LE.S.turnNumber.B); }
+async function startLiveGame(){
+  const [eng,cardsM,botM]=await Promise.all([import("/engine/engine.js"),import("/engine/cards.js"),import("/engine/bot.js")]);
+  LE.eng=eng; LE.cards=cardsM; LE.bot=botM;
+  for(const id in cardsM.CARDS){ const d=cardsM.CARDS[id]; if(!CARDS[d.name]) CARDS[d.name]={t:d.type,cost:d.cost,a:d.attack,h:d.health,kw:d.keywords||[],x:d.text||""}; }
+  const seed=(Date.now()&0x7fffffff)||777;
+  LE.S=eng.initMatch(seed, cardsM.DECKS[seatFaction.A]||cardsM.DECKS.closedai, cardsM.DECKS[seatFaction.B]||cardsM.DECKS.anthrabbit, {log:false});
+  $("endturnBtn").onclick=()=>{ if(LE.S.turnOf===YOU_SEAT) leApply("end"); };
+  renderLive(); if(LE.S.turnOf===OPP_SEAT) leBotPlay();
+}
+window.addEventListener("keydown", e=>{ if(e.key==="Escape") leClearTargets(); });
+
 /* ── boot ── */
 applyView();
 applyFactions(); renderState(REPLAY.turns[0]);
@@ -1173,7 +1257,9 @@ if(CFG.view==="spectator"){ addChat("Welcome to the Milestone live channel — a
 showControls(); ambientLoop();
 (async function(){
   try{ const m=await (await fetch("art/MANIFEST.json")).json(); (m.cards||[]).forEach(c=>NAME2ART[c.name]=c.id); }catch(e){}
-  if(CFG.phase==="heroselect"){ const picked=await showHeroSelect(); seatFaction={A:picked.A,B:picked.B}; applyFactions(); startMatch(); }
+  if(CFG.phase==="heroselect"){ const picked=await showHeroSelect(); seatFaction={A:picked.A,B:picked.B}; applyFactions(); }
+  if(LIVE){ await startLiveGame(); }
+  else if(CFG.phase==="heroselect"){ startMatch(); }
   else setTimeout(()=>startMatch(), 800);
 })();
 </script>
