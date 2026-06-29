@@ -140,12 +140,14 @@ input{font-family:inherit}
 /* in-hero open hand (the red-box space) */
 .hand-in-hero{flex:1 1 0; min-width:0; height:100%; display:flex; align-items:center; justify-content:center; gap:.5cqw; overflow:visible}
 /* founder-move "hero skill" slot — a DEFINED area, marked as a temp/placeholder box */
-.founder-box{flex:0 0 13cqw; height:84%; align-self:center; flex-direction:column; gap:.5cqh; position:relative}
-.founder-box .fb-tag{position:absolute; top:.3cqh; left:.5cqh; font-family:var(--font-mono); font-size:1cqh; letter-spacing:.05em; color:var(--accent); opacity:.75}
-.founder-box .fb-ring{width:5.4cqh; height:5.4cqh; border-radius:50%; background:var(--surface-3); overflow:hidden; position:relative;
-  border:.18cqh solid color-mix(in srgb,var(--seat,#888) 60%, var(--hairline)); display:flex; align-items:center; justify-content:center;
-  font-size:2.6cqh; color:color-mix(in srgb,var(--seat,#888) 85%, var(--ink-1))}
-.founder-box .fb-ring .skillimg{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block}
+/* hero skill = one clean panel holding the circular skill emblem + name + cost */
+.founder-box{flex:0 0 13cqw; height:84%; align-self:center; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:.7cqh; position:relative; padding:.7cqh .5cqh; border-radius:1.2cqh;
+  background:linear-gradient(180deg,#1a1e28,#11141b); border:.12cqh solid var(--hairline)}
+.founder-box .fb-ring{width:6.4cqh; height:6.4cqh; position:relative; display:flex; align-items:center; justify-content:center;
+  font-size:3cqh; color:color-mix(in srgb,var(--seat,#888) 85%, var(--ink-1))}
+.founder-box .fb-ring .skillimg{position:absolute; inset:0; width:100%; height:100%; object-fit:contain; display:block;
+  filter:drop-shadow(0 .25cqh .6cqh rgba(0,0,0,.55))}
 .founder-box .fb-name{font-size:1.6cqh; font-weight:500; color:var(--ink-1); text-align:center; line-height:1.05}
 .founder-box .fb-cost{font-family:var(--font-mono); font-size:1.3cqh; color:var(--accent)}
 
@@ -178,6 +180,12 @@ input{font-family:inherit}
 .bcard:hover{transform:translateY(-1.6cqh) scale(1.05); z-index:40; box-shadow:0 1.4cqh 2.6cqh rgba(0,0,0,.6)}
 .bcard .art{flex:1; min-height:0; border-radius:.6cqh; overflow:hidden; position:relative; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg,#12151d,#0a0c11)}
 .cardimg{width:100%; height:100%; object-fit:cover; display:block}
+/* emblem fallback for cards without bespoke art — fills the art slot, on-theme */
+.cardfallback{width:100%; height:100%; display:flex; align-items:center; justify-content:center;
+  background:radial-gradient(78% 78% at 50% 40%, #232c3f, #0c1017 82%); color:#6f7d96}
+.cardfallback svg{width:52%; height:52%; opacity:.85}
+.cardfallback.coin{color:#d3aa4e; background:radial-gradient(78% 78% at 50% 40%, #2b2517, #100f09 82%)}
+.cardfallback.token{color:#8fa0bd}
 .bcard .nm{font-size:1.9cqh; font-weight:600; line-height:1.02; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
 .bcard .kw{display:flex; gap:.3cqh; flex-wrap:wrap; min-height:1.4cqh; max-height:3cqh; overflow:hidden}
 .bcard .kw span{font-family:var(--font-mono); font-size:1.1cqh; background:var(--surface-3); color:var(--ink-2);
@@ -353,7 +361,7 @@ input{font-family:inherit}
 .targetable{cursor:crosshair!important; box-shadow:0 0 0 .26cqh var(--danger) inset, 0 0 3cqh -.3cqh var(--danger)!important; position:relative; z-index:35}
 .stage.targeting .battlefield::after{content:"Pick a target — Esc to cancel"; position:absolute; top:.6cqh; left:50%; transform:translateX(-50%);
   font-family:var(--font-mono); font-size:1.4cqh; color:var(--danger); background:rgba(12,14,20,.9); padding:.3cqh 1cqw; border-radius:1cqh; z-index:40}
-.founder-box.usable{box-shadow:0 0 0 .2cqh var(--accent) inset; cursor:pointer}
+.founder-box.usable{border-color:var(--accent); box-shadow:0 0 0 .18cqh var(--accent) inset, 0 0 2.4cqh -.6cqh var(--accent); cursor:pointer}
 .endturn-btn{position:absolute; right:2.2cqw; bottom:21cqh; z-index:30; display:none; align-items:center; gap:.5cqw;
   background:linear-gradient(180deg,var(--accent),#caa024); color:var(--ink-on); font-weight:700; font-size:1.9cqh;
   padding:1cqh 1.8cqw; border-radius:1cqh; box-shadow:0 1.2cqh 3cqh -1cqh var(--accent); transition:transform .12s}
@@ -391,6 +399,10 @@ input{font-family:inherit}
 .toggle::after{content:""; position:absolute; top:.3cqh; left:.3cqh; width:2cqh; height:2cqh; border-radius:50%; background:var(--ink-2); transition:.2s}
 .toggle.on{background:var(--accent)} .toggle.on::after{left:2.7cqh; background:var(--ink-on)}
 .settings .note{font-size:1.15cqh; color:#5d6b7a; line-height:1.4}
+.settings #setDemo, .settings #setPlay{display:flex; flex-direction:column; gap:1cqh}
+.settings .setbtn{font-family:var(--font-mono); font-size:1.3cqh; background:var(--surface-2); color:var(--ink-1);
+  border:.1cqh solid var(--hairline); border-radius:.6cqh; padding:.3cqh 1cqw; cursor:pointer}
+.settings .setbtn:hover{border-color:var(--accent); color:var(--accent)}
 
 /* ── interactive easter-egg props (kept: support goblin + server-cat) ── */
 .poke{position:absolute; z-index:12; cursor:pointer}
@@ -473,9 +485,8 @@ input{font-family:inherit}
       </div>
       <!-- open hand (Telemetry) lives in the hero band -->
       <div class="hand-in-hero" id="handB"></div>
-      <!-- founder move = hero skill slot (temp/placeholder box) -->
-      <div class="founder-box ph" data-ph="ph-founder-move" title="Founder Move — hero skill · 2 Compute, once per turn">
-        <span class="fb-tag">HERO SKILL · temp</span>
+      <!-- founder move = hero skill (circular emblem art) -->
+      <div class="founder-box" title="Founder Move — hero skill · 2 Compute, once per turn">
         <div class="fb-ring"><span>✦</span></div>
         <div class="fb-name" id="fmB">Realign</div>
         <div class="fb-cost">2 ◆</div>
@@ -548,9 +559,8 @@ input{font-family:inherit}
       </div>
       <!-- open hand (Telemetry) lives in the hero band -->
       <div class="hand-in-hero" id="handA"></div>
-      <!-- founder move = hero skill slot (temp/placeholder box) -->
-      <div class="founder-box ph" data-ph="ph-founder-move" title="Founder Move — hero skill · 2 Compute, once per turn">
-        <span class="fb-tag">HERO SKILL · temp</span>
+      <!-- founder move = hero skill (circular emblem art) -->
+      <div class="founder-box" title="Founder Move — hero skill · 2 Compute, once per turn">
         <div class="fb-ring"><span>✦</span></div>
         <div class="fb-name" id="fmA">Hype Ping</div>
         <div class="fb-cost">2 ◆</div>
@@ -593,14 +603,19 @@ input{font-family:inherit}
   <div class="settings" id="settings">
     <h4>Options</h4>
     <div class="set-row">Show art slots <span class="toggle" id="tgAnnotate" data-k="annotate"></span></div>
-    <div class="set-row">Ambient chat <span class="toggle on" id="tgAmbient" data-k="ambient"></span></div>
-    <div class="set-row">Matchup (demo)
-      <span style="display:flex;gap:.4cqw"><select id="selA"></select><select id="selB"></select></span></div>
-    <div class="set-row">Agent · P1
-      <select id="agentA"><option value="script">Script · 5s</option><option value="live">Live · 60s</option></select></div>
-    <div class="set-row">Agent · P2
-      <select id="agentB"><option value="script">Script · 5s</option><option value="live">Live · 60s</option></select></div>
-    <div class="note">View-only live stream — no playback controls. Each turn consumes its <b>full</b> timer (5s script / 60s live) with no early skip. This panel auto-hides; move the pointer or type to bring it back.</div>
+    <div id="setDemo"><!-- spectator/broadcast only -->
+      <div class="set-row">Ambient chat <span class="toggle on" id="tgAmbient" data-k="ambient"></span></div>
+      <div class="set-row">Matchup (demo)
+        <span style="display:flex;gap:.4cqw"><select id="selA"></select><select id="selB"></select></span></div>
+      <div class="set-row">Agent · P1
+        <select id="agentA"><option value="script">Script · 5s</option><option value="live">Live · 60s</option></select></div>
+      <div class="set-row">Agent · P2
+        <select id="agentB"><option value="script">Script · 5s</option><option value="live">Live · 60s</option></select></div>
+    </div>
+    <div id="setPlay" style="display:none"><!-- play modes only -->
+      <div class="set-row">Match <button class="setbtn" id="btnMenu">← Leave to menu</button></div>
+    </div>
+    <div class="note" id="setNote"></div>
   </div>
 
   <div class="inspect" id="inspect"></div>
@@ -787,9 +802,20 @@ function applyFactions(){
 }
 
 /* ── card elements ── */
-// real card art (from the MANIFEST name->id map) with a graceful placeholder fallback
+// clean themed emblem for cards that have no bespoke art file (coin/open-weights token, summoned tokens…)
+function cardFallback(name){
+  const coin=/open[\s-]?weights|coin/i.test(name||""), token=/token/i.test(name||"");
+  const cls = coin?"coin":(token?"token":"model");
+  const svg = coin
+    ? '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="24" cy="24" r="15"/><circle cx="24" cy="24" r="9" stroke-dasharray="3 3.6"/><path d="M24 17v14M17 24h14"/></svg>'
+    : token
+    ? '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M24 9l13 7.5v15L24 39 11 31.5v-15z"/><path d="M24 24l13-7.5M24 24v15M24 24L11 16.5"/></svg>'
+    : '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><rect x="14" y="11" width="20" height="26" rx="2.5"/><path d="M19 19h10M19 24h10M19 29h6"/></svg>';
+  return `<div class="cardfallback ${cls}">${svg}</div>`;
+}
+// real card art (from the MANIFEST name->id map) with a clean emblem fallback
 function cardImg(name){ const id=NAME2ART[name];
-  return id ? `<img class="cardimg" src="art/cards/${id}.svg" alt="" loading="lazy" onerror="this.remove()">` : `<span class="ph-ico">▤</span>`; }
+  return id ? `<img class="cardimg" src="art/cards/${id}.svg" alt="" loading="lazy" data-cn="${esc(name)}" onerror="this.outerHTML=cardFallback(this.getAttribute('data-cn'))">` : cardFallback(name); }
 function bcardEl(m, seatClass){
   const d=document.createElement("div");
   d.className="bcard "+seatClass+(m.sick?" sick":" ready")+(m.shield?" shield":"")+(m.stealth?" stealth":"")+((m.kw||[]).includes("Guardrail")?" guardrail":"");
@@ -1152,7 +1178,7 @@ document.querySelector("#heroB .flogo").style.cursor="pointer";
 
 /* hero-skill (founder move) hover tooltip */
 ["A","B"].forEach(s=>{ const fb=document.querySelector("#hero"+s+" .founder-box");
-  if(fb){ fb.onmouseenter=()=>{ if(!LIVE || CFG.view==="spectator" || fb._heroAvailable) showTip(fb, founderDetail(s), FACTIONS[seatFaction[s]].color); }; fb.onmouseleave=hideTip; } });
+  if(fb){ fb.onmouseenter=()=>showTip(fb, founderDetail(s), FACTIONS[seatFaction[s]].color); fb.onmouseleave=hideTip; } });
 
 /* ── easter-egg props ── */
 let pets=0;
@@ -1188,6 +1214,24 @@ function roleLabel(seat){ const k=seatKind[seat];
   if(k==="bot"){ const id=seat===OPP_SEAT?CFG.bot:CFG.youBot; return (id&&BOT_NAMES[id]?BOT_NAMES[id]:"Bot")+" · 5s"; }
   if(k==="agent") return "Live agent · 60s";
   return (CFG.single&&seat===YOU_SEAT)?"Human · no timer":"Human · 60s"; }
+
+/* ── settings panel adapts to the game mode (demo controls only when spectating) ── */
+(function(){ const demo=$("setDemo"), play=$("setPlay"), note=$("setNote"), bm=$("btnMenu");
+  const spectator = CFG.view==="spectator";
+  demo.style.display = spectator?"":"none";
+  play.style.display = spectator?"none":"";
+  if(spectator){
+    note.innerHTML='View-only live stream — no playback controls. Each turn consumes its <b>full</b> timer (5s script / 60s live) with no early skip. This panel auto-hides; move the pointer or type to bring it back.';
+  } else if(CFG.single){
+    note.innerHTML='Single-player — play at your own pace. <b>No timer:</b> end your turn when you’re ready and the bot replies in ~5s. This panel auto-hides; move the pointer to bring it back.';
+  } else {
+    const liveAgent = seatKind.A==="agent"||seatKind.B==="agent";
+    note.innerHTML = (liveAgent ? 'Live match — a live agent is playing; each turn uses up to its <b>full</b> timer with <b>no early skip</b>. '
+      : 'Match — each turn uses up to its 60s timer'+(earlyEndAllowed()?' (you may end early). ':'. '))
+      + 'This panel auto-hides; move the pointer to bring it back.';
+  }
+  if(bm) bm.onclick=()=>{ location.href="index.html"; };
+})();
 
 /* ── hero select (pre-match, 60 s) — uses the real CEO art ── */
 /* rich per-faction info for the hero-select detail panel */
