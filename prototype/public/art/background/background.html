@@ -112,10 +112,13 @@
     <!-- NOW BROADCASTING sign (clickable: toggle) -->
     <g id="broadcast" class="hot" transform="translate(800 120)">
       <rect id="rim" x="-1600" y="-120" width="3200" height="1140" fill="none" stroke="#FF3B6B" stroke-width="10" rx="20"/>
-      <rect x="-150" y="-34" width="300" height="58" rx="12" fill="#10151F" stroke="#2A323D" stroke-width="2"/>
-      <circle id="oair" cx="-120" cy="-5" r="9" fill="#3a3f48"/>
-      <text id="bcastTxt" x="14" y="2" font-family="'JetBrains Mono',monospace" font-size="20" font-weight="700" fill="#8B97A6" text-anchor="middle">○ OFF AIR</text>
-      <text x="14" y="20" font-family="'JetBrains Mono',monospace" font-size="9" fill="#5b6470" text-anchor="middle">click to go live</text>
+      <!-- the broadcast sign is hidden while off air (no "OFF AIR" clutter); it appears only on air -->
+      <g id="bcastSign" opacity="0">
+        <rect x="-150" y="-34" width="300" height="58" rx="12" fill="#10151F" stroke="#2A323D" stroke-width="2"/>
+        <circle id="oair" cx="-120" cy="-5" r="9" fill="#FF3B6B"/>
+        <text id="bcastTxt" x="14" y="2" font-family="'JetBrains Mono',monospace" font-size="20" font-weight="700" fill="#FF3B6B" text-anchor="middle">● ON AIR</text>
+        <text x="14" y="20" font-family="'JetBrains Mono',monospace" font-size="9" fill="#5b6470" text-anchor="middle">click to go off air</text>
+      </g>
     </g>
 
     <!-- MID PLANE: server racks (clickable: LED cascade) -->
@@ -340,6 +343,7 @@ $$(".fan").forEach(f=>{
 let live=false;
 $("#broadcast").addEventListener("click",()=>{
   live=!live;
+  $("#bcastSign").style.opacity = live ? "1" : "0";   // show the sign only when on air
   $("#rim").classList.toggle("on",live);
   $("#bcastTxt").textContent = live? "● ON AIR" : "○ OFF AIR";
   $("#bcastTxt").setAttribute("fill", live? "#FF3B6B":"#8B97A6");
