@@ -295,6 +295,22 @@ input{font-family:inherit}
 .hcard.closed::after{content:"🂠"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
   font-size:3.4cqh; color:#3a4452; visibility:visible}
 
+/* ── hero select overlay (60s timer; real hero art) ── */
+.heroselect{position:absolute; inset:0; z-index:60; display:none; flex-direction:column; align-items:center; justify-content:center;
+  background:radial-gradient(70% 70% at 50% 42%, rgba(12,14,20,.93), rgba(7,7,10,.98))}
+.heroselect.show{display:flex}
+.hs-head{display:flex; align-items:center; gap:2cqw; font-size:2.6cqh; font-weight:600; margin-bottom:2.4cqh}
+.hs-head .hs-timer{font-family:var(--font-mono); color:var(--accent); border:.12cqh solid var(--accent); border-radius:2cqh; padding:.25cqh 1.1cqh; font-size:2cqh; font-variant-numeric:tabular-nums}
+.hs-grid{display:flex; gap:1.6cqw}
+.hs-card{width:16cqw; background:var(--surface-2); border:.18cqh solid var(--hairline); border-radius:1.2cqh; overflow:hidden;
+  display:flex; flex-direction:column; transition:transform .16s, border-color .16s, box-shadow .16s; cursor:pointer; --fc:var(--accent)}
+.hs-card:hover{transform:translateY(-1cqh); border-color:var(--fc); box-shadow:0 2cqh 5cqh -2cqh var(--fc)}
+.hs-card.sel{border-color:var(--fc); box-shadow:0 0 0 .22cqh var(--fc) inset, 0 2cqh 5cqh -2cqh var(--fc)}
+.hs-card .hs-art{width:100%; aspect-ratio:360/460; object-fit:cover; background:linear-gradient(180deg,#10131b,#0a0c11); display:block}
+.hs-card .hs-nm{font-weight:700; font-size:1.7cqh; padding:.8cqh 1cqh 0; color:var(--fc)}
+.hs-card .hs-fm{font-family:var(--font-mono); font-size:1.2cqh; color:var(--ink-2); padding:.2cqh 1cqh 1cqh}
+.hs-foot{margin-top:2.2cqh; color:var(--ink-2); font-size:1.5cqh; font-family:var(--font-mono)}
+
 /* ─────────────────── CONTROLS / SETTINGS (auto-hide) ────────────────── */
 .controls{position:absolute; top:1.2cqh; right:calc(var(--chatW) + 1.4cqw); z-index:30; display:flex; gap:.5cqw;
   transition:opacity .4s, transform .4s}
@@ -549,6 +565,13 @@ input{font-family:inherit}
   <div class="toasts" id="toasts"></div>
 
   <!-- end-of-match victor -->
+  <!-- hero select (pre-match, 60s) -->
+  <div class="heroselect" id="heroSelect">
+    <div class="hs-head"><span id="hsTitle">Choose your hero</span><span class="hs-timer" id="hsTimer">1:00</span></div>
+    <div class="hs-grid" id="hsGrid"></div>
+    <div class="hs-foot" id="hsFoot">Pick a faction to deploy.</div>
+  </div>
+
   <div class="victor seatA" id="victor">
     <div class="vc">
       <span class="vk">SHUTDOWN · ACQUI-HIRED</span>
@@ -615,8 +638,9 @@ const TOOL_INFO = {
 const AGENT_TIMES = { script:5, live:60 };            // seconds
 let seatAgent = { A:"script", B:"live" };             // P1 script bot (5s), P2 live-prompt agent (60s)
 const TIER_LABEL = { script:"Script bot · 5s", live:"Live prompt · 60s" };
+// roleLabel() is defined with the role config near the bottom; updateTiers uses it.
 function updateTiers(){ ["A","B"].forEach(s=>{ const e=document.getElementById("tier"+s);
-  if(e){ e.classList.remove("fallback"); e.textContent=TIER_LABEL[seatAgent[s]]; } }); }
+  if(e){ e.classList.remove("fallback"); e.textContent=(typeof roleLabel==="function"?roleLabel(s):TIER_LABEL[seatAgent[s]]); } }); }
 
 /* ════════════════════════════ MOCK MATCH ═══════════════════════════════ */
 const M = (name,a,h,...f)=>({name,a,h,kw:CARDS[name]?CARDS[name].kw:[],
@@ -828,17 +852,19 @@ function setActive(seat){
   $("heroA").classList.toggle("active",seat==="A"); $("heroB").classList.toggle("active",seat==="B");
   $("heroA").classList.toggle("dim",seat!=="A"); $("heroB").classList.toggle("dim",seat!=="B");
   $("agWho").textContent=PLAYERS[seat];           // agent panel themes via .stage[data-active] CSS
-  $("agEyebrow").textContent="AGENT REASONING";
+  // in AGENT view you only see YOUR own reasoning — blank it on the opponent's turn
+  $("agEyebrow").textContent=(CFG.view==="agent" && seat!==YOU_SEAT) ? "OPPONENT IS THINKING" : "AGENT REASONING";
 }
 
 /* ── timer ring (active hero) ── */
 let ringTimer=null;
-function runTimer(seat, seconds){
+function runTimer(seat, seconds, noTimer){
   const ring=$("ring"+seat), secs=$("secs"+seat), td=$("agSecs"), C=283;
   if(ringTimer){clearInterval(ringTimer);ringTimer=null;}
   $("ringA").style.strokeDashoffset="0"; $("ringB").style.strokeDashoffset="0";
   ring.style.stroke="var(--accent)";
   const fmt=x=>{const s=Math.max(0,Math.ceil(x)); return Math.floor(s/60)+":"+String(s%60).padStart(2,"0");};
+  if(noTimer){ secs.textContent="∞"; td.textContent="your move"; ring.style.strokeDashoffset="0"; return; }
   secs.textContent=Math.ceil(seconds); td.textContent=fmt(seconds);
   const t0=performance.now(), dur=seconds*1000, myGen=gen;
   ringTimer=setInterval(()=>{
@@ -875,27 +901,25 @@ function flashLoss(i){
 /* ════════════════════════ LIVE PLAYBACK (no controls) ═══════════════════ */
 async function playTurn(i){
   const myGen=bump(); idx=i; const t=REPLAY.turns[i];
-  const seat=t.seat, dur=AGENT_TIMES[seatAgent[seat]];     // full timer for this seat's agent type
+  const seat=t.seat; const tsec=turnSeconds(seat); const noTimer=(tsec===null); const dur=noTimer?6:tsec;
+  const reveal=(CFG.view!=="agent")||seat===YOU_SEAT;      // agent view hides the opponent's reasoning
   renderState(prevState(i)); setActive(seat);
-  $("agQuote").innerHTML=""; renderCandidates(t,false);
-  $("agEyebrow").textContent="THINKING…";
-  runTimer(seat,dur);
-  if(t.timeout){ $("tier"+seat).classList.add("fallback"); $("tier"+seat).textContent=TIER_LABEL[seatAgent[seat]]+" · fallback"; }
+  $("agQuote").innerHTML="";
+  if(reveal){ renderCandidates(t,false); $("agEyebrow").textContent="THINKING…"; } else { $("agCands").innerHTML=""; }
+  runTimer(seat,dur,noTimer);
+  if(t.timeout){ $("tier"+seat).classList.add("fallback"); $("tier"+seat).textContent=roleLabel(seat)+" · fallback"; }
   try{
     const t0=performance.now();
     // think for the bulk of the budget; reveal + resolve in the last ~3.2s
     await sleep(Math.max(300, dur*1000 - 3200));
-    await streamRationale(t.rationale);
-    renderCandidates(t,true);                 // lock the chosen action(s)
-    $("agEyebrow").textContent="▸ COMMITTED";
+    if(reveal){ await streamRationale(t.rationale); renderCandidates(t,true); $("agEyebrow").textContent="▸ COMMITTED"; }
     await sleep(300);
     renderState(t); flashLoss(i);             // board animates (cards never blocked)
     logActions(t);
     if(t.big||t.lethal) chatReact(t);
     if(t.lethal) lethalFx(t);
-    // FORCE the whole timer to be consumed — no early skip
-    const remain = dur*1000 - (performance.now()-t0);
-    if(remain>0) await sleep(remain);
+    // FORCE the whole timer (no early skip) — except single-player "no timer" seats
+    if(!noTimer){ const remain = dur*1000 - (performance.now()-t0); if(remain>0) await sleep(remain); }
     if(myGen!==gen) return;
     if(i>=REPLAY.turns.length-1){ endMatch(); return; }
     if(running) playTurn(i+1);
@@ -1033,7 +1057,7 @@ function toast(msg,ico){ const t=document.createElement("div"); t.className="toa
 /* ── role/view config (from the Milestone menu via URL params) ── */
 const CFG = (()=>{ const p=new URLSearchParams(location.search);
   return { mode:p.get("mode")||"spectate", view:p.get("view")||"spectator",
-    you:p.get("you"), opp:p.get("opp"), bot:p.get("bot"), single:p.get("single")==="1",
+    you:p.get("you"), opp:p.get("opp"), bot:p.get("bot"), youBot:p.get("youBot"), single:p.get("single")==="1",
     demo:p.get("demo")==="1", matchId:p.get("matchId"), token:p.get("token"), phase:p.get("phase") }; })();
 let YOU_SEAT="A", OPP_SEAT="B", OPP_CLOSED=false;
 function applyView(){
@@ -1043,12 +1067,54 @@ function applyView(){
   else { stage.classList.add("chat-open","agent-open"); OPP_CLOSED=false; } // spectator / broadcast
 }
 
+/* ── player kinds + timers + end-turn rules (from the menu config) ──
+   human / live agent → 60 s · bot script → 5 s · single-player human → no timer.
+   Early end-turn is allowed only when NO live agent is involved. */
+const BOT_NAMES={hypebeast:"Hypebeast",the_auditor:"The Auditor",ramp_goblin:"Ramp Goblin",swarmlord:"Swarmlord",greedy_beam:"Greedy Beam",coin_flip:"Coin Flip"};
+const seatKind={ A:(CFG.view==="spectator"?"bot":(CFG.you||"bot")), B:(CFG.opp||"bot") };
+function turnSeconds(seat){ if(CFG.single && seat===YOU_SEAT) return null; return seatKind[seat]==="bot"?5:60; }
+function earlyEndAllowed(){ return seatKind.A!=="agent" && seatKind.B!=="agent"; } // disabled if any live agent
+function roleLabel(seat){ const k=seatKind[seat];
+  if(k==="bot"){ const id=seat===OPP_SEAT?CFG.bot:CFG.youBot; return (id&&BOT_NAMES[id]?BOT_NAMES[id]:"Bot")+" · 5s"; }
+  if(k==="agent") return "Live agent · 60s";
+  return (CFG.single&&seat===YOU_SEAT)?"Human · no timer":"Human · 60s"; }
+
+/* ── hero select (pre-match, 60 s) — uses the real CEO art ── */
+function showHeroSelect(){
+  return new Promise(resolve=>{
+    const FAC=Object.keys(FACTIONS), grid=$("hsGrid"), spectate=CFG.view==="spectator";
+    grid.innerHTML=FAC.map(k=>{const f=FACTIONS[k]; return `<button class="hs-card" data-fac="${k}" style="--fc:${f.color}">
+      <img class="hs-art" src="art/heroes/ceo_${k}.svg" alt="${esc(f.name)}" onerror="this.style.opacity=.2">
+      <div class="hs-nm">${esc(f.name)}</div><div class="hs-fm">Founder Move: ${esc(f.fm)}</div></button>`;}).join("");
+    $("hsTitle").textContent=spectate?"Heroes are being chosen…":"Choose your hero";
+    $("hsFoot").textContent=spectate?"Watching the draft…":"Pick a faction to deploy.";
+    $("heroSelect").classList.add("show");
+    const picked={A:null,B:null}; let secs=60, done=false;
+    const rnd=ex=>{const o=FAC.filter(k=>k!==ex); return o[Math.floor(Math.random()*o.length)];};
+    $("hsTimer").textContent="1:00";
+    const tick=setInterval(()=>{ if(done)return; secs--; $("hsTimer").textContent="0:"+String(Math.max(0,secs)).padStart(2,"0"); if(secs<=0) finish(); },1000);
+    function finish(){ if(done)return; done=true; clearInterval(tick);
+      if(spectate){ picked.A="closedai"; picked.B="anthrabbit"; }   // demo match = ClosedAI vs Anthrabbit
+      if(!picked[OPP_SEAT]) picked[OPP_SEAT]=rnd(picked[YOU_SEAT]);
+      if(!picked[YOU_SEAT]) picked[YOU_SEAT]=rnd(picked[OPP_SEAT]);
+      $("heroSelect").classList.remove("show"); resolve(picked); }
+    setTimeout(()=>{ if(!done&&!spectate) picked[OPP_SEAT]=rnd(picked[YOU_SEAT]); }, 1600); // opponent drafts
+    if(spectate){ setTimeout(finish, 1800); }
+    grid.onclick=e=>{ if(spectate)return; const b=e.target.closest(".hs-card"); if(!b)return;
+      picked[YOU_SEAT]=b.dataset.fac; [...grid.children].forEach(c=>c.classList.toggle("sel",c===b));
+      $("hsFoot").textContent="You chose "+FACTIONS[b.dataset.fac].name+". Deploying…"; setTimeout(finish,700); };
+  });
+}
+
 /* ── boot ── */
 applyView();
 applyFactions(); renderState(REPLAY.turns[0]);
 if(CFG.view==="spectator"){ addChat("Welcome to the Milestone live channel — agents are playing.","system"); addChat("nice, a live AI match","viewer","temp0"); }
 showControls(); ambientLoop();
-setTimeout(()=>startMatch(), 800);
+(async function(){
+  if(CFG.phase==="heroselect"){ const picked=await showHeroSelect(); seatFaction={A:picked.A,B:picked.B}; applyFactions(); startMatch(); }
+  else setTimeout(()=>startMatch(), 800);
+})();
 </script>
 </body>
 </html>
