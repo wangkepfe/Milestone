@@ -79,12 +79,14 @@ input{font-family:inherit}
 /* ── BATTLE: left art · center cards · right art (grid = deterministic) ── */
 .battle{flex:1 1 0; min-height:0; display:grid; grid-template-columns:1fr minmax(0,44cqw) 1fr; gap:1cqw; align-items:stretch}
 .battle-center{min-width:0; display:flex; flex-direction:column; gap:.3cqh}
-.art-side{min-width:0; display:flex; flex-direction:column; gap:1.2cqh; overflow:hidden;
-  border-style:dashed; border-color:#333b46;
-  background:repeating-linear-gradient(135deg, rgba(255,255,255,.022) 0 8px, transparent 8px 16px),
-    linear-gradient(180deg,#10131b 0%, #0a0c11 100%)}
-.art-side .a-ico{font-size:3.6cqh; opacity:.35}
-.art-side .a-cap{font-family:var(--font-mono); font-size:1.25cqh; letter-spacing:.28em; color:#566472; text-align:center; line-height:1.6}
+/* side panels are framed translucent windows onto the datacenter backdrop */
+.art-side{min-width:0; display:flex; flex-direction:column; gap:1.2cqh; overflow:hidden; position:relative;
+  border-style:solid; border-width:.12cqh; border-color:#222a34; border-radius:1cqh;
+  background:linear-gradient(180deg, rgba(8,10,14,.12), rgba(8,10,14,.45))}
+.art-side .a-ico, .art-side .a-cap, .art-side .ph-lbl{display:none}
+/* interactive arena backdrop */
+.scene-bg{position:absolute; inset:0; z-index:0; overflow:hidden; background:radial-gradient(120% 90% at 50% 0%, #0e1018, #08090d 75%)}
+.scene-frame{position:absolute; inset:-1px; width:calc(100% + 2px); height:calc(100% + 2px); border:none; pointer-events:none; opacity:.5}
 .art-prop{position:absolute; bottom:1.4cqh; left:50%; transform:translateX(-50%); z-index:3}
 
 /* ── HERO (big CEO profile + vitals, always visible) ── */
@@ -97,7 +99,8 @@ input{font-family:inherit}
 .hero.dim{opacity:.62; filter:saturate(.6)}
 
 .portrait-wrap{position:relative; width:13cqh; height:13cqh; flex:0 0 auto}
-.portrait{width:100%; height:100%; border-radius:50%; border:.3cqh solid var(--seat-deep);}
+.portrait{width:100%; height:100%; border-radius:50%; border:.3cqh solid var(--seat-deep); overflow:hidden; position:relative}
+.heroimg{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:50%; display:block}
 .stage[data-active="A"] .seatA .portrait, .stage[data-active="B"] .seatB .portrait{border-color:var(--seat)}
 .hero-ring{position:absolute; inset:-1cqh; width:calc(100% + 2cqh); height:calc(100% + 2cqh);
   transform:rotate(-90deg); pointer-events:none; opacity:0; transition:opacity .3s}
@@ -136,9 +139,10 @@ input{font-family:inherit}
 /* founder-move "hero skill" slot — a DEFINED area, marked as a temp/placeholder box */
 .founder-box{flex:0 0 13cqw; height:84%; align-self:center; flex-direction:column; gap:.5cqh; position:relative}
 .founder-box .fb-tag{position:absolute; top:.3cqh; left:.5cqh; font-family:var(--font-mono); font-size:1cqh; letter-spacing:.05em; color:var(--accent); opacity:.75}
-.founder-box .fb-ring{width:5.4cqh; height:5.4cqh; border-radius:50%; background:var(--surface-3);
+.founder-box .fb-ring{width:5.4cqh; height:5.4cqh; border-radius:50%; background:var(--surface-3); overflow:hidden; position:relative;
   border:.18cqh solid color-mix(in srgb,var(--seat,#888) 60%, var(--hairline)); display:flex; align-items:center; justify-content:center;
   font-size:2.6cqh; color:color-mix(in srgb,var(--seat,#888) 85%, var(--ink-1))}
+.founder-box .fb-ring .skillimg{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block}
 .founder-box .fb-name{font-size:1.6cqh; font-weight:500; color:var(--ink-1); text-align:center; line-height:1.05}
 .founder-box .fb-cost{font-family:var(--font-mono); font-size:1.3cqh; color:var(--accent)}
 
@@ -149,7 +153,7 @@ input{font-family:inherit}
   border-radius:.6cqh; border:.12cqh solid var(--hairline); position:relative; padding:.3cqh;
   display:flex; flex-direction:column; gap:.2cqh; transition:transform .15s}
 .hcard:hover{transform:translateY(-1.6cqh) scale(1.12); z-index:40; box-shadow:0 1cqh 2cqh rgba(0,0,0,.6)}
-.hcard .art{flex:1; min-height:0; border-radius:.4cqh}
+.hcard .art{flex:1; min-height:0; border-radius:.4cqh; overflow:hidden; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg,#12151d,#0a0c11)}
 .hcard .nm{font-size:1cqh; line-height:1; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
 .hcard .cost{position:absolute; top:-.5cqh; left:-.5cqh; width:2.6cqh; height:2.6cqh; border-radius:50%;
   background:var(--seat-deep); color:var(--ink-1); font-family:var(--font-mono); font-weight:600; font-size:1.4cqh;
@@ -169,7 +173,8 @@ input{font-family:inherit}
 .bcard.shield{box-shadow:0 0 0 .2cqh #cfe0ff inset, 0 0 2cqh -.2cqh #cfe0ff}
 .bcard.stealth{opacity:.5; filter:grayscale(.4)}
 .bcard:hover{transform:translateY(-1.6cqh) scale(1.05); z-index:40; box-shadow:0 1.4cqh 2.6cqh rgba(0,0,0,.6)}
-.bcard .art{flex:1; min-height:0; border-radius:.6cqh}
+.bcard .art{flex:1; min-height:0; border-radius:.6cqh; overflow:hidden; position:relative; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg,#12151d,#0a0c11)}
+.cardimg{width:100%; height:100%; object-fit:cover; display:block}
 .bcard .nm{font-size:1.9cqh; font-weight:600; line-height:1.02; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
 .bcard .kw{display:flex; gap:.3cqh; flex-wrap:wrap; min-height:1.4cqh; max-height:3cqh; overflow:hidden}
 .bcard .kw span{font-family:var(--font-mono); font-size:1.1cqh; background:var(--surface-3); color:var(--ink-2);
@@ -313,14 +318,30 @@ input{font-family:inherit}
 .hs-head{display:flex; align-items:center; gap:2cqw; font-size:2.6cqh; font-weight:600; margin-bottom:2.4cqh}
 .hs-head .hs-timer{font-family:var(--font-mono); color:var(--accent); border:.12cqh solid var(--accent); border-radius:2cqh; padding:.25cqh 1.1cqh; font-size:2cqh; font-variant-numeric:tabular-nums}
 .hs-grid{display:flex; gap:1.6cqw}
-.hs-card{width:16cqw; background:var(--surface-2); border:.18cqh solid var(--hairline); border-radius:1.2cqh; overflow:hidden;
+.hs-card{width:11.5cqw; background:var(--surface-2); border:.18cqh solid var(--hairline); border-radius:1.2cqh; overflow:hidden;
   display:flex; flex-direction:column; transition:transform .16s, border-color .16s, box-shadow .16s; cursor:pointer; --fc:var(--accent)}
 .hs-card:hover{transform:translateY(-1cqh); border-color:var(--fc); box-shadow:0 2cqh 5cqh -2cqh var(--fc)}
 .hs-card.sel{border-color:var(--fc); box-shadow:0 0 0 .22cqh var(--fc) inset, 0 2cqh 5cqh -2cqh var(--fc)}
 .hs-card .hs-art{width:100%; aspect-ratio:360/460; object-fit:cover; background:linear-gradient(180deg,#10131b,#0a0c11); display:block}
 .hs-card .hs-nm{font-weight:700; font-size:1.7cqh; padding:.8cqh 1cqh 0; color:var(--fc)}
 .hs-card .hs-fm{font-family:var(--font-mono); font-size:1.2cqh; color:var(--ink-2); padding:.2cqh 1cqh 1cqh}
-.hs-foot{margin-top:2.2cqh; color:var(--ink-2); font-size:1.5cqh; font-family:var(--font-mono)}
+.hs-foot{margin-top:1.4cqh; color:var(--ink-2); font-size:1.4cqh; font-family:var(--font-mono)}
+/* hero-select detail panel (story / skill / playstyle / deck) */
+.hs-detail{margin-top:1.6cqh; width:74cqw; max-width:74cqw; min-height:13cqh; text-align:left;
+  background:rgba(16,19,26,.82); border:.12cqh solid var(--hairline); border-radius:1cqh; padding:1.3cqh 1.8cqw;
+  font-size:1.45cqh; line-height:1.5; color:var(--ink-1)}
+.hs-detail .hd-head{display:flex; align-items:baseline; gap:1cqw; margin-bottom:.5cqh}
+.hs-detail .hd-name{font-size:2.3cqh; font-weight:700}
+.hs-detail .hd-arch{font-family:var(--font-mono); font-size:1.35cqh; letter-spacing:.06em; color:var(--accent)}
+.hs-detail .hd-story{color:var(--ink-2); font-style:italic; margin-bottom:.7cqh}
+.hs-detail .hd-row{margin:.35cqh 0}
+.hs-detail .hd-row b{color:var(--ink-1)}
+.hs-detail .hd-cost{font-family:var(--font-mono); color:var(--accent)}
+.hs-detail .hd-deck{margin-top:.7cqh; border-top:.1cqh solid var(--hairline); padding-top:.6cqh}
+.hs-detail .hd-cards{display:flex; flex-wrap:wrap; gap:.4cqh; margin-top:.5cqh}
+.hs-detail .hd-card{font-family:var(--font-mono); font-size:1.2cqh; background:var(--surface-1); border-radius:.3cqh;
+  padding:.1cqh .5cqh; color:var(--ink-2); display:inline-flex; gap:.45cqw; align-items:center}
+.hs-detail .hd-card i{color:var(--accent); font-style:normal; font-weight:700}
 
 /* ── interactive local play (human vs bot) ── */
 .hcard.playable{cursor:pointer; box-shadow:0 0 0 .22cqh var(--accent) inset, 0 0 2.4cqh -.4cqh var(--accent); animation:pulseGlow 1.7s ease-in-out infinite}
@@ -351,6 +372,8 @@ input{font-family:inherit}
 .stage.agent-open .live-badge{left:calc(var(--agentW) + 1.4cqw)}
 .live-badge .d{width:1.2cqh; height:1.2cqh; border-radius:50%; background:var(--danger); animation:breathe 1.6s infinite}
 .controls.hidden ~ .live-badge{opacity:.25}
+/* "LIVE" is a broadcast badge — only the spectator view is a live stream */
+.stage[data-view="human"] .live-badge, .stage[data-view="agent"] .live-badge{display:none}
 
 .settings{position:absolute; top:5.2cqh; right:calc(var(--chatW) + 1.4cqw); z-index:31; width:24cqw;
   background:rgba(16,18,24,.97); border:.12cqh solid var(--hairline); border-radius:1cqh; padding:1.2cqh 1.4cqw;
@@ -416,10 +439,9 @@ input{font-family:inherit}
 <body>
 <div class="stage chat-open agent-open" id="stage" data-active="A">
 
-  <!-- deepest: scene background -->
-  <div class="ph" data-ph="ph-scene-bg" style="position:absolute;inset:0;z-index:0;border:none;border-radius:0;
-     background:radial-gradient(120% 90% at 50% 0%, #0e1018, #08090d 75%)">
-    <span class="ph-lbl" style="top:.6cqh;bottom:auto">ph-scene-bg · darkened arena (keep center low-detail)</span>
+  <!-- deepest: interactive datacenter-arena backdrop (real art) -->
+  <div class="scene-bg" id="sceneBg">
+    <iframe class="scene-frame" src="art/background/background.html" title="Datacenter Colosseum backdrop" tabindex="-1" loading="lazy" scrolling="no"></iframe>
   </div>
 
   <!-- LIVE badge -->
@@ -597,6 +619,7 @@ input{font-family:inherit}
   <div class="heroselect" id="heroSelect">
     <div class="hs-head"><span id="hsTitle">Choose your hero</span><span class="hs-timer" id="hsTimer">1:00</span></div>
     <div class="hs-grid" id="hsGrid"></div>
+    <div class="hs-detail" id="hsDetail"></div>
     <div class="hs-foot" id="hsFoot">Pick a faction to deploy.</div>
   </div>
 
@@ -746,6 +769,15 @@ function sleep(ms){ const g=gen; return new Promise((res,rej)=>setTimeout(()=>g=
 const prevState=i=> i>0?REPLAY.turns[i-1]:{...REPLAY.turns[0], A:{...REPLAY.turns[0].A,board:[],hand:["—","—","—"]}, B:{...REPLAY.turns[0].B}};
 
 /* ── faction theming ── */
+function setHeroArt(seat){
+  const fac=seatFaction[seat];
+  const pw=document.querySelector("#hero"+seat+" .portrait");
+  if(pw){ let img=pw.querySelector(".heroimg"); if(!img){ img=document.createElement("img"); img.className="heroimg"; img.alt=""; img.onerror=function(){this.remove();}; pw.insertBefore(img, pw.firstChild); }
+    img.src="art/heroes/ceo_"+fac+".svg"; }
+  const ring=document.querySelector("#hero"+seat+" .fb-ring");
+  if(ring && SKILL_ART[fac]){ let s=ring.querySelector(".skillimg"); if(!s){ s=document.createElement("img"); s.className="skillimg"; s.alt=""; s.onerror=function(){this.remove();}; ring.appendChild(s); }
+    s.src="art/skills/"+SKILL_ART[fac]+".svg"; }
+}
 function applyFactions(){
   const fa=FACTIONS[seatFaction.A], fb=FACTIONS[seatFaction.B];
   stage.style.setProperty("--seat-a",fa.color); stage.style.setProperty("--seat-a-deep",fa.deep);
@@ -753,14 +785,18 @@ function applyFactions(){
   $("companyA").textContent=fa.name; $("companyB").textContent=fb.name;
   $("fmA").textContent=fa.fm; $("fmB").textContent=fb.fm;
   $("nameA").textContent=PLAYERS.A; $("nameB").textContent=PLAYERS.B;
+  setHeroArt("A"); setHeroArt("B");
   updateTiers();
 }
 
 /* ── card elements ── */
+// real card art (from the MANIFEST name->id map) with a graceful placeholder fallback
+function cardImg(name){ const id=NAME2ART[name];
+  return id ? `<img class="cardimg" src="art/cards/${id}.svg" alt="" loading="lazy" onerror="this.remove()">` : `<span class="ph-ico">▤</span>`; }
 function bcardEl(m, seatClass){
   const d=document.createElement("div");
   d.className="bcard "+seatClass+(m.sick?" sick":" ready")+(m.shield?" shield":"")+(m.stealth?" stealth":"")+((m.kw||[]).includes("Guardrail")?" guardrail":"");
-  d.innerHTML=`<div class="ph art" data-ph="ph-card-art-model"><span class="ph-ico">▤</span><span class="ph-lbl">art</span></div>
+  d.innerHTML=`<div class="art" data-ph="ph-card-art-model">${cardImg(m.name)}</div>
     <div class="nm">${esc(m.name)}</div>
     <div class="kw">${(m.kw||[]).map(k=>`<span>${esc(k)}</span>`).join("")}</div>
     <div class="stats"><span class="atk">${m.a}</span><span class="hp${m.hurt?' hurt':''}">${m.h}</span></div>`;
@@ -771,7 +807,7 @@ function facAccent(sc){ return sc==="seatA"?FACTIONS[seatFaction.A].color : sc==
 function hcardEl(name, seatClass, watch){
   const c=CARDS[name]||{cost:"?"};
   const d=document.createElement("div"); d.className="hcard "+seatClass+(watch?" watch":"");
-  d.innerHTML=`<span class="cost">${c.cost}</span><div class="ph art" data-ph="ph-card-art-hand"><span class="ph-ico">▤</span></div>
+  d.innerHTML=`<span class="cost">${c.cost}</span><div class="art" data-ph="ph-card-art-hand">${cardImg(name)}</div>
     <div class="nm">${esc(name)}</div>`;
   d.onmouseenter=()=>showTip(d, cardTip(name), facAccent(seatClass)); d.onmouseleave=hideTip;
   return d;
@@ -1157,28 +1193,64 @@ function roleLabel(seat){ const k=seatKind[seat];
   return (CFG.single&&seat===YOU_SEAT)?"Human · no timer":"Human · 60s"; }
 
 /* ── hero select (pre-match, 60 s) — uses the real CEO art ── */
+/* rich per-faction info for the hero-select detail panel */
+const FACTION_INFO = {
+  closedai:{archetype:"Aggro · Hype tempo",
+    story:"OpenAI through a funhouse mirror — ships first, aligns never. A glass-cannon hype machine that wins before anyone else gets to scale.",
+    mechanic:"Hype N — permanent +N Performance buffs that stack, turning a wide cheap board into one lethal hit.",
+    playstyle:"Flood cheap all-attack Models, pile on Hype, and burn the enemy CEO down fast. No draw, no heal — race or lose."},
+  anthrabbit:{archetype:"Control · Safety",
+    story:"Anthropic as an earnest padded rabbit — measures twice, deploys never. Out-survives everything and grinds you out.",
+    mechanic:"Safety Margin — armor that soaks CEO damage before your Valuation; it persists between turns and stacks.",
+    playstyle:"Guardrail walls, heals, and armor blunt the early game; then bury the opponent under late-game inevitability."},
+  googlitch:{archetype:"Ramp · Big-compute value",
+    story:"Google/DeepMind, gloriously overextended — too many tabs, a search bar for a mouth, the occasional glitch-hallucination.",
+    mechanic:"Glitch — read the public coin each turn; a Glitch flips a downside on your over-statted Models.",
+    playstyle:"Ramp Compute ahead of curve, draw, then slam frontier Titans and board wipes. Clunky early, crushing late."},
+  shallowseek:{archetype:"Swarm · Efficiency combo",
+    story:"DeepSeek, the scrappy upstart — hoodie and flip-flops, a pet whale, ships fast and cheap.",
+    mechanic:"Quantize — hand-wide cost reduction that chains cheap cards into explosive multi-play turns.",
+    playstyle:"Flood the board with cheap Models and free Tokens, then convert that width into a burst finisher. Folds to board wipes."},
+};
+let EDECKS=null, ECARDS=null;  // engine deck lists + card catalog, loaded before hero-select
+function deckOf(fac){ if(!EDECKS||!EDECKS[fac]) return []; const seen=new Set(), out=[];
+  EDECKS[fac].cards.forEach(id=>{ if(seen.has(id)) return; seen.add(id); const c=ECARDS&&ECARDS[id]; if(c) out.push({name:c.name,cost:c.cost}); });
+  return out.sort((a,b)=>a.cost-b.cost); }
+function heroDetailHTML(fac){ const f=FACTIONS[fac], info=FACTION_INFO[fac], fm=FOUNDER_MOVES[fac], deck=deckOf(fac);
+  return `<div class="hd-head"><span class="hd-name" style="color:${f.color}">${esc(f.name)}</span><span class="hd-arch">${esc(info.archetype)}</span></div>
+    <div class="hd-story">${esc(info.story)}</div>
+    <div class="hd-row"><b>Founder Move · ${esc(fm.name)}</b> <span class="hd-cost">${fm.cost} ◆</span> — ${esc(fm.text)}</div>
+    <div class="hd-row"><b>Signature</b> — ${esc(info.mechanic)}</div>
+    <div class="hd-row"><b>Playstyle</b> — ${esc(info.playstyle)}</div>
+    ${deck.length?`<div class="hd-deck"><b>Roadmap · ${deck.length} uniques ×2</b><div class="hd-cards">${deck.map(c=>`<span class="hd-card"><i>${c.cost}</i>${esc(c.name)}</span>`).join("")}</div></div>`:""}`;
+}
 function showHeroSelect(){
   return new Promise(resolve=>{
     const FAC=Object.keys(FACTIONS), grid=$("hsGrid"), spectate=CFG.view==="spectator";
+    const noTimer = CFG.single;   // single-player has no timer — including the hero draft
     grid.innerHTML=FAC.map(k=>{const f=FACTIONS[k]; return `<button class="hs-card" data-fac="${k}" style="--fc:${f.color}">
       <img class="hs-art" src="art/heroes/ceo_${k}.svg" alt="${esc(f.name)}" onerror="this.style.opacity=.2">
-      <div class="hs-nm">${esc(f.name)}</div><div class="hs-fm">Founder Move: ${esc(f.fm)}</div></button>`;}).join("");
+      <div class="hs-nm">${esc(f.name)}</div><div class="hs-fm">${esc(FACTION_INFO[k].archetype)}</div></button>`;}).join("");
     $("hsTitle").textContent=spectate?"Heroes are being chosen…":"Choose your hero";
-    $("hsFoot").textContent=spectate?"Watching the draft…":"Pick a faction to deploy.";
+    $("hsFoot").textContent=spectate?"Watching the draft…":"Hover a hero for its story, skill, playstyle, and deck — then click to choose.";
+    $("hsDetail").innerHTML=heroDetailHTML(spectate?"closedai":FAC[0]);
+    $("hsTimer").style.display=(spectate||noTimer)?"none":"";
     $("heroSelect").classList.add("show");
-    const picked={A:null,B:null}; let secs=60, done=false;
+    const picked={A:null,B:null}; let secs=60, done=false, tick=null;
     const rnd=ex=>{const o=FAC.filter(k=>k!==ex); return o[Math.floor(Math.random()*o.length)];};
-    $("hsTimer").textContent="1:00";
-    const tick=setInterval(()=>{ if(done)return; secs--; $("hsTimer").textContent="0:"+String(Math.max(0,secs)).padStart(2,"0"); if(secs<=0) finish(); },1000);
-    function finish(){ if(done)return; done=true; clearInterval(tick);
+    if(!spectate && !noTimer){ $("hsTimer").textContent="1:00";
+      tick=setInterval(()=>{ if(done)return; secs--; $("hsTimer").textContent="0:"+String(Math.max(0,secs)).padStart(2,"0"); if(secs<=0) finish(); },1000); }
+    function finish(){ if(done)return; done=true; if(tick) clearInterval(tick);
       if(spectate){ picked.A="closedai"; picked.B="anthrabbit"; }   // demo match = ClosedAI vs Anthrabbit
       if(!picked[OPP_SEAT]) picked[OPP_SEAT]=rnd(picked[YOU_SEAT]);
       if(!picked[YOU_SEAT]) picked[YOU_SEAT]=rnd(picked[OPP_SEAT]);
       $("heroSelect").classList.remove("show"); resolve(picked); }
     setTimeout(()=>{ if(!done&&!spectate) picked[OPP_SEAT]=rnd(picked[YOU_SEAT]); }, 1600); // opponent drafts
     if(spectate){ setTimeout(finish, 1800); }
+    grid.onmouseover=e=>{ const b=e.target.closest(".hs-card"); if(b) $("hsDetail").innerHTML=heroDetailHTML(b.dataset.fac); };
     grid.onclick=e=>{ if(spectate)return; const b=e.target.closest(".hs-card"); if(!b)return;
       picked[YOU_SEAT]=b.dataset.fac; [...grid.children].forEach(c=>c.classList.toggle("sel",c===b));
+      $("hsDetail").innerHTML=heroDetailHTML(b.dataset.fac);
       $("hsFoot").textContent="You chose "+FACTIONS[b.dataset.fac].name+". Deploying…"; setTimeout(finish,700); };
   });
 }
@@ -1264,7 +1336,9 @@ if(CFG.view==="spectator"){ addChat("Welcome to the Milestone live channel — a
 showControls(); ambientLoop();
 (async function(){
   try{ const m=await (await fetch("art/MANIFEST.json")).json(); (m.cards||[]).forEach(c=>NAME2ART[c.name]=c.id); }catch(e){}
-  if(CFG.phase==="heroselect"){ const picked=await showHeroSelect(); seatFaction={A:picked.A,B:picked.B}; applyFactions(); }
+  if(CFG.phase==="heroselect"){
+    try{ const cm=await import("/engine/cards.js"); EDECKS=cm.DECKS; ECARDS=cm.CARDS; }catch(e){}  // deck info for the hero-select detail
+    const picked=await showHeroSelect(); seatFaction={A:picked.A,B:picked.B}; applyFactions(); }
   if(LIVE){ await startLiveGame(); }
   else if(CFG.phase==="heroselect"){ startMatch(); }
   else setTimeout(()=>startMatch(), 800);
